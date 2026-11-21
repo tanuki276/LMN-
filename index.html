@@ -6,8 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#07080a">
-<link rel="manifest" href='data:application/manifest+json,{"name":"THE BACKROOMS: LIMINAL DRIFT","short_name":"Liminal Drift","start_url":"./","display":"fullscreen","orientation":"any","background_color":"%2307080a","theme_color":"%2307080a"}'>
-<title>THE BACKROOMS: LIMINAL DRIFT V6</title>
+<link rel="manifest" href='data:application/manifest+json,{"name":"Like Homes","short_name":"Like Homes","start_url":"./","display":"fullscreen","orientation":"any","background_color":"%2307080a","theme_color":"%2307080a"}'>
+<title>Like Homes</title>
 <style>
   :root {
     --bg: #07080a;
@@ -1021,7 +1021,7 @@
       <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V7</span>
       <span class="escape-badge" id="title-escape-badge">★ 現実へ脱出済み</span>
     </div>
-    <h1>THE BACKROOMS: LIMINAL DRIFT</h1>
+    <h1>Like Homes</h1>
     <p class="desc">
       全16階層を潜り、サンプルを持ち帰るかさらに深く潜るかを見極め、最終的な「現実への脱出（深度10+白い扉）」を目指す一人称バックルーム探索サバイバル。
       クロカビ・メガン・ホワイトモデル・ディンゴ・ドクガ・カワハギ・ノッペラ・レク・テアシ、さらにネイバーフッド・ウォッチや黄色いカタツムリらの対処法を学び生き延びろ。
@@ -1066,8 +1066,10 @@
       <div class="rec-box"><div class="rec-val" id="best-ach">0 / 10</div><div class="rec-lbl">実績達成</div></div>
     </div>
 
+    <div id="model-load-status" style="font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;min-height:14px;"></div>
+
     <div class="credits-bar">
-      <span id="credits-ver">THE BACKROOMS: LIMINAL DRIFT // V7.0.0</span>
+      <span id="credits-ver">Like Homes // V7.1.0</span>
       <span>CREDITS: LIMINAL DRIFT PROJECT (THREE.JS / PEERJS)</span>
     </div>
   </div>
@@ -1098,6 +1100,7 @@
 
 <!-- Local Static Libraries (Vercel Deployment: NO external CDNs!) -->
 <script src="./lib/three.min.js"></script>
+<script src="./lib/GLTFLoader.js"></script>
 <script src="./lib/peerjs.min.js"></script>
 <script>
 (() => {
@@ -1106,10 +1109,10 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V7.0.0';
+const VERSION = 'V7.1.0';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
-document.getElementById('credits-ver').textContent = `THE BACKROOMS: LIMINAL DRIFT // ${VERSION}`;
+document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
 
 if (typeof window.THREE === 'undefined') {
   const err = document.getElementById('load-error');
@@ -3140,9 +3143,131 @@ const PropFactory = {
     return pivot;
   },
 
-  // §8 Complete Procedural Model Overhaul (All 14 Species + Horde, <=3,500 tris, shared textures/materials)
+  // §V7.1 GLB Model Bank (Preload in background, fallback to procedural if loading/failed)
+  glbSpecs: {
+    bacteria:    { file: 'クロカビ.glb', scale: 2.4 },
+    smiler:      { file: 'メガン.glb', scale: 2.0 },
+    mannequin:   { file: 'ホワイトモデル.glb', scale: 1.9 },
+    hound:       { file: 'ディンゴ.glb', scale: 0.95 },
+    deathmoth:   { file: 'ドクガ.glb', scale: 1.1 },
+    skinstealer: { file: 'カワハギ.glb', scale: 1.85 },
+    faceling:    { file: 'ノッペラ.glb', scale: 1.8 },
+    partygoer:   { file: 'レク.glb', scale: 1.8 },
+    clump:       { file: 'テアシ.glb', scale: 1.4 },
+    watch:       { file: 'ネイバーフッド・ウォッチ.glb', scale: 2.7 },
+    scarecrow:   { file: 'スケアクロウ.glb', scale: 2.0 },
+    deathrat:    { file: 'デスラット.glb', scale: 0.5 },
+    tvhead:      { file: 'TVヘッド.glb', scale: 1.85 },
+    snail:       { file: '黄色いカタツムリ.glb', scale: 0.55 }
+  },
+  // §2 Centralized per-entity YAW correction (degrees, default -90 so +X GLB forward aligns with +Z entity forward)
+  MODEL_YAW: {
+    bacteria: -90, smiler: -90, mannequin: -90, hound: -90, deathmoth: -90,
+    skinstealer: -90, faceling: -90, partygoer: -90, clump: -90, watch: -90,
+    scarecrow: -90, deathrat: -90, tvhead: -90, snail: -90
+  },
+  glbCache: {},
+  glbFailed: {},
+  preloadGlbModels() {
+    const statusEl = document.getElementById('model-load-status');
+    if (typeof THREE === 'undefined' || typeof THREE.GLTFLoader !== 'function') {
+      if (statusEl) statusEl.textContent = '';
+      return;
+    }
+    const loader = new THREE.GLTFLoader();
+    const keys = Object.keys(this.glbSpecs);
+    const total = keys.length;
+    let done = 0, ok = 0;
+    const updateStatus = () => {
+      if (!statusEl) return;
+      if (done < total) statusEl.textContent = `記録モデル読込中 ${done}/${total}`;
+      else statusEl.textContent = ok > 0 ? `記録モデル読込完了 (${ok}/${total})` : '';
+    };
+    updateStatus();
+    for (const id of keys) {
+      const url = './' + encodeURIComponent(this.glbSpecs[id].file);
+      loader.load(
+        url,
+        (gltf) => {
+          this.glbCache[id] = gltf.scene;
+          done++; ok++; updateStatus();
+        },
+        undefined,
+        () => {
+          this.glbFailed[id] = true;
+          done++; updateStatus();
+        }
+      );
+    }
+  },
+  buildGlbEntity(kind, isChild = false) {
+    const baseKind = (kind === 'horde') ? 'bacteria' : kind;
+    const tmpl = this.glbCache[baseKind];
+    if (!tmpl || this.glbFailed[baseKind]) return null;
+    const spec = this.glbSpecs[baseKind];
+    const root = new THREE.Group();
+    const modelWrap = new THREE.Group();
+    const yawRad = ((this.MODEL_YAW[baseKind] !== undefined ? this.MODEL_YAW[baseKind] : -90) * Math.PI) / 180;
+    const baseScale = spec.scale * (kind === 'horde' ? (0.88 + Math.random()*0.26) : (isChild ? 0.58 : 1.0));
+
+    if (baseKind === 'deathrat') {
+      // §2 Swarm of 6 cloned GLBs in 1 unit
+      const rats = [];
+      for (let i = 0; i < 6; i++) {
+        const r = new THREE.Group();
+        const ang = (i / 6) * Math.PI * 2, rad = 0.28 + (i % 2) * 0.28;
+        r.position.set(Math.cos(ang)*rad, 0, Math.sin(ang)*rad);
+        const clone = tmpl.clone(true);
+        clone.scale.setScalar(baseScale);
+        clone.rotation.y = yawRad;
+        r.add(clone);
+        modelWrap.add(r);
+        rats.push({ grp: r, bx: r.position.x, bz: r.position.z, ph: i * 1.1 });
+      }
+      root.add(modelWrap);
+      root.userData = { isGlb: true, modelWrap, baseY: 0, baseScale: 1, rats };
+      return root;
+    }
+
+    const clone = tmpl.clone(true);
+    clone.scale.setScalar(baseScale);
+    clone.rotation.y = yawRad;
+    modelWrap.add(clone);
+
+    const baseY = (baseKind === 'deathmoth') ? 0.6 : 0;
+    modelWrap.position.y = baseY;
+    const u = { isGlb: true, modelWrap, baseY, baseScale: 1 };
+
+    // §5 Emissive Overlay Parts (anchored to modelWrap head area so they move with the GLB!)
+    if (baseKind === 'smiler') {
+      const eyeMat = getMat('glb_smiler_eye', { color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 2.2 });
+      addPart(modelWrap, Geo.sphere, eyeMat, 0.12, 0.14, 0.08, -0.18, baseScale * 0.78, 0.28);
+      addPart(modelWrap, Geo.sphere, eyeMat, 0.12, 0.14, 0.08,  0.18, baseScale * 0.78, 0.28);
+      const face = new THREE.Mesh(Geo.plane, new THREE.MeshBasicMaterial({ map: TexCache.smiler_face, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
+      face.scale.set(0.88, 0.88, 1); face.position.set(0, baseScale * 0.72, 0.32);
+      modelWrap.add(face);
+      u.face = face;
+    } else if (baseKind === 'watch') {
+      const lampMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff2cc, emissiveIntensity: 1.8, roughness: 0.2 });
+      const coneMat = new THREE.MeshBasicMaterial({ color: 0xfff2cc, transparent: true, opacity: 0.13, side: THREE.DoubleSide, depthWrite: false });
+      const bulb = addPart(modelWrap, Geo.cyl, lampMat, 0.26, 0.04, 0.26, 0, baseScale * 0.88, 0.26, Math.PI/2, 0, 0);
+      const cone = new THREE.Mesh(Geo.cone, coneMat);
+      cone.scale.set(6.5, 13.5, 6.5); cone.rotation.x = -Math.PI/2 + 0.18; cone.position.set(0, 1.5, 7.0);
+      modelWrap.add(cone);
+      u.bulb = bulb; u.lampMat = lampMat; u.cone = cone; u.coneMat = coneMat;
+    } else if (baseKind === 'tvhead') {
+      const scrMat = new THREE.MeshStandardMaterial({ map: TexCache.ent_tvstatic, emissive: 0x9cd6ff, emissiveIntensity: 0.75, roughness: 0.2 });
+      const scr = addPart(modelWrap, Geo.plane, scrMat, 0.42, 0.32, 1, 0, baseScale * 0.88, 0.25);
+      u.scr = scr; u.scrMat = scrMat;
+    }
+
+    root.add(modelWrap);
+    root.userData = u;
+    return root;
+  },
+
+  // §8 Procedural Entity Models (Kept intact as automatic fallback for §3!)
   createEntityModel(kind, isChild = false) {
-    const g = new THREE.Group();
     if (!TexCache._v7EntTex) {
       TexCache._v7EntTex = true;
       TexCache.ent_mold = makeCanvasTex(128, (ctx, s) => {
@@ -3152,6 +3277,55 @@ const PropFactory = {
           ctx.beginPath(); ctx.arc(Math.random()*s, Math.random()*s, 3+Math.random()*9, 0, Math.PI*2); ctx.fill();
         }
       }, 1, 1);
+      TexCache.ent_porcelain = makeCanvasTex(128, (ctx, s) => {
+        ctx.fillStyle = '#cbc4b4'; ctx.fillRect(0, 0, s, s);
+        ctx.strokeStyle = 'rgba(42,36,30,0.55)'; ctx.lineWidth = 1.2;
+        for (let i = 0; i < 12; i++) {
+          let x = Math.random()*s, y = Math.random()*s; ctx.beginPath(); ctx.moveTo(x, y);
+          for (let k = 0; k < 4; k++) { x += (Math.random()-0.5)*28; y += (Math.random()-0.5)*28; ctx.lineTo(x, y); }
+          ctx.stroke();
+        }
+      }, 1, 1);
+      TexCache.ent_patchskin = makeCanvasTex(128, (ctx, s) => {
+        const tones = ['#73675c', '#5f5349', '#817466', '#685b51'];
+        for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
+          ctx.fillStyle = tones[(x*3+y*5)%4]; ctx.fillRect(x*32, y*32, 32, 32);
+          ctx.strokeStyle = 'rgba(30,20,18,0.6)'; ctx.lineWidth = 1.5; ctx.strokeRect(x*32, y*32, 32, 32);
+        }
+      }, 1, 1);
+      TexCache.ent_mothwing = makeCanvasTex(128, (ctx, s) => {
+        ctx.fillStyle = '#3a3126'; ctx.fillRect(0, 0, s, s);
+        ctx.fillStyle = '#5c4d3a'; ctx.beginPath(); ctx.ellipse(s*0.5, s*0.5, s*0.36, s*0.24, 0, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#14110d'; ctx.beginPath(); ctx.arc(s*0.5, s*0.5, s*0.14, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = '#9c8662'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(s*0.5, s*0.5, s*0.2, 0, Math.PI*2); ctx.stroke();
+      }, 1, 1);
+      TexCache.ent_scarecrow = makeCanvasTex(128, (ctx, s) => {
+        ctx.fillStyle = '#4a3d2e'; ctx.fillRect(0, 0, s, s);
+        const p = ['#384534', '#5c4632', '#3c3c48', '#66543a'];
+        for (let i = 0; i < 10; i++) {
+          ctx.fillStyle = p[i%4]; const x = (i*37)%96, y = (i*53)%96;
+          ctx.fillRect(x, y, 30, 30); ctx.strokeStyle = '#1e1610'; ctx.lineWidth = 2; ctx.strokeRect(x, y, 30, 30);
+        }
+      }, 1, 1);
+      TexCache.ent_tvstatic = makeCanvasTex(128, (ctx, s) => {
+        for (let y = 0; y < s; y += 4) for (let x = 0; x < s; x += 4) {
+          const v = Math.floor(Math.random()*220) + 20; ctx.fillStyle = `rgb(${v},${v},${v})`; ctx.fillRect(x, y, 4, 4);
+        }
+      }, 1, 1);
+      TexCache.ent_snail = makeCanvasTex(128, (ctx, s) => {
+        ctx.fillStyle = '#d4b22e'; ctx.fillRect(0, 0, s, s);
+        ctx.strokeStyle = '#6b4c0e'; ctx.lineWidth = 5; ctx.beginPath();
+        for (let a = 0; a < Math.PI*6; a += 0.15) {
+          const r = a * 2.6, x = s/2 + Math.cos(a)*r, y = s/2 + Math.sin(a)*r;
+          if (a === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }, 1, 1);
+    }
+    const glbModel = this.buildGlbEntity(kind, isChild);
+    if (glbModel) return glbModel;
+    const g = new THREE.Group();
+    if (false) {
       TexCache.ent_porcelain = makeCanvasTex(128, (ctx, s) => {
         ctx.fillStyle = '#cbc4b4'; ctx.fillRect(0, 0, s, s);
         ctx.strokeStyle = 'rgba(42,36,30,0.55)'; ctx.lineWidth = 1.2;
@@ -4912,6 +5086,39 @@ function updateEntities(dt, playerMovedDist) {
         e.phase += dt * (moveSpd * 2.2);
         u.lArm.rotation.x = Math.sin(e.phase)*0.52; u.rArm.rotation.x = -Math.sin(e.phase)*0.52;
         u.lLeg.rotation.x = -Math.sin(e.phase)*0.52; u.rLeg.rotation.x = Math.sin(e.phase)*0.52;
+      }
+    }
+    // §V7.1 §4 Whole-body procedural animation for rigless GLB models
+    if (e.mesh.userData && e.mesh.userData.isGlb) {
+      const mw = e.mesh.userData.modelWrap, t = state.elapsed + e.phase;
+      if (e.kind === 'deathmoth') {
+        mw.position.y = 0.6 + Math.sin(t * 3.2) * 0.16;
+        mw.rotation.z = Math.sin(t * 37.7) * 0.14; // ±8° @ ~6Hz
+      } else if (e.kind === 'snail') {
+        mw.scale.set(1, 1, 1.03 + Math.sin(t * Math.PI) * 0.03); // 1.0..1.06 @ 0.5Hz
+      } else if (e.kind === 'clump') {
+        const br = 1.015 + Math.sin(t * 2.1) * 0.015;
+        mw.scale.set(br, br, br);
+        mw.rotation.y = Math.sin(t * 1.4) * 0.175; // ±10° yaw rock
+      } else if (e.kind === 'hound' || e.kind === 'deathrat') {
+        if (moveSpd > 0.05) {
+          e.phase += dt * (moveSpd * 2.8);
+          mw.position.y = Math.abs(Math.sin(e.phase)) * 0.05;
+          mw.rotation.x = Math.sin(e.phase) * 0.035; // ±2° pitch rock
+        }
+      } else if (e.kind === 'watch') {
+        if (e.violation > 0 || e.state === 'chase') {
+          const targetYaw = Math.atan2(dx, dz);
+          const diff = Math.atan2(Math.sin(targetYaw - e.mesh.rotation.y), Math.cos(targetYaw - e.mesh.rotation.y));
+          e.mesh.rotation.y += diff * Math.min(1, dt * 2.4);
+        }
+      } else if (e.kind !== 'mannequin' && e.kind !== 'scarecrow') {
+        if (moveSpd > 0.05) {
+          e.phase += dt * (moveSpd * 2.2);
+          mw.position.y = Math.sin(e.phase * 2) * 0.03;
+          mw.rotation.z = Math.sin(e.phase) * 0.035;
+          mw.rotation.x = 0.05;
+        } else { mw.position.y *= 0.85; mw.rotation.z *= 0.85; mw.rotation.x *= 0.85; }
       }
     }
 
@@ -6932,6 +7139,7 @@ window.addEventListener('resize', () => { camera.aspect = window.innerWidth / wi
 initSharedGeos();
 createBackroomsTextures();
 PropFactory.init();
+PropFactory.preloadGlbModels();
 initPlayerBody();
 refreshTitleRecords();
 syncSettingsUI();
