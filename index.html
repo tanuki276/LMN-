@@ -576,6 +576,56 @@
     text-shadow: 0 0 18px rgba(224,199,121,0.45); margin: 4px 0;
   }
   .res-list { font-size: 11.5px; color: #cfccc0; text-align: left; background: rgba(255,255,255,0.04); border-radius: 6px; padding: 9px 11px; margin: 9px 0 12px; line-height: 1.6; }
+  /* ===== V7 Overlays & Feedback (§2-3, §2-9, §4-2, §6-2, §7-3) ===== */
+  #threat-edge-l, #threat-edge-r, #threat-edge-t, #threat-edge-b,
+  #hit-edge-l, #hit-edge-r, #hit-edge-t, #hit-edge-b {
+    position: fixed; pointer-events: none; z-index: 6; opacity: 0; transition: opacity 0.16s ease-out;
+  }
+  #threat-edge-l { top: 0; bottom: 0; left: 0; width: 14vw; background: linear-gradient(90deg, rgba(255,140,80,0.28), transparent); }
+  #threat-edge-r { top: 0; bottom: 0; right: 0; width: 14vw; background: linear-gradient(270deg, rgba(255,140,80,0.28), transparent); }
+  #threat-edge-t { top: 0; left: 0; right: 0; height: 11vh; background: linear-gradient(180deg, rgba(255,140,80,0.24), transparent); }
+  #threat-edge-b { bottom: 0; left: 0; right: 0; height: 11vh; background: linear-gradient(0deg, rgba(255,140,80,0.28), transparent); }
+  #hit-edge-l { top: 0; bottom: 0; left: 0; width: 22vw; background: linear-gradient(90deg, rgba(235,30,30,0.68), transparent); z-index: 7; }
+  #hit-edge-r { top: 0; bottom: 0; right: 0; width: 22vw; background: linear-gradient(270deg, rgba(235,30,30,0.68), transparent); z-index: 7; }
+  #hit-edge-t { top: 0; left: 0; right: 0; height: 18vh; background: linear-gradient(180deg, rgba(235,30,30,0.62), transparent); z-index: 7; }
+  #hit-edge-b { bottom: 0; left: 0; right: 0; height: 18vh; background: linear-gradient(0deg, rgba(235,30,30,0.68), transparent); z-index: 7; }
+  #kawagi-vignette {
+    position: fixed; inset: 0; z-index: 6; pointer-events: none; opacity: 0; transition: opacity 0.25s;
+    background: radial-gradient(circle at center, transparent 48%, rgba(70,120,170,0.42) 100%);
+  }
+  #kawagi-banner {
+    position: fixed; top: max(48px, calc(env(safe-area-inset-top) + 42px)); left: 0; right: 0; z-index: 21;
+    background: linear-gradient(90deg, transparent, rgba(28,44,68,0.92) 18%, rgba(28,44,68,0.92) 82%, transparent);
+    border-top: 1px solid rgba(130,195,255,0.6); border-bottom: 1px solid rgba(130,195,255,0.6);
+    color: #d6ecff; text-align: center; font-size: 13px; font-weight: 800; letter-spacing: 0.14em;
+    padding: 8px 14px; pointer-events: none; opacity: 0; transform: translateY(-8px); transition: all 0.28s;
+  }
+  #kawagi-banner.show { opacity: 1; transform: translateY(0); }
+  #sonar-rear-marker {
+    position: absolute; bottom: 92px; left: 50%; transform: translateX(-50%);
+    background: rgba(24,42,68,0.88); border: 1px solid rgba(130,200,255,0.7);
+    color: #bfe4ff; font-family: monospace; font-size: 11px; font-weight: 800;
+    padding: 4px 12px; border-radius: 99px; display: none; letter-spacing: 0.1em;
+    box-shadow: 0 0 12px rgba(100,180,255,0.35);
+  }
+  #happyfile-bar {
+    position: fixed; top: max(10px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
+    z-index: 22; background: rgba(48,12,48,0.92); border: 1px solid #ff6bf5; color: #ffd4fd;
+    font-family: monospace; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 5px;
+    display: none; pointer-events: none; text-align: center;
+  }
+  #downed-overlay {
+    position: fixed; inset: 0; z-index: 20; pointer-events: none; display: none;
+    background: radial-gradient(circle, rgba(40,0,0,0.32) 30%, rgba(90,0,0,0.78) 100%);
+    flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  }
+  #downed-overlay.show { display: flex; }
+  #downed-title { font-size: 22px; font-weight: 900; color: #ff9a9a; letter-spacing: 0.14em; text-shadow: 0 2px 10px #000; }
+  #downed-timer { font-family: monospace; font-size: 14px; color: #ffe6e6; background: rgba(0,0,0,0.7); padding: 5px 14px; border-radius: 6px; border: 1px solid rgba(255,120,120,0.5); }
+  #hud-samples { font-size: 10px; color: #8ef2ff; margin-top: 2px; font-family: monospace; }
+  .sig-ping.white { color: #ffffff; text-shadow: 0 0 8px #ffffff; font-weight: 900; }
+  .sig-ping.glitch { color: #ff6bf5; text-shadow: 0 0 6px #ff6bf5; animation: blink 0.25s infinite; }
+  .sig-ping.pin { color: #ffe57f; text-shadow: 0 0 6px #ffe57f; }
 </style>
 </head>
 <body>
@@ -588,6 +638,21 @@
 <div id="sonar-edge-l"></div>
 <div id="sonar-edge-r"></div>
 <div id="sonar-edge-t"></div>
+<div id="threat-edge-l"></div>
+<div id="threat-edge-r"></div>
+<div id="threat-edge-t"></div>
+<div id="threat-edge-b"></div>
+<div id="hit-edge-l"></div>
+<div id="hit-edge-r"></div>
+<div id="hit-edge-t"></div>
+<div id="hit-edge-b"></div>
+<div id="kawagi-vignette"></div>
+<div id="kawagi-banner">背後に気配 — カワハギが付いてきている</div>
+<div id="happyfile-bar">⚠ HAPPYFILE 感染中：消灯＋5秒静止で再起動 / 電池[5]で即駆除</div>
+<div id="downed-overlay">
+  <div id="downed-title">DOWNED // 行動不能</div>
+  <div id="downed-timer">猶予 45s — 仲間の蘇生を待機中</div>
+</div>
 <div id="damage-flash"></div>
 <div id="blink-overlay"></div>
 <div id="hide-overlay"></div>
@@ -597,7 +662,7 @@
   <div class="cam-corner cam-tr"></div>
   <div class="cam-corner cam-bl"></div>
   <div class="cam-corner cam-br"></div>
-  <div class="cam-rec"><span class="rec-dot"></span>REC // VHS-SP // CAM-06</div>
+  <div class="cam-rec"><span class="rec-dot"></span>REC // VHS-SP // CAM-07</div>
   <div class="cam-sync" id="cam-sync">SYNC DRIFT</div>
   <div class="cam-time" id="cam-clock">1998-07-14 03:14:00</div>
 </div>
@@ -618,7 +683,7 @@
   </div>
   <div id="look-touch-area"></div>
   <div id="mobile-arc">
-    <button class="m-round-btn" id="m-pulse">探知<span class="m-btn-sub">SONAR</span></button>
+    <button class="m-round-btn" id="m-pulse">探知<span class="m-btn-sub">長押しPIN</span></button>
     <button class="m-round-btn toggled" id="m-light">ライト<span class="m-btn-sub">ON</span></button>
     <button class="m-round-btn" id="m-crouch">しゃがみ<span class="m-btn-sub">HIDE</span></button>
     <button class="m-round-btn" id="m-peek">チラ見<span class="m-btn-sub">BACK</span></button>
@@ -646,6 +711,7 @@
       <span id="hud-seed">SEED: ---</span>
       <span id="hud-disc">発見: 1/16</span>
     </div>
+    <div id="hud-samples">サンプル ×0（未確定 ×0）</div>
     <div id="obj-panel">
       <div id="hud-main-obj">目的：出口またはノークリップ箇所を探せ</div>
       <div id="hud-sub-obj">副目的：---</div>
@@ -672,6 +738,7 @@
 
   <div id="ach-toast">🏆 実績解除</div>
   <div id="peek-indicator">◀ REAR VIEW ▶</div>
+  <div id="sonar-rear-marker">▼ 背後反応：カワハギ接近 ▼</div>
   <div id="crosshair"></div>
   <div id="stare-ring-wrap">
     <svg id="stare-ring-svg" viewBox="0 0 44 44">
@@ -713,15 +780,15 @@
   <!-- 5 Inventory Slots (Mobile switches to crisp Icon + Count!) -->
   <div id="inventory">
     <div class="inv-slot" id="slot-0"><div class="inv-key">[1]</div><div class="inv-ico">💧</div><div class="inv-cnt" id="cnt-0">0</div><div class="inv-name">アーモンド水</div><div class="inv-sub">HP+25 安定+35</div></div>
-    <div class="inv-slot" id="slot-1"><div class="inv-key">[2]</div><div class="inv-ico">🥫</div><div class="inv-cnt" id="cnt-1">0</div><div class="inv-name">携帯食料</div><div class="inv-sub">空腹+38</div></div>
+    <div class="inv-slot" id="slot-1"><div class="inv-key">[2]</div><div class="inv-ico">🥫</div><div class="inv-cnt" id="cnt-1">0</div><div class="inv-name">携帯食料</div><div class="inv-sub">空腹+38 / 囮</div></div>
     <div class="inv-slot" id="slot-2"><div class="inv-key">[3]</div><div class="inv-ico">🩹</div><div class="inv-cnt" id="cnt-2">0</div><div class="inv-name">救急キット</div><div class="inv-sub">HP+55</div></div>
-    <div class="inv-slot" id="slot-3"><div class="inv-key">[4]</div><div class="inv-ico">🍯</div><div class="inv-cnt" id="cnt-3">0</div><div class="inv-name">モスゼリー</div><div class="inv-sub">食+30 蛾忌避</div></div>
-    <div class="inv-slot" id="slot-4"><div class="inv-key">[5]</div><div class="inv-ico">🔋</div><div class="inv-cnt" id="cnt-4">0</div><div class="inv-name">乾電池</div><div class="inv-sub">電池+60%</div></div>
+    <div class="inv-slot" id="slot-3"><div class="inv-key">[4]</div><div class="inv-ico">🍯</div><div class="inv-cnt" id="cnt-3">0</div><div class="inv-name">モスゼリー</div><div class="inv-sub">食+30 ドクガ忌避</div></div>
+    <div class="inv-slot" id="slot-4"><div class="inv-key">[5]</div><div class="inv-ico">🔋</div><div class="inv-cnt" id="cnt-4">0</div><div class="inv-name">乾電池</div><div class="inv-sub">電池+50% / 駆除</div></div>
   </div>
 
   <div id="controls-hint">
     <b>WASD</b> 移動 / <b>Shift</b> ダッシュ / <b>C</b> しゃがみ・伏せ<br>
-    <b>R</b> 後ろチラ見 / <b>E</b> 調べる・隠れる / <b>F</b> ライト / <b>Q</b> 探知<br>
+    <b>R</b> 後ろチラ見 / <b>E</b> 調べる・隠れる / <b>F</b> ライト / <b>Q</b> 探知 / <b>G</b> ピン<br>
     <b>1-5</b> アイテム / <b>V</b> VHS切替 / <b>ESC</b> ポーズ・設定
   </div>
 </div>
@@ -869,17 +936,21 @@
   </div>
 </div>
 
-<!-- Codex / M.E.G. Logs / Achievements Modal (§6, §12) -->
+<!-- Codex / Phenomena / M.E.G. Logs / Achievements Modal (§6, §12) -->
 <div id="codex-modal" class="modal-backdrop">
   <div class="panel-card">
-    <h2>M.E.G. ARCHIVE // 図鑑・記録・実績 <span id="codex-progress" style="font-family:monospace;font-size:11.5px;color:var(--muted);">0 / 9</span></h2>
+    <h2>M.E.G. ARCHIVE // 図鑑・記録・実績 <span id="codex-progress" style="font-family:monospace;font-size:11.5px;color:var(--muted);">0 / 14</span></h2>
     <div class="tab-bar">
-      <button class="tab-btn active" data-tab="entities">エンティティ図鑑</button>
+      <button class="tab-btn active" data-tab="entities">エンティティ</button>
+      <button class="tab-btn" data-tab="phenomena">現象</button>
       <button class="tab-btn" data-tab="logs">M.E.G. 記録</button>
       <button class="tab-btn" data-tab="achievements">実績・解放</button>
     </div>
     <div class="tab-pane active" id="tab-entities">
       <div class="codex-grid" id="codex-list"></div>
+    </div>
+    <div class="tab-pane" id="tab-phenomena">
+      <div class="codex-grid" id="phenomena-list"></div>
     </div>
     <div class="tab-pane" id="tab-logs">
       <div class="codex-grid" id="logs-list"></div>
@@ -898,7 +969,7 @@
   <div class="panel-card">
     <h2>CO-OP // マルチプレイ (2〜4人 P2P)</h2>
     <p style="font-size:11.5px;color:var(--muted);margin-bottom:10px;line-height:1.55;">
-      同じシードの世界を最大4人で協力探索します。出口は過半数が集まると全員同時遷移します。<br>
+      同じシードの世界を最大4人で協力探索します。同時作業タスク・ピン共有・ダウン蘇生に対応し、出口は過半数で全員同時遷移します。<br>
       ※ボイスチャットは非対応です（外部通話ツールの併用を想定しています）。
     </p>
     <div class="form-row">
@@ -947,13 +1018,13 @@
 <div id="title-screen">
   <div class="card">
     <div class="tag">
-      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V6</span>
+      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V7</span>
       <span class="escape-badge" id="title-escape-badge">★ 現実へ脱出済み</span>
     </div>
     <h1>THE BACKROOMS: LIMINAL DRIFT</h1>
     <p class="desc">
-      全16階層を潜り、タスクをこなし、最終的な「現実への脱出（深度10+白い扉）」を目指す一人称バックルーム探索サバイバル。
-      クロカビ・メガン・ホワイトモデル・ディンゴ・Deathmoth・Skin-Stealer・レク・Clump それぞれの対処法を学び、ロッカー・車・家の中に身を潜めて生き延びろ。
+      全16階層を潜り、サンプルを持ち帰るかさらに深く潜るかを見極め、最終的な「現実への脱出（深度10+白い扉）」を目指す一人称バックルーム探索サバイバル。
+      クロカビ・メガン・ホワイトモデル・ディンゴ・ドクガ・カワハギ・ノッペラ・レク・テアシ、さらにネイバーフッド・ウォッチや黄色いカタツムリらの対処法を学び生き延びろ。
     </p>
 
     <div id="url-join-banner">
@@ -989,14 +1060,14 @@
       <div class="rec-box"><div class="rec-val col" id="best-collapse">0</div><div class="rec-lbl">崩壊 最高深度</div></div>
       <div class="rec-box"><div class="rec-val day" id="best-daily">0</div><div class="rec-lbl">本日シード深度</div></div>
       <div class="rec-box"><div class="rec-val" id="best-levels">0 / 16</div><div class="rec-lbl">解放レベル</div></div>
-      <div class="rec-box"><div class="rec-val" id="best-codex">0 / 9</div><div class="rec-lbl">図鑑登録</div></div>
+      <div class="rec-box"><div class="rec-val" id="best-codex">0 / 14</div><div class="rec-lbl">エンティティ図鑑</div></div>
       <div class="rec-box"><div class="rec-val" id="best-logs">0 / 16</div><div class="rec-lbl">M.E.G.記録</div></div>
-      <div class="rec-box"><div class="rec-val" id="best-samples">0</div><div class="rec-lbl">特異点サンプル</div></div>
+      <div class="rec-box"><div class="rec-val" id="best-samples">0</div><div class="rec-lbl">確定サンプル累計</div></div>
       <div class="rec-box"><div class="rec-val" id="best-ach">0 / 10</div><div class="rec-lbl">実績達成</div></div>
     </div>
 
     <div class="credits-bar">
-      <span id="credits-ver">THE BACKROOMS: LIMINAL DRIFT // V6.0.0</span>
+      <span id="credits-ver">THE BACKROOMS: LIMINAL DRIFT // V7.0.0</span>
       <span>CREDITS: LIMINAL DRIFT PROJECT (THREE.JS / PEERJS)</span>
     </div>
   </div>
@@ -1013,7 +1084,7 @@
       <div class="rec-box"><div class="rec-val" id="res-depth">1</div><div class="rec-lbl">到達深度</div></div>
       <div class="rec-box"><div class="rec-val" id="res-dist">0 m</div><div class="rec-lbl">移動距離</div></div>
       <div class="rec-box"><div class="rec-val" id="res-time">00:00</div><div class="rec-lbl">生存時間</div></div>
-      <div class="rec-box"><div class="rec-val" id="res-samples">0</div><div class="rec-lbl">特異点サンプル</div></div>
+      <div class="rec-box"><div class="rec-val" id="res-samples">0</div><div class="rec-lbl">確定 / 喪失サンプル</div></div>
     </div>
     <div class="res-list" id="res-summary"></div>
     <div class="form-row">
@@ -1033,11 +1104,12 @@
 'use strict';
 
 /* ============================================================
-   0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §8-5)
+   0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const GAME_VERSION = 'V6.0.0';
-document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${GAME_VERSION}`;
-document.getElementById('credits-ver').textContent = `THE BACKROOMS: LIMINAL DRIFT // ${GAME_VERSION}`;
+const VERSION = 'V7.0.0';
+const GAME_VERSION = VERSION;
+document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
+document.getElementById('credits-ver').textContent = `THE BACKROOMS: LIMINAL DRIFT // ${VERSION}`;
 
 if (typeof window.THREE === 'undefined') {
   const err = document.getElementById('load-error');
@@ -1206,70 +1278,115 @@ function getDailySeedInfo() {
   return { key, seed: strToSeed('DAILY_' + key) };
 }
 
-// §1 & §9 Official Display Names (bacteria=クロカビ, smiler=メガン, mannequin=ホワイトモデル, hound=ディンゴ, partygoer=レク)
+// §1, §5, §10 Official V7 Display Names (Zero old English names!)
 const ENTITY_META = {
   bacteria: {
     id: 'bacteria', name: 'クロカビ', danger: '危険 / 追跡型',
-    desc: '細長い黒い四肢と小さな頭部を持つ人型シルエット。音と視線の両方に反応し、歪んだ咆哮とともに追跡してくる。',
+    desc: '関節3段の異常に長い四肢とカビの斑点を持つ黒い人型。音と視線の両方に反応し、歪んだ咆哮とともに追跡してくる。',
     counter: 'ダッシュで角を曲がり4秒間視線を切れば追跡を諦める。しゃがみ静止で検知範囲を半減でき、ロッカーや車への隠蔽も有効。'
   },
   smiler: {
     id: 'smiler', name: 'メガン', danger: '危険 / 光反応型',
-    desc: '暗闇の奥に真っ白く光る瞳と裂けた歯列だけが浮かぶ浮遊体。懐中電灯などの強い光に惹きつけられる。',
+    desc: '暗闇の奥に真っ白く光る瞳と開閉する歯列だけが浮かぶ浮遊体。懐中電灯などの強い光に惹きつけられる。',
     counter: '懐中電灯[F]を消灯すると静かに後退して離れていく。光が消えている間に距離を取れ。'
   },
   mannequin: {
     id: 'mannequin', name: 'ホワイトモデル', danger: '危険 / 視線反応型',
-    desc: '関節で区切られた無表情の白い人形。見られている間は完全に静止するが、視界から外れると接近し、10m以内では微かな陶器の擦れ音を立てる。',
+    desc: 'ひび割れた陶器の質感と球体関節を持つ白い人形。見られている間は完全に静止するが、視界から外れると接近し、10m以内では微かな陶器の擦れ音を立てる。',
     counter: '視界内に通算4秒入れ続けると（画面中央のリングが満ちると）陶器の擦れ音とともに後退退場する。懐中電灯で広い角度から固定でき、探知パルス[Q]で3秒足止め可能。'
   },
   hound: {
     id: 'hound', name: 'ディンゴ', danger: '危険 / 聴覚高速型',
-    desc: '四足で地面を這うように疾走する獣型シルエット。足音やダッシュ音に鋭敏に反応して猛スピードで迫る。',
-    counter: '走るのをやめ、しゃがみ歩きか静止して音を消せばやり過ごせる。車内や建物への隠蔽も有効。'
+    desc: '黒髪に覆われた頭部と低い脊柱を持つ四足の獣型。足音やダッシュ音、探知パルスの音響に鋭敏に反応して猛スピードで迫る。',
+    counter: '走るのをやめ、しゃがみ歩きか静止して音を消せばやり過ごせる。探知パルス[Q]の音にも誘引されるため乱用厳禁。'
   },
   deathmoth: {
-    id: 'deathmoth', name: 'Deathmoth', danger: '危険 / 走光飛翔型',
-    desc: '羽ばたきながら宙を漂う大型の蛾型シルエット。天井照明の明るい区画や懐中電灯の光に引き寄せられる。',
-    counter: '懐中電灯を消して暗い通路を進め。携帯品の「モスゼリー」を使用すると一定時間寄せ付けない。'
+    id: 'deathmoth', name: 'ドクガ', danger: '危険 / 走光飛翔型',
+    desc: '模様入りの大きな翅と毛羽立った胴体を持つ大型の蛾型。天井照明の明るい区画や懐中電灯の光に引き寄せられる。',
+    counter: '懐中電灯を消して暗い通路を進め。携帯品の「モスゼリー」を使用すると45秒間寄せ付けない。'
   },
   skinstealer: {
-    id: 'skinstealer', name: 'Skin-Stealer', danger: '警戒 / 背後尾行型',
-    desc: '探索者の背後を音もなく付いてくる長身の人型。正面から見つめられることを嫌う。',
-    counter: '後ろチラ見[R]（モバイルはチラ見ボタン）や振り返りで正面から視線を合わせると後退して離れる。'
+    id: 'skinstealer', name: 'カワハギ', danger: '警戒 / 背後尾行型',
+    desc: '継ぎ接ぎの皮を纏い、目の位置が僅かにずれた長身の人型。探索者の背後を音もなく付いてくるが、正面から見つめられることを嫌う。',
+    counter: '接近バナーや探知パルス[Q]の背面マーカーで気配を察知したら、後ろチラ見[R]や振り返りで正面から視線を合わせて後退させろ。'
   },
   faceling: {
-    id: 'faceling', name: 'Faceling', danger: '無害 / 悪戯あり',
-    desc: '顔の造形が欠落した人型住民。攻撃性はないが、小型の子Facelingはすれ違いざまに所持品を1つ床へ落とす悪戯をする。',
-    counter: 'ダメージは受けない。子Facelingとすれ違った後は足元に落ちたアイテムを拾い直そう。'
+    id: 'faceling', name: 'ノッペラ', danger: '無害 / 悪戯あり',
+    desc: '顔の造形が完全に欠落した滑らかな頭部の人型住民。攻撃性はないが、小型の子ノッペラはすれ違いざまに所持品を1つ床へ落とす悪戯をする。',
+    counter: 'ダメージは受けない。子ノッペラとすれ違った後は足元に落ちたアイテムを拾い直そう。'
   },
   partygoer: {
     id: 'partygoer', name: 'レク', danger: '極危険 / 縄張り型',
-    desc: '風船やケーキのある「パーティ区画」にだけ現れる黄色い人型。縄張り内では最速クラスだが、部屋の外へは出てこない。',
+    desc: '風船やケーキのある「パーティ区画」にだけ現れる黄色い人型。笑顔の面を持ち、縄張り内では最速クラスだが部屋の外へは出てこない。',
     counter: 'パーティ部屋に入らないこと。万が一入ったらすぐ視線を切って縄張りの外へ脱出せよ。'
   },
   clump: {
-    id: 'clump', name: 'Clump', danger: '危険 / 鈍足圧迫型',
-    desc: '無数の腕脚が絡み合った不定形存在。極めて遅い（約2m/s）が決して止まらず、大きな軋み音を立てる。',
+    id: 'clump', name: 'テアシ', danger: '危険 / 鈍足圧迫型',
+    desc: '12本以上の腕脚が不規則に絡み合い蠢く不定形存在。極めて遅い（約2m/s）が決して止まらず、大きな軋み音を立てる。',
     counter: '軋み音で位置を察知し、近づかれる前に別通路へ距離を取り続けろ。'
+  },
+  watch: {
+    id: 'watch', name: 'ネイバーフッド・ウォッチ', danger: '危険 / 定点監視型',
+    desc: '街灯の頭部と細長い柱体を持つ監視者。前方へ約14mの光の円錐を投射し、光の中で規則違反（ダッシュ・点灯）をする者を赤閃光とともに突撃排除する。',
+    counter: '光の円錐の中では走らず・懐中電灯を消して歩け。突撃されたら角で視線を4秒切れば元の見張り位置へ戻る。'
+  },
+  scarecrow: {
+    id: 'scarecrow', name: 'スケアクロウ', danger: '危険 / 縄張り視線型',
+    desc: '麦わら帽子と継ぎ接ぎの服、縫い目のある袋の顔を持つカカシ。支柱から半径26mを縄張りとし、目を離した隙に短い跳躍で迫る。',
+    counter: '視界に入れ続けると静止する。ホワイトモデルと違い睨んでも退場しないため、見ながら後退して縄張りの外へ抜けろ。探知パルスで3秒足止め可能。'
+  },
+  deathrat: {
+    id: 'deathrat', name: 'デスラット', danger: '危険 / 群れ追跡型',
+    desc: '凶暴な大型ネズミ6匹の群れ。一撃は軽いが連撃が速くノックバックしないため囲まれると危険。強い光の中では動きが2割鈍る。',
+    counter: '携帯食料[2]を使うと6秒間そちらへ群がる。半径7m以内の探知パルス[Q]で5秒間離散、または高さ0.5m以上の台に乗れば3秒で見失う。'
+  },
+  tvhead: {
+    id: 'tvhead', name: 'TVヘッド', danger: '危険 / 予兆突撃型',
+    desc: 'スーツ姿の体に砂嵐のブラウン管テレビを戴く人型。15m以内で視界に捉えると砂嵐と電子音を高め、1.6秒後に白く閃光して突撃する。',
+    counter: 'ロックオン予兆の電子音と砂嵐が強まる前に物陰へ隠れろ。しゃがみ＋消灯でロックオン蓄積を半減できる。'
+  },
+  snail: {
+    id: 'snail', name: '黄色いカタツムリ', danger: '即死 / 執拗追跡型',
+    desc: '淡く光る黄色い渦巻き殻を持つカタツムリ。深度2以降のランに確率で付着し、探索者の移動軌跡を0.85m/sで休まず辿り続け、10秒ごとに小さな鈴の音を鳴らす。',
+    counter: '触れたら即死。倒す手段はなくマニラルームにも入ってくる。来た道を戻らず進み続け、階層移動で45秒の猶予を稼げ。'
   }
 };
-const ENTITY_ORDER = ['bacteria','smiler','mannequin','hound','deathmoth','skinstealer','faceling','partygoer','clump'];
+const ENTITY_ORDER = ['bacteria','smiler','mannequin','hound','deathmoth','skinstealer','faceling','partygoer','clump','watch','scarecrow','deathrat','tvhead','snail'];
+
+// §6 Named Phenomena Codex (including Entity 666 HappyFile!)
+const PHENOMENA_META = {
+  voltage_surge:    { id: 'voltage_surge',    name: '電圧サージ', desc: '照明が一時的に落ち、視界が暗転した瞬間に背後の空間構造が再配置される現象。' },
+  crossing_shadow:  { id: 'crossing_shadow',  name: '横切る人影', desc: '通路の奥を黒い人影が音もなく横切って消える視覚異常。' },
+  fake_exit:        { id: 'fake_exit',        name: '偽非常口',   desc: '背後に突如現れ、一度視線を合わせた後に目を離すと消滅する偽の非常口。' },
+  mirage_stairs:    { id: 'mirage_stairs',    name: '蜃気楼階段', desc: '近づくと輪郭にノイズと歪みが増し、間近で霧散する偽の階段。' },
+  phantom_steps:    { id: 'phantom_steps',    name: '不在の足音', desc: '誰もいないはずの左右の通路から響いてくる足音。' },
+  whisper:          { id: 'whisper',          name: '囁き',       desc: '環境ノイズに混ざって耳元で低く響き、正気度を僅かに削る囁き声。' },
+  zero_gravity:     { id: 'zero_gravity',     name: '無重力',     desc: '家具などの小物が局所的に宙へ浮かび回転する重力異常。' },
+  perspective_warp: { id: 'perspective_warp', name: '遠近歪み',   desc: '視野の遠近感が一時的に引き伸ばされる空間知覚異常。' },
+  blink_shift:      { id: 'blink_shift',      name: '瞬き変異',   desc: '瞬きによる一瞬の暗転の隙に、背後の壁や小物が入れ替わる非ユークリッド変異。' },
+  color_loss:       { id: 'color_loss',       name: '色彩喪失',   desc: '視界から色彩が一時的に抜け落ちる感覚異常。' },
+  afterimage_text:  { id: 'afterimage_text',  name: '残像文字',   desc: '警告めいた文字列が空中に浮かび上がる現象。' },
+  mirror_ghost:     { id: 'mirror_ghost',     name: '鏡面残像',   desc: '窓ガラスや鏡の奥に別の誰かの姿が一瞬だけ映り込む現象。' },
+  distant_phone:    { id: 'distant_phone',    name: '遠方電話',   desc: '壁の向こうの遠い場所から呼び出し音が鳴り続ける聴覚異常。' },
+  happyfile:        { id: 'happyfile',        name: 'ハッピーファイル', desc: '電子環境（Level 3 / 33 / 3999）で発生する実体のないウイルス現象（Entity 666）。20秒間 HUD・ソナー・インベントリを汚染し偽の出口を混ぜる。対処：懐中電灯を消して5秒静止で再起動、または乾電池[5]で即駆除。' }
+};
+const PHENOMENA_ORDER = Object.keys(PHENOMENA_META);
 
 // §6-5 Achievements
 const ACHIEVEMENTS = [
   { id: 'first_noclip', name: '現実からの剥離', desc: '初めてノークリップ箇所から次階層へ落ちた' },
   { id: 'first_escape', name: '現実帰還', desc: '深度10以降の白い扉からバックルームを脱出した' },
-  { id: 'codex_full',   name: 'M.E.G. 上級調査員', desc: 'エンティティ図鑑の全9種に遭遇した' },
+  { id: 'codex_full',   name: 'M.E.G. 上級調査員', desc: 'エンティティ図鑑を9種以上登録した' },
   { id: 'collapse_5',   name: '崩壊の観測者', desc: 'シード崩壊モードで深度5に到達した' },
   { id: 'nodmg_3',      name: '無傷の歩行者', desc: '一度もダメージを受けずに深度3へ到達した' },
   { id: 'meet_rek',     name: '招待されていない客', desc: 'パーティ区画で「レク」と遭遇した' },
-  { id: 'samples_5',    name: '異質結晶収集', desc: '特異点サンプルを累計5個回収した' },
-  { id: 'samples_10',   name: '特異点研究者', desc: '特異点サンプルを累計10個回収した' },
+  { id: 'samples_5',    name: '異質結晶収集', desc: '確定サンプルを累計5個持ち帰った' },
+  { id: 'samples_10',   name: '特異点研究者', desc: '確定サンプルを累計10個持ち帰った' },
   { id: 'dist_1000',    name: '果てなき歩み', desc: '累計移動距離が1,000mに到達した' },
   { id: 'logs_full',    name: '真実の記録者', desc: '全16階層のM.E.G.記録をすべて収集した' }
 ];
 
+const SAVE_KEY_V7 = 'backrooms_liminal_v7';
 const SAVE_KEY_V6 = 'backrooms_liminal_v6';
 const SAVE_KEY_V5 = 'backrooms_liminal_v5';
 const SETTINGS_KEY_V6 = 'backrooms_settings_v6';
@@ -1283,6 +1400,7 @@ function defaultRecords() {
     discovered: [0],
     anomalies: 0,
     codexSeen: {}, codexHints: {},
+    phenomenaSeen: {},
     logsCollected: [],
     samplesCollected: 0, sampleLevels: [],
     achievements: [],
@@ -1292,9 +1410,9 @@ function defaultRecords() {
 
 function loadRecords() {
   try {
-    let raw = JSON.parse(localStorage.getItem(SAVE_KEY_V6) || 'null');
+    let raw = JSON.parse(localStorage.getItem(SAVE_KEY_V7) || 'null');
+    if (!raw) raw = JSON.parse(localStorage.getItem(SAVE_KEY_V6) || 'null');
     if (!raw) {
-      // §3-5 Inherit existing V5 records seamlessly!
       const v5 = JSON.parse(localStorage.getItem(SAVE_KEY_V5) || 'null');
       raw = defaultRecords();
       if (v5) {
@@ -1311,6 +1429,7 @@ function loadRecords() {
     r.logsCollected = new Set(r.logsCollected || []);
     r.sampleLevels = new Set(r.sampleLevels || []);
     r.achievements = new Set(r.achievements || []);
+    r.phenomenaSeen = r.phenomenaSeen || {};
     return r;
   } catch (e) {
     const r = Object.assign(defaultRecords(), memStore.records || {});
@@ -1318,6 +1437,7 @@ function loadRecords() {
     r.logsCollected = new Set(r.logsCollected || []);
     r.sampleLevels = new Set(r.sampleLevels || []);
     r.achievements = new Set(r.achievements || []);
+    r.phenomenaSeen = r.phenomenaSeen || {};
     return r;
   }
 }
@@ -1336,6 +1456,7 @@ function saveRecords(mutator) {
     anomalies: rec.anomalies,
     codexSeen: rec.codexSeen,
     codexHints: rec.codexHints,
+    phenomenaSeen: rec.phenomenaSeen || {},
     logsCollected: Array.from(rec.logsCollected),
     samplesCollected: rec.samplesCollected || 0,
     sampleLevels: Array.from(rec.sampleLevels),
@@ -1343,7 +1464,7 @@ function saveRecords(mutator) {
     hintsShown: rec.hintsShown || {}
   };
   memStore.records = plain;
-  try { localStorage.setItem(SAVE_KEY_V6, JSON.stringify(plain)); } catch (e) {}
+  try { localStorage.setItem(SAVE_KEY_V7, JSON.stringify(plain)); } catch (e) {}
   return rec;
 }
 
@@ -1546,10 +1667,22 @@ class SoundEngine {
     const g = this.ctx.createGain(); g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(vol, t + 0.04);
     g.gain.exponentialRampToValueAtTime(0.001, t + 0.32); s.connect(f); f.connect(g); g.connect(this.master); s.start(t, Math.random(), 0.36);
   }
+  playTonePan(freq, dur, type = 'sine', vol = 0.14, freqEnd = null, pan = 0) {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime, o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    if (freqEnd) o.frequency.exponentialRampToValueAtTime(Math.max(20, freqEnd), t + dur);
+    g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(vol, t + Math.min(0.02, dur*0.25));
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    const p = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+    if (p) { p.pan.value = Math.max(-1, Math.min(1, pan)); o.connect(g); g.connect(p); p.connect(this.master); }
+    else { o.connect(g); g.connect(this.master); }
+    o.start(t); o.stop(t + dur + 0.02);
+  }
   playShiftCreak() { this.playTone(72 + Math.random()*18, 0.52, 'sine', 0.065, 42); this.playStaticBurst(0.055, 0.04); }
-  playHeartbeat(intensity = 0.5) {
+  playHeartbeat(intensity = 0.5, pan = 0) {
     const v = 0.09 + intensity * 0.22;
-    this.playTone(62, 0.13, 'sine', v, 36); setTimeout(() => this.playTone(54, 0.16, 'sine', v*0.78, 32), 160);
+    this.playTonePan(62, 0.13, 'sine', v, 36, pan); setTimeout(() => this.playTonePan(54, 0.16, 'sine', v*0.78, 32, pan), 160);
   }
   playBreath() {
     if (!this.ctx || !this.noiseBuf) return;
@@ -1558,14 +1691,33 @@ class SoundEngine {
     const g = this.ctx.createGain(); g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(0.085, t + 0.12);
     g.gain.exponentialRampToValueAtTime(0.001, t + 0.34); s.connect(f); f.connect(g); g.connect(this.master); s.start(t, Math.random(), 0.38);
   }
-  playEntityAlert(kind) {
+  playKawagiStinger() {
+    // §2-9 Distinct eerie stinger (NO pan so it does NOT reveal direction!)
+    this.playTone(620, 0.28, 'sine', 0.18, 190);
+    setTimeout(() => this.playTone(310, 0.45, 'sawtooth', 0.12, 82), 110);
+    this.playStaticBurst(0.22, 0.08);
+  }
+  playKawagiPulse() { this.playTone(118, 0.14, 'triangle', 0.085, 84); }
+  playSnailBell(pan = 0, vol = 0.12) {
+    this.playTonePan(1480, 0.55, 'sine', vol, 1460, pan);
+    this.playTonePan(2960, 0.32, 'triangle', vol*0.45, 2940, pan);
+  }
+  playTvLock(progress = 0.5, pan = 0) {
+    this.playTonePan(340 + progress * 980, 0.12, 'sawtooth', 0.06 + progress * 0.09, 360 + progress * 1040, pan);
+  }
+  playPin() { this.playTone(880, 0.1, 'sine', 0.13); setTimeout(() => this.playTone(1320, 0.18, 'sine', 0.12), 75); }
+  playEntityAlert(kind, pan = 0) {
     if (!this.ctx) return;
-    if (kind === 'bacteria' || kind === 'horde') { this.playTone(210, 0.8, 'sawtooth', 0.22, 90); this.playTone(435, 0.7, 'square', 0.1, 180); this.playStaticBurst(0.45, 0.14); }
-    else if (kind === 'hound') { this.playTone(180, 0.22, 'sawtooth', 0.22, 78); setTimeout(() => this.playTone(220, 0.28, 'sawtooth', 0.2, 85), 140); }
-    else if (kind === 'smiler') { this.playTone(95, 0.85, 'sine', 0.2, 46); this.playWhisper((Math.random()-0.5)*1.4); }
-    else if (kind === 'partygoer') { this.playTone(520, 0.18, 'triangle', 0.16, 680); setTimeout(() => this.playTone(410, 0.26, 'sawtooth', 0.15, 290), 150); }
+    if (kind === 'bacteria' || kind === 'horde') { this.playTonePan(210, 0.8, 'sawtooth', 0.22, 90, pan); this.playTonePan(435, 0.7, 'square', 0.1, 180, pan); this.playStaticBurst(0.45, 0.14); }
+    else if (kind === 'hound') { this.playTonePan(180, 0.22, 'sawtooth', 0.22, 78, pan); setTimeout(() => this.playTonePan(220, 0.28, 'sawtooth', 0.2, 85, pan), 140); }
+    else if (kind === 'smiler') { this.playTonePan(95, 0.85, 'sine', 0.2, 46, pan); this.playWhisper(pan); }
+    else if (kind === 'partygoer') { this.playTonePan(520, 0.18, 'triangle', 0.16, 680, pan); setTimeout(() => this.playTonePan(410, 0.26, 'sawtooth', 0.15, 290, pan), 150); }
     else if (kind === 'mannequin') { this.playCeramicScrape(0.16); }
-    else { this.playTone(145, 0.34, 'triangle', 0.16, 64); }
+    else if (kind === 'watch') { this.playTonePan(520, 0.35, 'square', 0.18, 220, pan); setTimeout(() => this.playTonePan(520, 0.35, 'square', 0.18, 220, pan), 200); }
+    else if (kind === 'tvhead') { this.playTonePan(1240, 0.32, 'sawtooth', 0.2, 180, pan); this.playStaticBurst(0.28, 0.18); }
+    else if (kind === 'deathrat') { this.playTonePan(1800, 0.12, 'sawtooth', 0.13, 900, pan); setTimeout(() => this.playTonePan(2100, 0.1, 'sawtooth', 0.12, 1100, pan), 90); }
+    else if (kind === 'skinstealer') { this.playKawagiStinger(); }
+    else { this.playTonePan(145, 0.34, 'triangle', 0.16, 64, pan); }
   }
   playWhisper(pan = 0) {
     if (!this.ctx || !this.noiseBuf) return;
@@ -2089,7 +2241,7 @@ const LEVELS = [
     arch: 'warehouse_halls', ceilH: 5.2, hasCeil: true, waterY: null,
     fogColor: 0x0e1013, fogDensity: 0.058, ambColor: 0x454e56, ambInt: 0.18,
     lightColor: 0xdce7f5, lightInt: 1.85, lightDist: 17,
-    sound: 'warehouse', surface: 'concrete', hazard: 'mold', entities: ['bacteria', 'smiler', 'clump'],
+    sound: 'warehouse', surface: 'concrete', hazard: 'mold', entities: ['bacteria', 'smiler', 'clump', 'deathrat'],
     wallTex: 'concrete', floorTex: 'concrete_floor', ceilTex: 'concrete',
     edges: { noclip: 2, door: [2, 4], stairs: [3, 8], elevator: [4, 12] },
     task: { type: 'keycard', target: 1, label: '暗い区画でキーカードを回収し施錠扉を開けろ' }
@@ -2099,7 +2251,7 @@ const LEVELS = [
     arch: 'pipe_corridor', ceilH: 3.2, hasCeil: true, waterY: null,
     fogColor: 0x0c0907, fogDensity: 0.074, ambColor: 0x42362d, ambInt: 0.15,
     lightColor: 0xffba73, lightInt: 1.65, lightDist: 12,
-    sound: 'pipes', surface: 'concrete', hazard: 'steam', entities: ['smiler', 'bacteria', 'clump'],
+    sound: 'pipes', surface: 'concrete', hazard: 'steam', entities: ['smiler', 'bacteria', 'clump', 'deathrat'],
     wallTex: 'concrete', floorTex: 'concrete_floor', ceilTex: 'concrete',
     edges: { noclip: 3, door: [3, 4], stairs: [3, 10], elevator: [4, 5] },
     task: { type: 'fuse', target: 2, label: 'ヒューズを回収して出口電源を復旧せよ' }
@@ -2149,7 +2301,7 @@ const LEVELS = [
     arch: 'suburbs_outdoor', ceilH: 10.0, hasCeil: false, waterY: null,
     fogColor: 0x05070e, fogDensity: 0.052, ambColor: 0x1b2338, ambInt: 0.14,
     lightColor: 0xffcf7d, lightInt: 2.35, lightDist: 20,
-    sound: 'night', surface: 'concrete', hazard: 'sanity', entities: ['hound', 'smiler', 'skinstealer', 'mannequin'],
+    sound: 'night', surface: 'concrete', hazard: 'sanity', entities: ['hound', 'smiler', 'skinstealer', 'mannequin', 'watch'],
     wallTex: 'siding_0', floorTex: 'asphalt', ceilTex: null,
     edges: { noclip: 12, door: [12, 15], stairs: [12, 8], elevator: [10, 14] },
     task: { type: 'keycard', target: 1, label: '住宅街で家屋の鍵・カードを回収せよ' }
@@ -2199,7 +2351,7 @@ const LEVELS = [
     arch: 'endless_city', ceilH: 14.0, hasCeil: false, waterY: null,
     fogColor: 0x070b14, fogDensity: 0.038, ambColor: 0x242e42, ambInt: 0.18,
     lightColor: 0xffe4aa, lightInt: 2.4, lightDist: 21,
-    sound: 'city', surface: 'concrete', hazard: 'none', entities: ['hound', 'faceling', 'skinstealer', 'bacteria'],
+    sound: 'city', surface: 'concrete', hazard: 'none', entities: ['hound', 'faceling', 'skinstealer', 'bacteria', 'watch', 'scarecrow'],
     wallTex: 'city_tower', floorTex: 'asphalt', ceilTex: null,
     edges: { noclip: 13, door: [13, 14], stairs: [15, 9], elevator: [14, 11] },
     task: { type: 'keycard', target: 1, label: '店舗内または街区でアクセスカードを探せ' }
@@ -2209,7 +2361,7 @@ const LEVELS = [
     arch: 'infinite_mall', ceilH: 6.2, hasCeil: true, waterY: null,
     fogColor: 0x252724, fogDensity: 0.042, ambColor: 0x62645e, ambInt: 0.24,
     lightColor: 0xf7f2e0, lightInt: 1.8, lightDist: 18,
-    sound: 'mall', surface: 'tile', hazard: 'none', entities: ['deathmoth', 'faceling', 'mannequin'],
+    sound: 'mall', surface: 'tile', hazard: 'none', entities: ['deathmoth', 'faceling', 'mannequin', 'tvhead'],
     wallTex: 'mall_wall', floorTex: 'mall_tile', ceilTex: 'ceil_tile',
     edges: { noclip: 14, door: [14, 12], stairs: [15, 10], elevator: [14, 9] },
     task: { type: 'breaker', target: 2, label: 'モール電源ブレーカーを2箇所復旧せよ' }
@@ -2219,7 +2371,7 @@ const LEVELS = [
     arch: 'neon_arcade', ceilH: 4.2, hasCeil: true, waterY: null,
     fogColor: 0x0a0412, fogDensity: 0.052, ambColor: 0x321846, ambInt: 0.2,
     lightColor: 0xff6ee0, lightInt: 2.1, lightDist: 17,
-    sound: 'arcade', surface: 'carpet', hazard: 'none', entities: ['deathmoth', 'faceling', 'smiler'],
+    sound: 'arcade', surface: 'carpet', hazard: 'none', entities: ['deathmoth', 'faceling', 'smiler', 'tvhead'],
     wallTex: 'arcade_wall', floorTex: 'arcade_carpet', ceilTex: 'concrete',
     edges: { noclip: 15, door: [12, 15], stairs: [9, 6], elevator: [11, 13] },
     task: { type: 'fuse', target: 2, label: '筐体電源ヒューズを2個集めて脱出口を起動せよ' }
@@ -2229,31 +2381,37 @@ const LEVELS = [
     arch: 'motion_suburbs', ceilH: 12.0, hasCeil: false, waterY: null,
     fogColor: 0x769ec2, fogDensity: 0.032, ambColor: 0x8ea8c2, ambInt: 0.42,
     lightColor: 0xfff8e0, lightInt: 1.65, lightDist: 18,
-    sound: 'motion', surface: 'concrete', hazard: 'none', entities: ['mannequin', 'faceling', 'hound', 'skinstealer'],
+    sound: 'motion', surface: 'concrete', hazard: 'none', entities: ['mannequin', 'faceling', 'hound', 'skinstealer', 'scarecrow'],
     wallTex: 'siding_4', floorTex: 'asphalt', ceilTex: null,
     edges: { noclip: 9, door: [12, 9], stairs: [14, 10], elevator: [6, 11] },
     task: { type: 'keycard', target: 1, label: '住宅内を調査し鍵カードを見つけ出せ' }
   }
 ];
 
-// §6-3 Complete 16 Level-Specific M.E.G. Logs (+ Final Log #17 unlocked upon collecting all 16!)
+// §6-3 Complete 16 Level-Specific M.E.G. Logs (+ Final Log #17 & Progressive White Door Clues!)
 const MEG_LOGS = [
   { id: 0,  lv: 0,  title: 'M.E.G. 記録 #01 [LEVEL 0] クロカビと薄い床', unlockEntity: 'bacteria', body: '湿ったカーペットの奥に、わずかにノイズが走る薄い床（ノークリップ箇所）がある。踏み抜けばLevel 1へ落ちる。黒い人影「クロカビ」に追われたら角を曲がって4秒視線を切れ。' },
-  { id: 1,  lv: 1,  title: 'M.E.G. 記録 #02 [LEVEL 1] 倉庫の施錠とClump', unlockEntity: 'clump', body: '倉庫区画の出口扉はセキュリティカードで施錠されている。重い軋み音が聞こえたら「Clump」が近い。歩みは遅いが止まらない。距離を保て。' },
-  { id: 2,  lv: 2,  title: 'M.E.G. 記録 #03 [LEVEL 2] 蒸気配管とメガン', unlockEntity: 'smiler', body: '配管回廊の暗がりに光る目と歯列「メガン」が潜む。懐中電灯[F]を消せば奴は退く。ヒューズを2個集めれば奥の非常口が通電する。' },
-  { id: 3,  lv: 3,  title: 'M.E.G. 記録 #04 [LEVEL 3] 変電所ブレーカー', unlockEntity: 'smiler', body: '高圧アークが跳ねるケーブルに近づくな。2箇所の配電ブレーカーを復旧させれば出口の電磁ロックが外れる。ロッカーに隠れれば追跡をやり過ごせる。' },
+  { id: 1,  lv: 1,  title: 'M.E.G. 記録 #02 [LEVEL 1] 倉庫の施錠とテアシ', unlockEntity: 'clump', body: '倉庫区画の出口扉はセキュリティカードで施錠されている。重い軋み音が聞こえたら「テアシ」が近い。歩みは遅いが止まらない。距離を保て。' },
+  { id: 2,  lv: 2,  title: 'M.E.G. 記録 #03 [LEVEL 2] 蒸気配管とデスラット', unlockEntity: 'deathrat', body: '配管回廊には「メガン」に加え大型ネズミの群れ「デスラット」が潜む。携帯食料[2]を落とせば群れを足止めでき、探知パルス[Q]で散らせる。' },
+  { id: 3,  lv: 3,  title: 'M.E.G. 記録 #04 [LEVEL 3] 変電所ブレーカーとウイルス', unlockEntity: 'smiler', body: '高圧アークに近づくな。2箇所のブレーカーを復旧させれば区画に照明が戻り出口が開く。電子的な「ハッピーファイル」感染時は消灯して5秒静止せよ。' },
   { id: 4,  lv: 4,  title: 'M.E.G. 記録 #05 [LEVEL 4] 雨のオフィスとホワイトモデル', unlockEntity: 'mannequin', body: '「ホワイトモデル」と睨み合いになっても動じるな。視界に通算4秒収め続ければ、陶器の擦れ音とともに後退する。探知パルス[Q]で3秒足止めもできる。' },
-  { id: 5,  lv: 5,  title: 'M.E.G. 記録 #06 [LEVEL 5] 静寂ホテルとDeathmoth', unlockEntity: 'deathmoth', body: '「Deathmoth」は明るい照明とライトに集まる。消灯して暗い道を選び、モスゼリーを使えば近づけない。この階層ではしゃがみ歩きで静かに進め。' },
-  { id: 6,  lv: 6,  title: 'M.E.G. 記録 #07 [LEVEL 37] プールルームの休息', unlockEntity: null, body: '白タイルの水面はぬるく、ここではSANITYがゆっくり回復する。稀に見つかるクリーム色の「マニラルーム」も同様に安全な避難所だ。' },
-  { id: 7,  lv: 7,  title: 'M.E.G. 記録 #08 [LEVEL 9] 深夜住宅街とディンゴ', unlockEntity: 'hound', body: '四足で疾走する「ディンゴ」は足音に反応する。しゃがみ静止で音を消すか、停まっている車内へ入りシートに伏せてやり過ごせ。開いた家屋の2階ベッド下も使える。' },
+  { id: 5,  lv: 5,  title: 'M.E.G. 記録 #06 [LEVEL 5] 静寂ホテルとドクガ', unlockEntity: 'deathmoth', body: '「ドクガ」は明るい照明とライトに集まる。消灯して暗い道を選び、モスゼリーを使えば近づけない。この階層ではしゃがみ歩きで静かに進め。' },
+  { id: 6,  lv: 6,  title: 'M.E.G. 記録 #07 [LEVEL 37] プールルームと黄色い鈴', unlockEntity: 'snail', body: '白タイルの水面はぬるくSANITYが回復する。ただし深度2以降、遠くで小さな鈴の音がしたら「黄色いカタツムリ」が付着している。触れたら即死だ。来た道を戻るな。' },
+  { id: 7,  lv: 7,  title: 'M.E.G. 記録 #08 [LEVEL 9] 深夜住宅街とディンゴ', unlockEntity: 'hound', body: '四足で疾走する「ディンゴ」は足音や探知パルスの音に反応する。しゃがみ静止で音を消すか、停まっている車内や開いた家屋の2階ベッド下へ隠れろ。' },
   { id: 8,  lv: 8,  title: 'M.E.G. 記録 #09 [LEVEL 22] 地下駐車場のヒューズ', unlockEntity: 'hound', body: '誰も乗らない車が並ぶ駐車場。ヒューズを2個集めて脱出口を起動せよ。ヘッドライトの点いた車の周囲は明るいため、影の気配を見落とすな。' },
   { id: 9,  lv: 9,  title: 'M.E.G. 記録 #10 [THE END] 終端の偽り', unlockEntity: 'faceling', body: '「THE END」と書かれた端末は現実への出口ではない。だが電源を入れれば次の階層へ進める。本物の白い扉は、さらに深い深度10以降にのみ現れるという。' },
   { id: 10, lv: 10, title: 'M.E.G. 記録 #11 [LEVEL !] 赤色非常回廊', unlockEntity: 'bacteria', body: '警報が鳴り響く赤い病院廊下に出たら振り返るな！立ち止まると過圧とクロカビ群に呑まれる。スタミナを管理し、ストレッチャーを避けて非常口へ駆け抜けろ！' },
   { id: 11, lv: 11, title: 'M.E.G. 記録 #12 [LEVEL 188] 見下ろす無数の窓', unlockEntity: 'mannequin', body: '中庭を囲む窓のいくつかで、誰かがこちらを見ている残像が映ることがある。だが実体はない。落ち着いて鍵カードを探し出せ。' },
-  { id: 12, lv: 12, title: 'M.E.G. 記録 #13 [LEVEL 11] 無限都市の店舗', unlockEntity: 'skinstealer', body: '夜の市街地ではコンビニや書店の中に入れる。背後を静かに付いてくる「Skin-Stealer」には、後ろチラ見[R]で正面から視線を合わせれば怯んで退く。' },
-  { id: 13, lv: 13, title: 'M.E.G. 記録 #14 [LEVEL 33] モールとレクの縄張り', unlockEntity: 'partygoer', body: '風船とケーキが並ぶパーティ部屋には絶対に入るな。「レク」はその区画内では最速だが、外へは一歩も出てこない。ループする廊下にも警戒しろ。' },
-  { id: 14, lv: 14, title: 'M.E.G. 記録 #15 [LEVEL 3999] ネオンの果て', unlockEntity: 'partygoer', body: 'ネオンが明滅するアーケード。明るい広間はDeathmothに狙われやすい。ヒューズを集め、深度10を超えた先で「現実への白い扉」を待て。' },
-  { id: 15, lv: 15, title: 'M.E.G. 記録 #16 [LEVEL 94] 昼のモーション住宅', unlockEntity: 'faceling', body: '青空の下、同じ形の家々が並び窓のカーテンの影が揺れている。子Facelingはすれ違いざまに所持品を落とす悪戯をしてくるが危害はない。' }
+  { id: 12, lv: 12, title: 'M.E.G. 記録 #13 [LEVEL 11] 無限都市と街灯の監視者', unlockEntity: 'watch', body: '夜の市街地では「ネイバーフッド・ウォッチ」の光の円錐内で走る・ライト点灯が厳禁だ。背後を付ける「カワハギ」には後ろチラ見[R]で視線を合わせろ。' },
+  { id: 13, lv: 13, title: 'M.E.G. 記録 #14 [LEVEL 33] モールとTVヘッド・レク', unlockEntity: 'tvhead', body: '「TVヘッド」の砂嵐と電子音が高まったら突撃の合図。予兆のうちに物陰へ入れ。風船のあるパーティ部屋には「レク」が潜むため立ち入るな。' },
+  { id: 14, lv: 14, title: 'M.E.G. 記録 #15 [LEVEL 3999] ネオンの果て', unlockEntity: 'partygoer', body: 'ネオンが明滅するアーケード。明るい広間は「ドクガ」に狙われやすい。ヒューズを集め、深度10を超えた先で「現実への白い扉」を待て。' },
+  { id: 15, lv: 15, title: 'M.E.G. 記録 #16 [LEVEL 94] 昼のモーション住宅とカカシ', unlockEntity: 'scarecrow', body: '青空の下、支柱に立つ「スケアクロウ」は目を離すと跳躍して迫る。視界に収めたまま縄張り（26m）の外へ後退せよ。子ノッペラの悪戯にも注意。' }
+];
+const WHITE_DOOR_CLUES = [
+  { need: 2,  text: '手がかり①：現実へ通じる「白い扉」は、深度10未満の浅い階層には一切出現しない。' },
+  { need: 5,  text: '手がかり②：確定させた特異点サンプルが多いほど、深度10以降で白い扉が出現しやすくなる。' },
+  { need: 8,  text: '手がかり③：深度10以降で現在の階層に白い扉が実在するとき、探知パルス[Q]に距離なしの白い◆方角が映る。' },
+  { need: 12, text: '手がかり④：白い扉は通常の施錠タスクを無視して開けることができる。見つけたら迷わず飛び込め。' }
 ];
 const FINAL_MEG_LOG = {
   title: 'M.E.G. 最終機密記録 #17 // THE THRESHOLD',
@@ -2927,6 +3085,11 @@ const PropFactory = {
       // §6-1 Escape Ending White Door to Reality!
       addPart(g, Geo.box1, M.whiteDoorGlow, 1.65, 2.75, 0.26, 0, 1.375, 0);
       addPart(g, Geo.box1, M.gold, 0.14, 0.14, 0.18, 0.54, 1.15, 0.16);
+    } else if (type === 'return_rift') {
+      // §3-2 Return Rift (Depth <= 3 safe extraction!)
+      const rMat = getMat('returnRiftMat', { color: 0x0b2a36, emissive: 0x5eeeff, emissiveIntensity: 1.15, roughness: 0.15 });
+      addPart(g, Geo.box1, rMat, 1.24, 2.38, 0.22, 0, 1.19, 0, 0, 0, -0.05);
+      addPart(g, Geo.box1, rMat, 0.78, 2.05, 0.28, -0.08, 1.12, 0.04, 0, -0.2, 0.07);
     } else if (type === 'noclip') {
       // §3-1 Subtle thinning floor/warp patch
       const p = new THREE.Mesh(Geo.plane, M.noclipMat);
@@ -2951,110 +3114,264 @@ const PropFactory = {
     return g;
   },
 
-  buildJointedLimb(mat, rTop, len, jointR) {
-    const pivot = new THREE.Group();
-    addPart(pivot, Geo.sphere, mat, jointR, jointR, jointR, 0, 0, 0);
+  buildJointedLimb(mat, rTop, len, jointR, jointMat = null) {
+    const pivot = new THREE.Group(), jm = jointMat || mat;
+    addPart(pivot, Geo.sphere, jm, jointR, jointR, jointR, 0, 0, 0);
     addPart(pivot, Geo.taper, mat, rTop, len*0.52, rTop, 0, -len*0.26, 0);
-    addPart(pivot, Geo.sphere, mat, jointR*0.85, jointR*0.85, jointR*0.85, 0, -len*0.52, 0);
+    addPart(pivot, Geo.sphere, jm, jointR*0.85, jointR*0.85, jointR*0.85, 0, -len*0.52, 0);
     addPart(pivot, Geo.taper, mat, rTop*0.82, len*0.48, rTop*0.82, 0, -len*0.76, 0);
     return pivot;
   },
 
-  // §4-3 Dark matte articulated silhouettes for all 9 species
+  // §8-2 3-segment articulated limb with wire-thin branching fingers for Bacteria/Horde
+  build3SegLimb(mat, rTop, len, withFingers = false) {
+    const pivot = new THREE.Group(), s = len / 3;
+    addPart(pivot, Geo.sphere, mat, rTop*1.25, rTop*1.25, rTop*1.25, 0, 0, 0);
+    addPart(pivot, Geo.taper, mat, rTop, s, rTop, 0, -s*0.5, 0);
+    addPart(pivot, Geo.sphere, mat, rTop*1.1, rTop*1.1, rTop*1.1, 0, -s, 0);
+    addPart(pivot, Geo.taper, mat, rTop*0.85, s, rTop*0.85, 0, -s*1.5, 0.04, 0.12, 0, 0);
+    addPart(pivot, Geo.sphere, mat, rTop*0.9, rTop*0.9, rTop*0.9, 0, -s*2, 0.08);
+    addPart(pivot, Geo.taper, mat, rTop*0.68, s, rTop*0.68, 0, -s*2.5, 0.1, 0.08, 0, 0);
+    if (withFingers) {
+      for (let f = -1; f <= 1; f++) {
+        addPart(pivot, Geo.cyl8, mat, 0.018, 0.24, 0.018, f*0.045, -len - 0.1, 0.12, 0.2, 0, f*0.22);
+      }
+    }
+    return pivot;
+  },
+
+  // §8 Complete Procedural Model Overhaul (All 14 Species + Horde, <=3,500 tris, shared textures/materials)
   createEntityModel(kind, isChild = false) {
     const g = new THREE.Group();
+    if (!TexCache._v7EntTex) {
+      TexCache._v7EntTex = true;
+      TexCache.ent_mold = makeCanvasTex(128, (ctx, s) => {
+        ctx.fillStyle = '#07080a'; ctx.fillRect(0, 0, s, s);
+        for (let i = 0; i < 42; i++) {
+          ctx.fillStyle = i % 3 === 0 ? 'rgba(38,48,34,0.45)' : 'rgba(22,26,20,0.55)';
+          ctx.beginPath(); ctx.arc(Math.random()*s, Math.random()*s, 3+Math.random()*9, 0, Math.PI*2); ctx.fill();
+        }
+      }, 1, 1);
+      TexCache.ent_porcelain = makeCanvasTex(128, (ctx, s) => {
+        ctx.fillStyle = '#cbc4b4'; ctx.fillRect(0, 0, s, s);
+        ctx.strokeStyle = 'rgba(42,36,30,0.55)'; ctx.lineWidth = 1.2;
+        for (let i = 0; i < 12; i++) {
+          let x = Math.random()*s, y = Math.random()*s; ctx.beginPath(); ctx.moveTo(x, y);
+          for (let k = 0; k < 4; k++) { x += (Math.random()-0.5)*28; y += (Math.random()-0.5)*28; ctx.lineTo(x, y); }
+          ctx.stroke();
+        }
+      }, 1, 1);
+      TexCache.ent_patchskin = makeCanvasTex(128, (ctx, s) => {
+        const tones = ['#73675c', '#5f5349', '#817466', '#685b51'];
+        for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
+          ctx.fillStyle = tones[(x*3+y*5)%4]; ctx.fillRect(x*32, y*32, 32, 32);
+          ctx.strokeStyle = 'rgba(30,20,18,0.6)'; ctx.lineWidth = 1.5; ctx.strokeRect(x*32, y*32, 32, 32);
+        }
+      }, 1, 1);
+      TexCache.ent_mothwing = makeCanvasTex(128, (ctx, s) => {
+        ctx.fillStyle = '#3a3126'; ctx.fillRect(0, 0, s, s);
+        ctx.fillStyle = '#5c4d3a'; ctx.beginPath(); ctx.ellipse(s*0.5, s*0.5, s*0.36, s*0.24, 0, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#14110d'; ctx.beginPath(); ctx.arc(s*0.5, s*0.5, s*0.14, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = '#9c8662'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(s*0.5, s*0.5, s*0.2, 0, Math.PI*2); ctx.stroke();
+      }, 1, 1);
+      TexCache.ent_scarecrow = makeCanvasTex(128, (ctx, s) => {
+        ctx.fillStyle = '#4a3d2e'; ctx.fillRect(0, 0, s, s);
+        const p = ['#384534', '#5c4632', '#3c3c48', '#66543a'];
+        for (let i = 0; i < 10; i++) {
+          ctx.fillStyle = p[i%4]; const x = (i*37)%96, y = (i*53)%96;
+          ctx.fillRect(x, y, 30, 30); ctx.strokeStyle = '#1e1610'; ctx.lineWidth = 2; ctx.strokeRect(x, y, 30, 30);
+        }
+      }, 1, 1);
+      TexCache.ent_tvstatic = makeCanvasTex(128, (ctx, s) => {
+        for (let y = 0; y < s; y += 4) for (let x = 0; x < s; x += 4) {
+          const v = Math.floor(Math.random()*220) + 20; ctx.fillStyle = `rgb(${v},${v},${v})`; ctx.fillRect(x, y, 4, 4);
+        }
+      }, 1, 1);
+      TexCache.ent_snail = makeCanvasTex(128, (ctx, s) => {
+        ctx.fillStyle = '#d4b22e'; ctx.fillRect(0, 0, s, s);
+        ctx.strokeStyle = '#6b4c0e'; ctx.lineWidth = 5; ctx.beginPath();
+        for (let a = 0; a < Math.PI*6; a += 0.15) {
+          const r = a * 2.6, x = s/2 + Math.cos(a)*r, y = s/2 + Math.sin(a)*r;
+          if (a === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }, 1, 1);
+    }
+
     if (kind === 'bacteria' || kind === 'horde') {
-      const mat = getMat('ent_bact', { color: 0x08080b, roughness: 0.96, metalness: 0.03 });
+      const mat = getMat('ent_bact_v7', { map: TexCache.ent_mold, color: 0x222422, roughness: 0.96, metalness: 0.04 });
       const eyeMat = getMat('ent_bact_eye', { color: 0xffe4a8, emissive: 0xffcc6e, emissiveIntensity: 1.4 });
-      addPart(g, Geo.taper, mat, 0.28, 0.85, 0.2, 0, 1.58, 0);
-      addPart(g, Geo.sphere, mat, 0.24, 0.22, 0.2, 0, 1.12, 0);
-      addPart(g, Geo.box1, mat, 0.54, 0.1, 0.14, 0, 1.98, 0);
-      const head = new THREE.Group(); head.position.set(0, 2.26, 0.06);
-      addPart(head, Geo.cyl8, mat, 0.08, 0.24, 0.08, 0, -0.14, 0);
-      addPart(head, Geo.sphere, mat, 0.24, 0.3, 0.24, 0, 0.06, 0);
-      addPart(head, Geo.sphere, eyeMat, 0.036, 0.036, 0.03, -0.06, 0.08, 0.11);
-      addPart(head, Geo.sphere, eyeMat, 0.036, 0.036, 0.03, 0.06, 0.08, 0.11);
+      addPart(g, Geo.taper, mat, 0.26, 0.9, 0.18, 0, 1.62, 0);
+      addPart(g, Geo.sphere, mat, 0.22, 0.2, 0.18, 0, 1.15, 0);
+      addPart(g, Geo.box1, mat, 0.56, 0.09, 0.13, 0, 2.04, 0);
+      const head = new THREE.Group(); head.position.set(0, 2.3, 0.06);
+      addPart(head, Geo.cyl8, mat, 0.07, 0.24, 0.07, 0, -0.14, 0);
+      addPart(head, Geo.sphere, mat, 0.21, 0.28, 0.21, 0, 0.05, 0);
+      addPart(head, Geo.sphere, eyeMat, 0.032, 0.032, 0.028, -0.055, 0.07, 0.1);
+      addPart(head, Geo.sphere, eyeMat, 0.032, 0.032, 0.028, 0.055, 0.07, 0.1);
       g.add(head);
-      const lArm = this.buildJointedLimb(mat, 0.08, 1.28, 0.11); lArm.position.set(-0.3, 1.96, 0);
-      const rArm = this.buildJointedLimb(mat, 0.08, 1.28, 0.11); rArm.position.set(0.3, 1.96, 0);
-      const lLeg = this.buildJointedLimb(mat, 0.1, 1.12, 0.12); lLeg.position.set(-0.14, 1.12, 0);
-      const rLeg = this.buildJointedLimb(mat, 0.1, 1.12, 0.12); rLeg.position.set(0.14, 1.12, 0);
-      g.add(lArm, rArm, lLeg, rLeg); g.userData = { head, lArm, rArm, lLeg, rLeg };
+      const lArm = this.build3SegLimb(mat, 0.07, 1.48, true); lArm.position.set(-0.31, 2.02, 0);
+      const rArm = this.build3SegLimb(mat, 0.07, 1.48, true); rArm.position.set(0.31, 2.02, 0);
+      const lLeg = this.build3SegLimb(mat, 0.09, 1.16, false); lLeg.position.set(-0.14, 1.15, 0);
+      const rLeg = this.build3SegLimb(mat, 0.09, 1.16, false); rLeg.position.set(0.14, 1.15, 0);
+      g.add(lArm, rArm, lLeg, rLeg);
+      if (kind === 'horde') { const sc = 0.88 + Math.random()*0.26; g.scale.set(sc, sc, sc); head.rotation.z = (Math.random()-0.5)*0.35; }
+      g.userData = { head, lArm, rArm, lLeg, rLeg };
     } else if (kind === 'smiler') {
       const voidMat = getMat('ent_smiler_body', { color: 0x020204, roughness: 0.98, transparent: true, opacity: 0.92 });
       addPart(g, Geo.sphere, voidMat, 0.92, 1.25, 0.72, 0, 1.52, 0);
       const face = new THREE.Mesh(Geo.plane, new THREE.MeshBasicMaterial({ map: TexCache.smiler_face, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
       face.scale.set(1.06, 1.06, 1); face.position.set(0, 1.56, 0.42); g.add(face); g.userData = { face };
     } else if (kind === 'mannequin') {
-      const mat = getMat('ent_mann', { color: 0xbfb8a8, roughness: 0.94, metalness: 0.01 });
-      const jMat = getMat('ent_mann_j', { color: 0x767064, roughness: 0.96 });
+      const mat = getMat('ent_mann_v7', { map: TexCache.ent_porcelain, roughness: 0.38, metalness: 0.05 });
+      const jMat = getMat('ent_mann_j', { color: 0x645e54, roughness: 0.78 });
       addPart(g, Geo.taper, mat, 0.38, 0.62, 0.24, 0, 1.38, 0);
       addPart(g, Geo.sphere, jMat, 0.28, 0.2, 0.22, 0, 1.02, 0);
-      addPart(g, Geo.cyl8, jMat, 0.11, 0.16, 0.11, 0, 1.72, 0);
+      addPart(g, Geo.cyl8, jMat, 0.1, 0.16, 0.1, 0, 1.72, 0);
       addPart(g, Geo.sphere, mat, 0.25, 0.32, 0.26, 0, 1.92, 0);
-      const lArm = this.buildJointedLimb(mat, 0.11, 0.76, 0.14); lArm.position.set(-0.26, 1.62, 0); lArm.rotation.x = -0.35;
-      const rArm = this.buildJointedLimb(mat, 0.11, 0.76, 0.14); rArm.position.set(0.26, 1.62, 0); rArm.rotation.x = -0.25;
-      const lLeg = this.buildJointedLimb(mat, 0.14, 0.98, 0.15); lLeg.position.set(-0.12, 0.98, 0);
-      const rLeg = this.buildJointedLimb(mat, 0.14, 0.98, 0.15); rLeg.position.set(0.12, 0.98, 0);
+      const lArm = this.buildJointedLimb(mat, 0.11, 0.76, 0.15, jMat); lArm.position.set(-0.26, 1.62, 0); lArm.rotation.x = -0.35;
+      const rArm = this.buildJointedLimb(mat, 0.11, 0.76, 0.15, jMat); rArm.position.set(0.26, 1.62, 0); rArm.rotation.x = -0.25;
+      const lLeg = this.buildJointedLimb(mat, 0.14, 0.98, 0.16, jMat); lLeg.position.set(-0.12, 0.98, 0);
+      const rLeg = this.buildJointedLimb(mat, 0.14, 0.98, 0.16, jMat); rLeg.position.set(0.12, 0.98, 0);
       g.add(lArm, rArm, lLeg, rLeg); g.userData = { lArm, rArm, lLeg, rLeg };
     } else if (kind === 'hound') {
-      const mat = getMat('ent_hound', { color: 0x161311, roughness: 0.95 });
+      const mat = getMat('ent_hound', { color: 0x181412, roughness: 0.95 });
+      const hairMat = getMat('ent_hound_hair', { color: 0x070708, roughness: 0.98 });
       const eyeMat = getMat('ent_hound_eye', { color: 0xff7048, emissive: 0xff3b18, emissiveIntensity: 1.6 });
-      addPart(g, Geo.taper, mat, 0.42, 1.15, 0.36, 0, 0.76, 0, Math.PI/2, 0, 0);
-      const head = new THREE.Group(); head.position.set(0, 0.88, 0.65);
-      addPart(head, Geo.sphere, mat, 0.34, 0.28, 0.42, 0, 0, 0);
-      addPart(head, Geo.sphere, eyeMat, 0.05, 0.04, 0.04, -0.09, 0.05, 0.18);
-      addPart(head, Geo.sphere, eyeMat, 0.05, 0.04, 0.04, 0.09, 0.05, 0.18); g.add(head);
-      const fl = this.buildJointedLimb(mat, 0.11, 0.78, 0.13); fl.position.set(-0.22, 0.74, 0.38);
-      const fr = this.buildJointedLimb(mat, 0.11, 0.78, 0.13); fr.position.set(0.22, 0.74, 0.38);
-      const bl = this.buildJointedLimb(mat, 0.12, 0.78, 0.13); bl.position.set(-0.22, 0.74, -0.4);
-      const br = this.buildJointedLimb(mat, 0.12, 0.78, 0.13); br.position.set(0.22, 0.74, -0.4);
-      g.add(fl, fr, bl, br); g.userData = { head, lArm: fl, rArm: fr, lLeg: bl, rLeg: br };
+      const spine = new THREE.Group(); spine.position.set(0, 0.72, 0);
+      addPart(spine, Geo.taper, mat, 0.38, 0.7, 0.32, 0, 0, 0.2, Math.PI/2, 0, 0);
+      addPart(spine, Geo.taper, mat, 0.32, 0.65, 0.28, 0, -0.04, -0.34, Math.PI/2, 0, 0);
+      addPart(spine, Geo.taper, mat, 0.08, 0.55, 0.08, 0, 0.04, -0.82, Math.PI/2.4, 0, 0);
+      g.add(spine);
+      const head = new THREE.Group(); head.position.set(0, 0.84, 0.68);
+      addPart(head, Geo.sphere, mat, 0.32, 0.28, 0.38, 0, 0, 0);
+      addPart(head, Geo.sphere, hairMat, 0.38, 0.32, 0.42, 0, 0.06, -0.02);
+      addPart(head, Geo.sphere, eyeMat, 0.045, 0.038, 0.038, -0.09, 0.03, 0.18);
+      addPart(head, Geo.sphere, eyeMat, 0.045, 0.038, 0.038, 0.09, 0.03, 0.18); g.add(head);
+      const fl = this.buildJointedLimb(mat, 0.1, 0.76, 0.12); fl.position.set(-0.22, 0.72, 0.4);
+      const fr = this.buildJointedLimb(mat, 0.1, 0.76, 0.12); fr.position.set(0.22, 0.72, 0.4);
+      const bl = this.buildJointedLimb(mat, 0.11, 0.76, 0.12); bl.position.set(-0.22, 0.72, -0.44);
+      const br = this.buildJointedLimb(mat, 0.11, 0.76, 0.12); br.position.set(0.22, 0.72, -0.44);
+      g.add(fl, fr, bl, br); g.userData = { head, spine, lArm: fl, rArm: fr, lLeg: bl, rLeg: br };
     } else if (kind === 'deathmoth') {
-      const mat = getMat('ent_moth', { color: 0x2c261e, roughness: 0.95 });
-      const wingMat = getMat('ent_moth_w', { color: 0x42382b, roughness: 0.93, side: THREE.DoubleSide });
-      addPart(g, Geo.taper, mat, 0.22, 0.65, 0.22, 0, 1.9, 0, Math.PI/2.4, 0, 0);
-      addPart(g, Geo.sphere, mat, 0.2, 0.2, 0.2, 0, 2.02, 0.28);
-      const lWing = new THREE.Group(); lWing.position.set(-0.1, 1.96, 0); addPart(lWing, Geo.box1, wingMat, 0.92, 0.03, 0.56, -0.46, 0, 0);
-      const rWing = new THREE.Group(); rWing.position.set(0.1, 1.96, 0); addPart(rWing, Geo.box1, wingMat, 0.92, 0.03, 0.56, 0.46, 0, 0);
+      const mat = getMat('ent_moth', { color: 0x302920, roughness: 0.98 });
+      const wingMat = getMat('ent_moth_wv7', { map: TexCache.ent_mothwing, roughness: 0.92, side: THREE.DoubleSide });
+      addPart(g, Geo.taper, mat, 0.24, 0.68, 0.24, 0, 1.9, 0, Math.PI/2.4, 0, 0);
+      addPart(g, Geo.sphere, mat, 0.22, 0.22, 0.22, 0, 2.02, 0.28);
+      const lWing = new THREE.Group(); lWing.position.set(-0.1, 1.96, 0); addPart(lWing, Geo.box1, wingMat, 0.98, 0.03, 0.62, -0.49, 0, 0);
+      const rWing = new THREE.Group(); rWing.position.set(0.1, 1.96, 0); addPart(rWing, Geo.box1, wingMat, 0.98, 0.03, 0.62, 0.49, 0, 0);
       g.add(lWing, rWing); g.userData = { lWing, rWing };
     } else if (kind === 'skinstealer') {
-      const mat = getMat('ent_skin', { color: 0x6c665e, roughness: 0.94 });
-      addPart(g, Geo.taper, mat, 0.42, 0.82, 0.28, 0, 1.52, 0.04, 0.14, 0, 0);
-      addPart(g, Geo.sphere, mat, 0.3, 0.38, 0.28, 0, 2.12, 0.12);
-      const lArm = this.buildJointedLimb(mat, 0.12, 1.05, 0.14); lArm.position.set(-0.28, 1.84, 0.06);
-      const rArm = this.buildJointedLimb(mat, 0.12, 1.05, 0.14); rArm.position.set(0.28, 1.84, 0.06);
-      const lLeg = this.buildJointedLimb(mat, 0.14, 1.08, 0.15); lLeg.position.set(-0.14, 1.08, 0);
-      const rLeg = this.buildJointedLimb(mat, 0.14, 1.08, 0.15); rLeg.position.set(0.14, 1.08, 0);
-      g.add(lArm, rArm, lLeg, rLeg); g.userData = { lArm, rArm, lLeg, rLeg };
+      const mat = getMat('ent_skin_v7', { map: TexCache.ent_patchskin, roughness: 0.92 });
+      const eyeMat = getMat('ent_skin_eye', { color: 0x161210, roughness: 0.4 });
+      addPart(g, Geo.taper, mat, 0.42, 0.84, 0.28, 0, 1.54, 0.04, 0.14, 0, 0);
+      const head = new THREE.Group(); head.position.set(0, 2.14, 0.12);
+      addPart(head, Geo.sphere, mat, 0.3, 0.38, 0.28, 0, 0, 0);
+      addPart(head, Geo.sphere, eyeMat, 0.04, 0.04, 0.03, -0.07, 0.05, 0.13);
+      addPart(head, Geo.sphere, eyeMat, 0.04, 0.04, 0.03, 0.08, 0.01, 0.13); // intentionally offset eyes!
+      g.add(head);
+      const lArm = this.buildJointedLimb(mat, 0.12, 1.08, 0.14); lArm.position.set(-0.28, 1.86, 0.06);
+      const rArm = this.buildJointedLimb(mat, 0.12, 1.08, 0.14); rArm.position.set(0.28, 1.86, 0.06);
+      const lLeg = this.buildJointedLimb(mat, 0.14, 1.1, 0.15); lLeg.position.set(-0.14, 1.1, 0);
+      const rLeg = this.buildJointedLimb(mat, 0.14, 1.1, 0.15); rLeg.position.set(0.14, 1.1, 0);
+      g.add(lArm, rArm, lLeg, rLeg); g.userData = { head, lArm, rArm, lLeg, rLeg };
     } else if (kind === 'faceling') {
       const coatMat = getMat('ent_face_coat', { color: 0x333942, roughness: 0.94 });
-      const skinMat = getMat('ent_face_skin', { color: 0xaea496, roughness: 0.92 });
+      const skinMat = getMat('ent_face_skin', { color: 0xaea496, roughness: 0.85 });
       addPart(g, Geo.taper, coatMat, 0.42, 0.78, 0.28, 0, 1.24, 0);
       addPart(g, Geo.sphere, skinMat, 0.26, 0.33, 0.26, 0, 1.78, 0);
       const lArm = this.buildJointedLimb(coatMat, 0.11, 0.72, 0.12); lArm.position.set(-0.27, 1.54, 0);
       const rArm = this.buildJointedLimb(coatMat, 0.11, 0.72, 0.12); rArm.position.set(0.27, 1.54, 0);
       const lLeg = this.buildJointedLimb(coatMat, 0.13, 0.88, 0.14); lLeg.position.set(-0.12, 0.88, 0);
       const rLeg = this.buildJointedLimb(coatMat, 0.13, 0.88, 0.14); rLeg.position.set(0.12, 0.88, 0);
-      g.add(lArm, rArm, lLeg, rLeg); if (isChild) g.scale.set(0.62, 0.62, 0.62); g.userData = { lArm, rArm, lLeg, rLeg };
+      g.add(lArm, rArm, lLeg, rLeg); if (isChild) g.scale.set(0.58, 0.58, 0.58); g.userData = { lArm, rArm, lLeg, rLeg };
     } else if (kind === 'partygoer') {
       const mat = getMat('ent_pg', { color: 0xa48a32, roughness: 0.94 });
-      const faceMat = getMat('ent_pg_face', { map: makeTextTexture('=)', '#a48a32', '#5c1414', 128, 128, 62), roughness: 0.92 });
+      const faceMat = getMat('ent_pg_face', { map: makeTextTexture('=)', '#a48a32', '#5c1414', 128, 128, 68), roughness: 0.92 });
       addPart(g, Geo.taper, mat, 0.44, 0.86, 0.3, 0, 1.38, 0);
       addPart(g, Geo.sphere, mat, 0.34, 0.38, 0.32, 0, 1.98, 0);
-      addPart(g, Geo.plane, faceMat, 0.26, 0.26, 1, 0, 1.98, 0.17);
+      addPart(g, Geo.plane, faceMat, 0.28, 0.28, 1, 0, 1.98, 0.17);
       const lArm = this.buildJointedLimb(mat, 0.12, 0.96, 0.14); lArm.position.set(-0.3, 1.72, 0);
       const rArm = this.buildJointedLimb(mat, 0.12, 0.96, 0.14); rArm.position.set(0.3, 1.72, 0);
       const lLeg = this.buildJointedLimb(mat, 0.14, 0.96, 0.15); lLeg.position.set(-0.14, 0.96, 0);
       const rLeg = this.buildJointedLimb(mat, 0.14, 0.96, 0.15); rLeg.position.set(0.14, 0.96, 0);
       g.add(lArm, rArm, lLeg, rLeg); g.userData = { lArm, rArm, lLeg, rLeg };
+    } else if (kind === 'watch') {
+      // §5-1 & §8-2 Neighborhood Watch: tall pole body + streetlamp head + forward light cone!
+      const poleMat = getMat('ent_watch_pole', { color: 0x1c2026, roughness: 0.65, metalness: 0.65 });
+      const lampMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff2cc, emissiveIntensity: 1.5, roughness: 0.2 });
+      const coneMat = new THREE.MeshBasicMaterial({ color: 0xfff2cc, transparent: true, opacity: 0.13, side: THREE.DoubleSide, depthWrite: false });
+      addPart(g, Geo.cyl8, poleMat, 0.2, 2.75, 0.2, 0, 1.38, 0);
+      addPart(g, Geo.box1, poleMat, 0.42, 0.22, 0.62, 0, 2.82, 0.16);
+      const bulb = addPart(g, Geo.sphere, lampMat, 0.28, 0.24, 0.28, 0, 2.7, 0.34);
+      const cone = new THREE.Mesh(Geo.cone, coneMat);
+      cone.scale.set(6.5, 13.5, 6.5); cone.rotation.x = -Math.PI/2 + 0.18; cone.position.set(0, 1.5, 7.0);
+      g.add(cone);
+      g.userData = { bulb, lampMat, cone, coneMat };
+    } else if (kind === 'scarecrow') {
+      // §5-2 & §8-2 Scarecrow: post + straw hat + stitched sack face + patchwork coat
+      const woodMat = getMat('ent_sc_wood', { color: 0x3b2c1e, roughness: 0.95 });
+      const coatMat = getMat('ent_sc_coat', { map: TexCache.ent_scarecrow, roughness: 0.96 });
+      const sackMat = getMat('ent_sc_sack', { map: makeTextTexture('X  X', '#8c7654', '#1a120c', 128, 128, 34), roughness: 0.96 });
+      const hatMat = getMat('ent_sc_hat', { color: 0x8f7438, roughness: 0.95 });
+      addPart(g, Geo.cyl8, woodMat, 0.09, 2.1, 0.09, 0, 1.05, 0);
+      addPart(g, Geo.cyl8, woodMat, 0.07, 1.45, 0.07, 0, 1.62, 0, 0, 0, Math.PI/2);
+      addPart(g, Geo.taper, coatMat, 0.48, 0.96, 0.3, 0, 1.32, 0);
+      addPart(g, Geo.sphere, sackMat, 0.32, 0.36, 0.3, 0, 1.96, 0);
+      addPart(g, Geo.cyl8, hatMat, 0.76, 0.05, 0.76, 0, 2.12, 0);
+      addPart(g, Geo.cone, hatMat, 0.42, 0.38, 0.42, 0, 2.32, 0);
+      g.userData = {};
+    } else if (kind === 'deathrat') {
+      // §5-3 & §8-2 Death Rats: 6 articulated rats in 1 swarm entity!
+      const rMat = getMat('ent_rat', { color: 0x241f1c, roughness: 0.92 });
+      const eyeMat = getMat('ent_rat_eye', { color: 0xff3b2f, emissive: 0xff2218, emissiveIntensity: 1.5 });
+      const rats = [];
+      for (let i = 0; i < 6; i++) {
+        const r = new THREE.Group();
+        const ang = (i / 6) * Math.PI * 2, rad = 0.25 + (i % 2) * 0.28;
+        r.position.set(Math.cos(ang)*rad, 0.14, Math.sin(ang)*rad);
+        addPart(r, Geo.sphere, rMat, 0.22, 0.16, 0.42, 0, 0, 0);
+        addPart(r, Geo.cone, rMat, 0.14, 0.22, 0.14, 0, 0.02, 0.26, Math.PI/2, 0, 0);
+        addPart(r, Geo.cyl8, rMat, 0.025, 0.38, 0.025, 0, -0.02, -0.34, Math.PI/2.2, 0, 0);
+        addPart(r, Geo.sphere, eyeMat, 0.028, 0.028, 0.028, -0.04, 0.05, 0.22);
+        addPart(r, Geo.sphere, eyeMat, 0.028, 0.028, 0.028, 0.04, 0.05, 0.22);
+        g.add(r); rats.push({ grp: r, bx: r.position.x, bz: r.position.z, ph: i * 1.1 });
+      }
+      g.userData = { rats };
+    } else if (kind === 'tvhead') {
+      // §5-4 & §8-2 TV Head: dark suit body + CRT television head with glowing static screen!
+      const suitMat = getMat('ent_tv_suit', { color: 0x1c2028, roughness: 0.9 });
+      const tvMat = getMat('ent_tv_case', { color: 0x26282c, roughness: 0.72, metalness: 0.25 });
+      const scrMat = new THREE.MeshStandardMaterial({ map: TexCache.ent_tvstatic, emissive: 0x9cd6ff, emissiveIntensity: 0.85, roughness: 0.2 });
+      addPart(g, Geo.taper, suitMat, 0.44, 0.84, 0.28, 0, 1.32, 0);
+      addPart(g, Geo.box1, tvMat, 0.56, 0.46, 0.46, 0, 1.98, 0);
+      const scr = addPart(g, Geo.plane, scrMat, 0.44, 0.34, 1, 0, 1.98, 0.24);
+      const lArm = this.buildJointedLimb(suitMat, 0.11, 0.82, 0.13); lArm.position.set(-0.28, 1.66, 0);
+      const rArm = this.buildJointedLimb(suitMat, 0.11, 0.82, 0.13); rArm.position.set(0.28, 1.66, 0);
+      const lLeg = this.buildJointedLimb(suitMat, 0.13, 0.92, 0.14); lLeg.position.set(-0.13, 0.92, 0);
+      const rLeg = this.buildJointedLimb(suitMat, 0.13, 0.92, 0.14); rLeg.position.set(0.13, 0.92, 0);
+      g.add(lArm, rArm, lLeg, rLeg); g.userData = { scr, scrMat, lArm, rArm, lLeg, rLeg };
+    } else if (kind === 'snail') {
+      // §5-5 & §8-2 The Snail in Yellow: softly glowing yellow spiral shell + body + antennae
+      const bodyMat = getMat('ent_snail_body', { color: 0x70684a, roughness: 0.75 });
+      const shellMat = getMat('ent_snail_shell', { map: TexCache.ent_snail, emissive: 0xd4aa22, emissiveIntensity: 0.55, roughness: 0.45 });
+      addPart(g, Geo.sphere, bodyMat, 0.28, 0.16, 0.62, 0, 0.1, 0.08);
+      addPart(g, Geo.sphere, shellMat, 0.46, 0.44, 0.46, 0, 0.3, -0.06);
+      addPart(g, Geo.cyl8, bodyMat, 0.025, 0.22, 0.025, -0.07, 0.24, 0.34, 0.35, 0, 0.2);
+      addPart(g, Geo.cyl8, bodyMat, 0.025, 0.22, 0.025, 0.07, 0.24, 0.34, 0.35, 0, -0.2);
+      g.userData = {};
     } else {
+      // §8-2 Clump (テアシ): 12+ irregular writhing limbs radiating from an amorphous core!
       const mat = getMat('ent_clump', { color: 0x221b18, roughness: 0.96 });
-      addPart(g, Geo.sphere, mat, 1.05, 0.85, 1.05, 0, 0.72, 0);
+      addPart(g, Geo.sphere, mat, 0.85, 0.7, 0.85, 0, 0.68, 0);
       const limbs = [];
-      for (let i = 0; i < 8; i++) {
-        const a = i*(Math.PI*2/8), lb = this.buildJointedLimb(mat, 0.14, 1.15, 0.16);
-        lb.position.set(Math.cos(a)*0.36, 0.76, Math.sin(a)*0.36); lb.rotation.set(0.85, -a, 0); g.add(lb); limbs.push(lb);
+      for (let i = 0; i < 14; i++) {
+        const a = i*(Math.PI*2/14) + (i%3)*0.12;
+        const len = 0.88 + (i % 4) * 0.24, rad = 0.09 + (i % 3) * 0.03;
+        const lb = this.buildJointedLimb(mat, rad, len, rad*1.15);
+        lb.position.set(Math.cos(a)*0.34, 0.62 + (i%3)*0.16, Math.sin(a)*0.34);
+        lb.rotation.set(0.75 + (i%3)*0.18, -a, (i%2 ? 0.2 : -0.2));
+        g.add(lb); limbs.push(lb);
       }
       g.userData = { limbs };
     }
@@ -3846,25 +4163,36 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
   }
 
   /* === SUPPLIES, BATTERIES, MOTH JELLY, TASK ITEMS, SINGULARITY SAMPLE & EXITS === */
-  if (!isSpawn && !isManila && lv.arch !== 'red_hospital' && rng() < 0.19) {
+  // §2-6 Zone-Aware Placement: NO vending machines on roads, crosswalks, or inside enterable houses!
+  if ((lv.arch === 'endless_city' || lv.arch === 'suburbs_outdoor' || lv.arch === 'motion_suburbs') && (cz%2===0 || cx%2===0)) {
+    chunk.zoneType = (cz%2===0 && cx%2===0) ? 'crosswalk' : 'road';
+  }
+  const canPlaceVending = (chunk.zoneType !== 'road' && chunk.zoneType !== 'crosswalk' && chunk.zoneType !== 'house_interior');
+  if (!isSpawn && !isManila && canPlaceVending && lv.arch !== 'red_hospital' && rng() < 0.19) {
     const r = tryPlaceRandomProp(chunk, rng, wx, wz, 11, 11, 0.9, 0.62, 0.52, () => PropFactory.vendingMachine(), { cardinal: true });
     if (r) addInteractable(chunk, r.obj, r.x, 0, r.z, 'vending', '[E] 自動販売機を使う', { uses: 2 }, 2.6);
   }
 
-  // §5-4 Depth-scaled generous supply & battery spawning
+  // §5-4 Depth-scaled generous supply & battery spawning (respecting §2-6 zone rules)
   const supplyCount = (lv.arch === 'warehouse_halls' || lv.arch === 'glass_office' || state.depth >= 4) ? 2 : 1;
-  for (let s = 0; s < supplyCount; s++) {
-    if (rng() < (0.64 + Math.min(0.22, state.depth * 0.03))) {
-      const ix = wx + (rng()-0.5) * (lv.arch==='pipe_corridor'||lv.arch==='red_hospital' ? 3.2 : 11);
-      const iz = wz + (rng()-0.5) * 11;
-      if (!pointCollides(chunk.colliders, ix, iz, 0.55)) {
-        const roll = rng();
-        if (roll < 0.25) addInteractable(chunk, PropFactory.almondWater(), ix, lv.waterY||0, iz, 'almond', '[E] アーモンドウォーターを拾う');
-        else if (roll < 0.45) addInteractable(chunk, PropFactory.batteryItem(), ix, lv.waterY||0, iz, 'battery', '[E] 乾電池を拾う');
-        else if (roll < 0.68) { const k = Math.floor(rng()*4); addInteractable(chunk, PropFactory.foodItem(k), ix, lv.waterY||0, iz, 'food', `[E] ${['缶詰','パン','りんご','チョコバー'][k]}を拾う`); }
-        else if (roll < 0.81) addInteractable(chunk, PropFactory.mothJellyItem(), ix, lv.waterY||0, iz, 'jelly', '[E] モスゼリーを拾う');
-        else if (roll < 0.91) addInteractable(chunk, PropFactory.medkit(), ix, lv.waterY||0, iz, 'medkit', '[E] 救急キットを拾う');
-        else { addInteractable(chunk, PropFactory.supplyCrate(), ix, lv.waterY||0, iz, 'crate', '[E] M.E.G.補給箱を開ける', {}, 2.5); chunk.colliders.push({ minX: ix-0.45, maxX: ix+0.45, minZ: iz-0.45, maxZ: iz+0.45, minY: 0, maxY: 1, disabled: false }); }
+  if (chunk.zoneType !== 'house_interior') {
+    for (let s = 0; s < supplyCount; s++) {
+      if (rng() < (0.64 + Math.min(0.22, state.depth * 0.03))) {
+        let ix = wx + (rng()-0.5) * (lv.arch==='pipe_corridor'||lv.arch==='red_hospital' ? 3.2 : 11);
+        let iz = wz + (rng()-0.5) * 11;
+        // On roads/crosswalks, push supplies onto the sidewalk edge, never in center of road!
+        if (chunk.zoneType === 'road' || chunk.zoneType === 'crosswalk') {
+          ix = wx + (rng() < 0.5 ? -5.8 : 5.8); iz = wz + (rng()-0.5)*9;
+        }
+        if (!pointCollides(chunk.colliders, ix, iz, 0.55)) {
+          const roll = rng();
+          if (roll < 0.25) addInteractable(chunk, PropFactory.almondWater(), ix, lv.waterY||0, iz, 'almond', '[E] アーモンドウォーターを拾う');
+          else if (roll < 0.45) addInteractable(chunk, PropFactory.batteryItem(), ix, lv.waterY||0, iz, 'battery', '[E] 乾電池を拾う');
+          else if (roll < 0.68) { const k = Math.floor(rng()*4); addInteractable(chunk, PropFactory.foodItem(k), ix, lv.waterY||0, iz, 'food', `[E] ${['缶詰','パン','りんご','チョコバー'][k]}を拾う`); }
+          else if (roll < 0.81) addInteractable(chunk, PropFactory.mothJellyItem(), ix, lv.waterY||0, iz, 'jelly', '[E] モスゼリーを拾う');
+          else if (roll < 0.91) addInteractable(chunk, PropFactory.medkit(), ix, lv.waterY||0, iz, 'medkit', '[E] 救急キットを拾う');
+          else { addInteractable(chunk, PropFactory.supplyCrate(), ix, lv.waterY||0, iz, 'crate', '[E] M.E.G.補給箱を開ける', {}, 2.5); chunk.colliders.push({ minX: ix-0.45, maxX: ix+0.45, minZ: iz-0.45, maxZ: iz+0.45, minY: 0, maxY: 1, disabled: false }); }
+        }
       }
     }
   }
@@ -3908,20 +4236,22 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
     chunk.lights.push({ x: wx, y: 1.1, z: wz, color: 0x62eeff });
   }
 
-  // §3-1 Noclip Spot & §3-2 Exits & §6-1 Escape White Door (Depth >= 10)
+  // §2-2 Level 0 18-26m Early Exit Guarantee + §3-2 Return Rift (Depth <= 3) + §6-1 Escape White Door (Depth >= 10)
   const distFromOrigin = Math.hypot(cx, cz);
   let spawnExit = forceExit;
   if (!spawnExit) {
     if (lv.arch === 'red_hospital') { if (cx === 0 && (cz === -5 || cz === 5)) spawnExit = true; }
+    else if (lv.id === 0 && cx === 1 && cz === 1) spawnExit = true; // ~22.6m from spawn (within 18-26m!)
     else if (distFromOrigin >= 2 && rng() < 0.16) spawnExit = true;
   }
   if (spawnExit) {
-    const ex = (lv.arch==='red_hospital'||lv.arch==='pipe_corridor') ? wx : wx+(rng()-0.5)*5, ez = wz;
+    const ex = (lv.arch==='red_hospital'||lv.arch==='pipe_corridor') ? wx : (lv.id===0 && cx===1 && cz===1 ? wx - 1.2 : wx+(rng()-0.5)*5), ez = wz;
     const rec = loadRecords();
     const whiteChance = state.depth >= 10 ? (0.28 + Math.min(0.32, (rec.samplesCollected||0)*0.03)) : 0;
     let etype;
     if (lv.arch === 'red_hospital') etype = 'door';
     else if (whiteChance > 0 && rng() < whiteChance) etype = 'white_door';
+    else if (state.depth <= 3 && !(lv.id === 0 && cx === 1 && cz === 1) && rng() < 0.14) etype = 'return_rift';
     else if (lv.id === 0 && rng() < 0.42) etype = 'noclip';
     else {
       const types = ['door', 'stairs', 'elevator', 'rift', 'noclip'];
@@ -3929,6 +4259,7 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
     }
     const labels = {
       white_door: '[E] 白い扉を開く（現実世界へ脱出！）',
+      return_rift: '[E] 帰還の裂け目（未確定サンプルを確定して安全に帰還）',
       noclip: '[E] 薄い床へ踏み抜く（ノークリップ遷移）',
       door: '[E] 非常口ドア（深度+1）',
       stairs: '[E] 光る階段（深度+2）',
@@ -3937,11 +4268,11 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
     };
     const mesh = PropFactory.exitDoor(etype);
     const it = addInteractable(chunk, mesh, ex, 0, ez, 'exit', labels[etype], { etype }, etype === 'noclip' ? 2.2 : 3.0);
-    const col = etype === 'white_door' ? 0xffffff : (etype === 'rift' || etype === 'noclip' ? 0xa370ff : 0x6bff9c);
+    const col = etype === 'white_door' ? 0xffffff : (etype === 'return_rift' ? 0x5eeeff : (etype === 'rift' || etype === 'noclip' ? 0xa370ff : 0x6bff9c));
     chunk.lights.push({ x: ex, y: etype === 'noclip' ? 0.6 : 2.35, z: ez + 0.7, color: col });
     chunk.hasExit = true;
     if (etype === 'noclip') chunk.noclipSpot = { x: ex, z: ez, it };
-    if (lv.arch !== 'red_hospital' && etype !== 'noclip' && etype !== 'white_door' && rng() < 0.25) {
+    if (lv.arch !== 'red_hospital' && etype !== 'noclip' && etype !== 'white_door' && etype !== 'return_rift' && rng() < 0.25) {
       chunk.stretchExit = { it, stretched: 0, maxStretch: 13.0 };
     }
   }
@@ -4039,8 +4370,11 @@ function triggerUnseenShifts(dt, forceInstant = false) {
   const toRebuild = [];
   chunks.forEach(ch => {
     if (ch.cx === pcx && ch.cz === pcz) { ch.seen = true; ch.visited = true; ch.unseenTime = 0; return; }
-    if (!collapse && ch.hasExit) return;
+    // §2-1 Persistent Exit Guarantee: NEVER rebuild chunk containing tracked exit or normal-mode exits!
+    const hasTrackedExit = state.trackedExitUid && ch.interactables.some(it => it.uid === state.trackedExitUid);
+    if (hasTrackedExit) return;
     const dx = ch.wx - state.pos.x, dz = ch.wz - state.pos.z, dist = Math.hypot(dx, dz);
+    if (ch.hasExit && (!collapse || dist < 28)) return;
     if (dist < 11.5) return;
     const dot = (dx*fwdX + dz*fwdZ) / (dist || 1);
     const hideBlind = collapse && state.hide.active;
@@ -4097,19 +4431,48 @@ function isInsideManilaRoom(x, z) {
   return inside;
 }
 
+// §2-3 Helper: compute stereo pan (-1 left .. +1 right) and relative screen side for a world point
+function getRelativePanAndSide(tx, tz) {
+  const viewYaw = getActiveViewYaw();
+  const ang = Math.atan2(-(tx - state.pos.x), -(tz - state.pos.z));
+  const diff = Math.atan2(Math.sin(ang - viewYaw), Math.cos(ang - viewYaw));
+  const pan = Math.max(-1, Math.min(1, -Math.sin(diff)));
+  let side = 't';
+  if (Math.abs(diff) > 2.2) side = 'b';
+  else if (diff > 0.55) side = 'l';
+  else if (diff < -0.55) side = 'r';
+  return { pan, side, diff };
+}
+function pulseHitEdge(tx, tz) {
+  const { side } = getRelativePanAndSide(tx, tz);
+  const el = document.getElementById('hit-edge-' + side);
+  if (!el) return;
+  el.style.opacity = '1';
+  clearTimeout(el._t); el._t = setTimeout(() => { el.style.opacity = '0'; }, 380);
+}
+function showKawagiBanner() {
+  const el = document.getElementById('kawagi-banner');
+  el.classList.add('show');
+  clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 4200);
+}
+
 function spawnEntity(kindOverride = null, posOverride = null, zoneRef = null) {
   if (!state.horrorMode || settings.entityFreq === 'none' || mp.role === 'guest') return;
+  if (!kindOverride && state.spawnGraceTimer > 0) return; // §2-2 45s early grace on Depth 1!
   const lv = LEVELS[state.levelIdx];
   const pool = lv.entities || ['bacteria'];
-  const maxEnt = (lv.arch === 'red_hospital' ? 3 : (settings.entityFreq === 'high' ? 3 : 2));
-  if (!kindOverride && activeEntities.length >= maxEnt) return;
+  const totalPlayers = mp.active ? (1 + mp.peers.size) : 1;
+  // §2-2 Depth 1 max 1 entity; §7-4 Co-op scales 2 + (players - 2)
+  const baseMax = state.depth <= 1 ? 1 : (mp.active ? (2 + Math.max(0, totalPlayers - 2)) : (settings.entityFreq === 'high' ? 3 : 2));
+  const maxEnt = lv.arch === 'red_hospital' ? 3 : baseMax;
+  const nonSnailCount = activeEntities.filter(e => e.kind !== 'snail').length;
+  if (!kindOverride && nonSnailCount >= maxEnt) return;
 
   const kind = kindOverride || pool[Math.floor(Math.random()*pool.length)];
   const isChild = (kind === 'faceling' && Math.random() < 0.45);
   let sx, sz;
   if (posOverride) { sx = posOverride.x; sz = posOverride.z; }
   else {
-    // §4-3 Prefer darker spot away from ceiling lights
     const fwdX = -Math.sin(state.yaw), fwdZ = -Math.cos(state.yaw), sideX = Math.cos(state.yaw), sideZ = -Math.sin(state.yaw);
     if (kind === 'horde') { sx = state.pos.x - fwdX*(10+Math.random()*4) + (Math.random()-0.5)*2; sz = state.pos.z - fwdZ*(10+Math.random()*4); }
     else if (kind === 'skinstealer') { sx = state.pos.x - fwdX*(11+Math.random()*5) + sideX*(Math.random()-0.5)*3; sz = state.pos.z - fwdZ*(11+Math.random()*5) + sideZ*(Math.random()-0.5)*3; }
@@ -4118,16 +4481,19 @@ function spawnEntity(kindOverride = null, posOverride = null, zoneRef = null) {
       sx = state.pos.x + fwdX*dist*dirSign + sideX*lat; sz = state.pos.z + fwdZ*dist*dirSign + sideZ*lat;
     }
   }
-  if (isInsideManilaRoom(sx, sz)) return;
+  if (kind !== 'snail' && isInsideManilaRoom(sx, sz)) return;
   const mesh = PropFactory.createEntityModel(kind, isChild);
   mesh.position.set(sx, 0, sz); entityGroup.add(mesh);
   activeEntities.push({
     eid: Math.floor(Math.random()*1e9), kind, isChild, mesh, x: sx, z: sz,
-    state: 'stalk', life: kind === 'horde' ? 60 : (36 + Math.random()*22),
+    homeX: sx, homeZ: sz,
+    state: 'stalk', life: kind === 'snail' ? 999999 : (kind === 'horde' ? 60 : (36 + Math.random()*22)),
     alerted: false, codexLogged: false, attackCd: 0, phase: Math.random()*6,
     lostSightTimer: 0, stareAccum: 0, stunTimer: 0, retreatTimer: 0,
     stakeoutTimer: 0, stakeoutX: 0, stakeoutZ: 0, stakeoutSoundCd: 0,
-    soundCd: 0, prankCd: 0, zone: zoneRef, wanderAng: Math.random()*Math.PI*2, wasMoving: false
+    soundCd: 0, prankCd: 0, zone: zoneRef, wanderAng: Math.random()*Math.PI*2, wasMoving: false,
+    violation: 0, chargeTimer: 0, hopCd: 0, lockAccum: 0, highLoseTimer: 0,
+    lureX: 0, lureZ: 0, lureTimer: 0, scatterTimer: 0, trailIdx: 0, bellCd: 2.0
   });
 }
 
@@ -4144,7 +4510,7 @@ function dropPlayerItemForPrank() {
     addInteractable(ch, fns[slot](), dx, state.floorY, dz, types[slot], '[E] 落とした携帯品を拾う');
   }
   sound.playPickup();
-  showToast('子Facelingがすれ違いざまに携帯品を1つ落とした！足元を拾い直そう');
+  showToast('子ノッペラがすれ違いざまに携帯品を1つ落とした！足元を拾い直そう');
 }
 
 // §5-5 Tension Wave Director (invisible pacing: quiet -> uneasy -> peak -> relief)
@@ -4157,44 +4523,90 @@ function updateDirector(dt, chasingCount) {
     else if (d.phase === 'relief') { d.phase = 'quiet'; d.timer = 14; }
     else if (d.phase === 'quiet') {
       d.phase = 'uneasy'; d.timer = 16;
-      // Inject subtle distant ambience when quiet for too long
       if (Math.random() < 0.6) sound.playDistantSteps(Math.random()<0.5 ? -0.8 : 0.8);
       else sound.playShiftCreak();
     } else { d.phase = 'quiet'; d.timer = 14; }
   }
 }
 
+function applyContactDamage(e, dx, dz, dist) {
+  const meta = ENTITY_META[e.kind === 'horde' ? 'bacteria' : e.kind];
+  const { pan } = getRelativePanAndSide(e.x, e.z);
+  pulseHitEdge(e.x, e.z);
+  if (e.kind === 'snail') {
+    state.hp = 0; state.runTookDamage = true;
+    sound.playHurt();
+    showResultScreen(false, '黄色いカタツムリに触れた');
+    return true;
+  }
+  const isRat = (e.kind === 'deathrat');
+  const dmg = isRat ? 8 : 24; // §1 unified 24 dmg (Death Rat exception: 8 dmg, no knockback, 0.8s cd)
+  state.hp -= dmg; state.runTookDamage = true;
+  state.sanity = Math.max(0, state.sanity - (isRat ? 4 : 14));
+  state.hurtFlash = isRat ? 0.55 : 0.95;
+  state.hurtInvuln = isRat ? 0.65 : 1.5;
+  state.glitchAmount = Math.max(state.glitchAmount, isRat ? 0.5 : 0.95);
+  e.attackCd = isRat ? 0.8 : 2.1;
+  sound.playHurt(); sound.playEntityAlert(e.kind, pan);
+  if (!isRat) { e.x -= (dx/(dist||1))*2.6; e.z -= (dz/(dist||1))*2.6; }
+  showToast(`${meta.name} に襲われた！ダッシュで離脱せよ！`);
+  return false;
+}
+
+function updateThreatEdgeGlow(nearestChaser) {
+  for (const s of ['l','r','t','b']) document.getElementById('threat-edge-' + s).style.opacity = '0';
+  if (!nearestChaser) return;
+  const { side } = getRelativePanAndSide(nearestChaser.x, nearestChaser.z);
+  const prox = Math.max(0.18, Math.min(0.85, 1 - nearestChaser.dist / 16));
+  const pulse = 0.72 + 0.28 * Math.sin(state.elapsed * 9);
+  document.getElementById('threat-edge-' + side).style.opacity = (prox * pulse).toFixed(2);
+}
+
 function updateEntities(dt, playerMovedDist) {
   state.stareProgress = 0;
+  // §5-5 Record player breadcrumb trail every 2s for Yellow Snail
+  if (state.snailAttached) {
+    state.trailTimer += dt;
+    if (state.trailTimer >= 2.0) {
+      state.trailTimer = 0;
+      state.playerTrail.push({ x: state.pos.x, z: state.pos.z });
+      if (state.playerTrail.length > 240) state.playerTrail.shift();
+    }
+    if (state.snailDelayTimer > 0) {
+      state.snailDelayTimer -= dt;
+      if (state.snailDelayTimer <= 0 && !activeEntities.some(e => e.kind === 'snail')) {
+        spawnEntity('snail', { x: 0, z: 0 });
+        showFirstHint('snail_bell', '遠くで小さな鈴の音がする…「黄色いカタツムリ」が軌跡を辿っている。来た道を戻るな！');
+      }
+    }
+  }
+
   // Guest receives entity positions from host!
   if (mp.role === 'guest') {
-    const playerHidden = (state.hide.active && (state.hide.kind !== 'car' || state.hide.ducked)) || isInsideManilaRoom(state.pos.x, state.pos.z);
-    let nearest = 999;
+    const playerHidden = state.downed || (state.hide.active && (state.hide.kind !== 'car' || state.hide.ducked)) || isInsideManilaRoom(state.pos.x, state.pos.z);
+    let nearest = 999, nearestEnt = null;
     for (const e of activeEntities) {
       e.x += (e.tx - e.x) * Math.min(1, dt * 10); e.z += (e.tz - e.z) * Math.min(1, dt * 10);
       e.mesh.position.set(e.x, 0, e.z); e.mesh.rotation.y = e.ry || 0;
-      const dist = Math.hypot(state.pos.x - e.x, state.pos.z - e.z);
+      const dx = state.pos.x - e.x, dz = state.pos.z - e.z, dist = Math.hypot(dx, dz);
       if (!e.codexLogged && dist < 16 && e.kind !== 'horde') { e.codexLogged = true; registerCodexSeen(e.kind); }
-      if (e.kind !== 'faceling' && dist < nearest) nearest = dist;
-      if (e.kind !== 'faceling' && !playerHidden && dist < 1.3 && state.hurtInvuln <= 0) {
-        const meta = ENTITY_META[e.kind === 'horde' ? 'bacteria' : e.kind];
-        state.hp -= 22; state.runTookDamage = true; state.sanity = Math.max(0, state.sanity - 12);
-        state.hurtFlash = 0.9; state.hurtInvuln = 1.6; state.glitchAmount = 0.9;
-        sound.playHurt(); sound.playEntityAlert(e.kind);
-        showToast(`${meta.name} に襲われた！ダッシュで離脱せよ！`);
+      if (e.kind !== 'faceling' && dist < nearest) { nearest = dist; nearestEnt = { x: e.x, z: e.z, dist }; }
+      if (e.kind !== 'faceling' && (!playerHidden || e.kind === 'snail') && dist < 1.32 && state.hurtInvuln <= 0) {
+        if (applyContactDamage(e, dx, dz, dist)) return '';
       }
     }
-    if (nearest < 17) {
-      const prox = Math.max(0, 1 - nearest / 17);
+    updateThreatEdgeGlow(nearest < 15 ? nearestEnt : null);
+    if (nearest < 17 && nearestEnt) {
+      const prox = Math.max(0, 1 - nearest / 17), { pan } = getRelativePanAndSide(nearestEnt.x, nearestEnt.z);
       state.glitchAmount = Math.max(state.glitchAmount, prox * 0.6);
       sound.heartbeatTimer -= dt;
-      if (sound.heartbeatTimer <= 0) { sound.playHeartbeat(prox); sound.heartbeatTimer = Math.max(0.38, 1.05 - prox*0.65); }
+      if (sound.heartbeatTimer <= 0) { sound.playHeartbeat(prox, pan); sound.heartbeatTimer = Math.max(0.38, 1.05 - prox*0.65); }
       if (nearest < 12) return '警告：エンティティがすぐ近くに迫っている！';
     }
     return '';
   }
 
-  if (!state.horrorMode || settings.entityFreq === 'none') return '';
+  if (!state.horrorMode || settings.entityFreq === 'none') { updateThreatEdgeGlow(null); return ''; }
   const lv = LEVELS[state.levelIdx];
 
   chunks.forEach(ch => {
@@ -4208,27 +4620,35 @@ function updateEntities(dt, playerMovedDist) {
     }
   });
 
+  const totalPlayers = mp.active ? (1 + mp.peers.size) : 1;
+  const coopIntervalMul = Math.pow(0.85, Math.max(0, totalPlayers - 1));
   const dirMul = state.director.phase === 'relief' ? 1.8 : (state.director.phase === 'uneasy' ? 0.85 : 1.0);
-  const freqMul = (settings.entityFreq === 'high' ? 0.6 : (settings.entityFreq === 'low' ? 1.7 : 1.0)) * dirMul;
-  entitySpawnCd -= dt;
-  if (entitySpawnCd <= 0) {
-    spawnEntity();
-    entitySpawnCd = (lv.arch === 'red_hospital' ? 5.0 : Math.max(12, 26 - state.depth*1.3)) * freqMul;
+  const freqMul = (settings.entityFreq === 'high' ? 0.6 : (settings.entityFreq === 'low' ? 1.7 : 1.0)) * dirMul * coopIntervalMul;
+  if (state.spawnGraceTimer > 0) state.spawnGraceTimer = Math.max(0, state.spawnGraceTimer - dt);
+  else {
+    entitySpawnCd -= dt;
+    if (entitySpawnCd <= 0) {
+      spawnEntity();
+      const baseCd = lv.arch === 'red_hospital' ? 5.0 : (state.depth <= 1 ? 34.0 : Math.max(12, 26 - state.depth*1.2));
+      entitySpawnCd = baseCd * freqMul;
+    }
   }
 
   const viewYaw = getActiveViewYaw(), fwdX = -Math.sin(viewYaw), fwdZ = -Math.cos(viewYaw);
-  const playerHidden = (state.hide.active && (state.hide.kind !== 'car' || state.hide.ducked)) || isInsideManilaRoom(state.pos.x, state.pos.z);
+  const playerHidden = state.downed || (state.hide.active && (state.hide.kind !== 'car' || state.hide.ducked)) || isInsideManilaRoom(state.pos.x, state.pos.z);
   const crouchStealth = state.crouching && playerMovedDist < 0.005;
   const speedMul = settings.entitySpeed, MAX_SPEED = 6.45;
-  let nearestThreatDist = 999, chasingCount = 0, stakeoutNear = false;
+  let nearestThreatDist = 999, nearestThreatPos = null, nearestChaser = null, chasingCount = 0, stakeoutNear = false, kawagiClose = false;
 
   for (let i = activeEntities.length - 1; i >= 0; i--) {
     const e = activeEntities[i];
-    e.life -= dt;
+    if (e.kind !== 'snail') e.life -= dt;
     if (e.attackCd > 0) e.attackCd -= dt;
     if (e.stunTimer > 0) e.stunTimer -= dt;
     if (e.soundCd > 0) e.soundCd -= dt;
     if (e.prankCd > 0) e.prankCd -= dt;
+    if (e.lureTimer > 0) e.lureTimer -= dt;
+    if (e.scatterTimer > 0) e.scatterTimer -= dt;
 
     const dx = state.pos.x - e.x, dz = state.pos.z - e.z, dist = Math.hypot(dx, dz);
     const toEntX = -dx / (dist || 1), toEntZ = -dz / (dist || 1);
@@ -4237,13 +4657,29 @@ function updateEntities(dt, playerMovedDist) {
     const flashLit = state.flashlightOn && (!settings.batteryEnabled || state.battery > 1);
     const playerLookingNormal = (lookDot > 0.56 && dist < 24 && hasLOS && state.blackoutTimer <= 0);
     const playerLightLock = (flashLit && lookDot > 0.34 && dist < 24 && hasLOS);
+    const { pan } = getRelativePanAndSide(e.x, e.z);
 
     if (!e.codexLogged && dist < 16 && hasLOS && e.kind !== 'horde') { e.codexLogged = true; registerCodexSeen(e.kind); }
 
     let moveSpd = 0, moveDirX = dx / (dist || 1), moveDirZ = dz / (dist || 1);
     const meta = ENTITY_META[e.kind === 'horde' ? 'bacteria' : e.kind];
 
-    if (e.state === 'stakeout') {
+    if (e.kind === 'snail') {
+      // §5-5 The Snail in Yellow: follows breadcrumb trail at 0.85 m/s, never stops, enters hiding spots & Manila Room!
+      e.bellCd -= dt;
+      if (e.bellCd <= 0) {
+        e.bellCd = 10.0;
+        if (dist < 28) sound.playSnailBell(pan, Math.max(0.03, (1 - dist/28) * 0.16));
+      }
+      let tx = state.pos.x, tz = state.pos.z;
+      if (state.playerTrail.length > 0) {
+        while (e.trailIdx < state.playerTrail.length - 1 && Math.hypot(state.playerTrail[e.trailIdx].x - e.x, state.playerTrail[e.trailIdx].z - e.z) < 0.8) e.trailIdx++;
+        const pt = state.playerTrail[Math.min(e.trailIdx, state.playerTrail.length - 1)];
+        if (pt && dist > 3.5) { tx = pt.x; tz = pt.z; }
+      }
+      const sdx = tx - e.x, sdz = tz - e.z, sd = Math.hypot(sdx, sdz);
+      if (sd > 0.05) { moveDirX = sdx/sd; moveDirZ = sdz/sd; moveSpd = 0.85; }
+    } else if (e.state === 'stakeout') {
       e.stakeoutTimer -= dt; e.stakeoutSoundCd -= dt; stakeoutNear = true;
       const sdx = e.stakeoutX - e.x, sdz = e.stakeoutZ - e.z, sd = Math.hypot(sdx, sdz);
       if (sd > 1.3) { moveSpd = 2.6; moveDirX = sdx/sd; moveDirZ = sdz/sd; } else moveSpd = 0;
@@ -4263,34 +4699,42 @@ function updateEntities(dt, playerMovedDist) {
       } else if (!playerHidden) {
         moveSpd = Math.min(MAX_SPEED, 5.1 * speedMul);
         if (!e.wasMoving && dist < 10.5 && e.soundCd <= 0) { sound.playCeramicScrape(Math.max(0.05, (1-dist/10.5)*0.16)); e.soundCd = 1.8; }
-        e.wasMoving = true; if (dist < 14) chasingCount++;
+        e.wasMoving = true; if (dist < 14) { chasingCount++; if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist }; }
       }
     } else if (e.kind === 'smiler') {
       e.mesh.lookAt(state.pos.x, 1.5, state.pos.z); e.mesh.position.y = Math.sin(state.elapsed*2.5+e.phase)*0.14;
+      if (e.mesh.userData.face) e.mesh.userData.face.scale.y = 1.0 + Math.sin(state.elapsed*6+e.phase)*0.08;
       if (!playerHidden && flashLit && dist < 21 && hasLOS) {
-        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('smiler'); showAnomalyBadge(`ENTITY: ${meta.name}（ライト[F]を消せば退く！）`); }
+        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('smiler', pan); showAnomalyBadge(`ENTITY: ${meta.name}（ライト[F]を消せば退く！）`); }
         e.state = 'chase'; e.lostSightTimer = 0; chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.35*speedMul);
+        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
       } else { e.state = 'stalk'; moveSpd = dist < 12 ? 1.6 : 0; moveDirX = -dx/(dist||1); moveDirZ = -dz/(dist||1); }
     } else if (e.kind === 'hound') {
       const noisy = !playerHidden && (state.sprinting || (playerMovedDist > 0.01 && !state.crouching));
       const hearR = state.sprinting ? 22 : (noisy ? 12.5 : (crouchStealth ? 3.0 : 5.0));
       if (!playerHidden && noisy && dist < hearR) {
-        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('hound'); showAnomalyBadge(`ENTITY: ${meta.name}（足音に反応！しゃがみ静止せよ）`); }
+        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('hound', pan); showAnomalyBadge(`ENTITY: ${meta.name}（足音に反応！しゃがみ静止せよ）`); }
         e.state = 'chase'; e.lostSightTimer = 0;
       }
       if (e.state === 'chase') {
         if (playerHidden || (!noisy && !hasLOS) || crouchStealth) { e.lostSightTimer += dt; if (e.lostSightTimer >= 4.0) { e.state = 'stalk'; e.alerted = false; } }
         else e.lostSightTimer = 0;
         chasingCount++; moveSpd = Math.min(MAX_SPEED, 5.75*speedMul);
+        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+      } else if (e.lureTimer > 0) {
+        // §4-1 Lured to Sonar Pulse origin!
+        const ldx = e.lureX - e.x, ldz = e.lureZ - e.z, ld = Math.hypot(ldx, ldz);
+        if (ld > 1.2) { moveDirX = ldx/ld; moveDirZ = ldz/ld; moveSpd = Math.min(MAX_SPEED, 4.8*speedMul); }
       } else { e.wanderAng += (Math.random()-0.5)*dt*1.4; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.8; }
     } else if (e.kind === 'deathmoth') {
       if (state.mothRepelTimer > 0 && dist < 14) { e.state = 'retreat'; e.retreatTimer = 3.5; }
       else {
         const nearBright = lightPool.some(pl => pl.intensity > 0.8 && Math.hypot(pl.position.x-state.pos.x, pl.position.z-state.pos.z) < 5.5);
-        const litTarget = !playerHidden && (flashLit || (nearBright && lv.ambInt >= 0.22));
+        const litTarget = !playerHidden && (flashLit || (nearBright && (lv.ambInt >= 0.22 || state.breakerLightsRestored)));
         if (litTarget && dist < 18 && hasLOS) {
-          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('deathmoth'); showAnomalyBadge(`ENTITY: ${meta.name}（消灯かモスゼリーで回避）`); }
+          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('deathmoth', pan); showAnomalyBadge(`ENTITY: ${meta.name}（消灯かモスゼリーで回避）`); }
           e.state = 'chase'; e.lostSightTimer = 0; chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.55*speedMul);
+          if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
         } else {
           if (e.state === 'chase') { e.lostSightTimer += dt; if (e.lostSightTimer >= 4.0) { e.state = 'stalk'; e.alerted = false; } }
           e.wanderAng += dt*0.9; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.9;
@@ -4299,9 +4743,16 @@ function updateEntities(dt, playerMovedDist) {
       if (e.mesh.userData.lWing) { const flp = Math.sin(state.elapsed*18+e.phase)*0.65; e.mesh.userData.lWing.rotation.z = flp; e.mesh.userData.rWing.rotation.z = -flp; }
       e.mesh.position.y = Math.sin(state.elapsed*3.2+e.phase)*0.25;
     } else if (e.kind === 'skinstealer') {
-      if (playerLookingNormal && dist < 18) { e.state = 'retreat'; e.retreatTimer = 5.0; sound.playEntityAlert('skinstealer'); showToast('Skin-Stealer と視線が合い後退した！'); }
-      else if (!playerHidden && dist < (crouchStealth ? 8 : 16)) {
-        if (!e.alerted && dist < 11) { e.alerted = true; showAnomalyBadge(`ENTITY: ${meta.name}（背後尾行！チラ見[R]で睨め）`); }
+      if (playerLookingNormal && dist < 18) { e.state = 'retreat'; e.retreatTimer = 5.0; sound.playKawagiStinger(); showToast('カワハギと視線が合い後退した！'); }
+      else if (!playerHidden && dist < (crouchStealth ? 9 : 17)) {
+        if (!e.alerted) {
+          // §2-9 Large full-width banner + distinct stinger (NO direction revealed!)
+          e.alerted = true; sound.playKawagiStinger(); showKawagiBanner();
+        }
+        if (dist < 8.0) {
+          kawagiClose = true;
+          if (e.soundCd <= 0) { sound.playKawagiPulse(); e.soundCd = 0.85; }
+        }
         chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.25*speedMul);
       } else moveSpd = 1.2;
     } else if (e.kind === 'faceling') {
@@ -4311,33 +4762,148 @@ function updateEntities(dt, playerMovedDist) {
       } else { moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.35; }
     } else if (e.kind === 'partygoer') {
       const z = e.zone, inZ = !playerHidden && z && Math.hypot(state.pos.x-z.x, state.pos.z-z.z) < z.r;
-      if (inZ) { if (!e.alerted) { e.alerted = true; sound.playEntityAlert('partygoer'); showAnomalyBadge(`ENTITY: ${meta.name}（パーティ部屋から脱出せよ！）`); } e.state = 'chase'; chasingCount++; moveSpd = Math.min(MAX_SPEED, 6.25*speedMul); }
+      if (inZ) { if (!e.alerted) { e.alerted = true; sound.playEntityAlert('partygoer', pan); showAnomalyBadge(`ENTITY: ${meta.name}（パーティ部屋から脱出せよ！）`); } e.state = 'chase'; chasingCount++; moveSpd = Math.min(MAX_SPEED, 6.25*speedMul); if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist }; }
       else if (z) { e.state = 'stalk'; e.alerted = false; const hdx = z.x-e.x, hdz = z.z-e.z, hd = Math.hypot(hdx, hdz); if (hd > 1.8) { moveDirX = hdx/hd; moveDirZ = hdz/hd; moveSpd = 2.4; } }
+    } else if (e.kind === 'watch') {
+      // §5-1 Neighborhood Watch: stationary watcher with 14m cone; sprint or flashlight triggers violation -> 1.2s -> red charge!
+      const u = e.mesh.userData;
+      const distHome = Math.hypot(e.x - e.homeX, e.z - e.homeZ);
+      if (e.state === 'chase') {
+        e.chargeTimer -= dt;
+        if (!hasLOS || playerHidden) e.lostSightTimer += dt; else e.lostSightTimer = 0;
+        if (e.chargeTimer <= 0 || e.lostSightTimer >= 4.0 || distHome > 30) { e.state = 'return'; e.violation = 0; }
+        else {
+          chasingCount++; moveSpd = Math.min(MAX_SPEED, 5.9*speedMul);
+          if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+          if (u.lampMat) { const fl = Math.sin(state.elapsed*26) > 0; u.lampMat.emissive.setHex(fl ? 0xff2222 : 0x550000); u.coneMat.color.setHex(0xff3333); }
+        }
+      } else if (e.state === 'return') {
+        const hdx = e.homeX - e.x, hdz = e.homeZ - e.z, hd = Math.hypot(hdx, hdz);
+        if (hd < 1.2) e.state = 'stalk';
+        else { moveDirX = hdx/hd; moveDirZ = hdz/hd; moveSpd = 3.2; }
+        if (u.lampMat) { u.lampMat.emissive.setHex(0xfff2cc); u.coneMat.color.setHex(0xfff2cc); }
+      } else {
+        const wFwdX = Math.sin(e.mesh.rotation.y), wFwdZ = Math.cos(e.mesh.rotation.y);
+        const pDot = ((dx/(dist||1))*wFwdX + (dz/(dist||1))*wFwdZ);
+        const inCone = !playerHidden && dist < 14 && pDot > 0.55 && hasLOS;
+        const violating = inCone && (state.sprinting || flashLit);
+        if (violating) {
+          e.violation += dt;
+          if (u.lampMat) { u.lampMat.emissive.setHex(0xffcc22); u.coneMat.color.setHex(0xffcc22); }
+          if (e.violation >= 1.2) {
+            e.state = 'chase'; e.chargeTimer = 6.0; e.lostSightTimer = 0;
+            sound.playEntityAlert('watch', pan);
+            showAnomalyBadge(`ENTITY: ${meta.name}（規則違反検知！光の中で走るな・灯けるな）`);
+          }
+        } else {
+          e.violation = Math.max(0, e.violation - dt * 1.5);
+          if (u.lampMat) { u.lampMat.emissive.setHex(0xfff2cc); u.coneMat.color.setHex(0xfff2cc); }
+        }
+      }
+    } else if (e.kind === 'scarecrow') {
+      // §5-2 Scarecrow: 26m territory, freezes when seen, hops up to 3.2m when unseen!
+      const inTerritory = Math.hypot(state.pos.x - e.homeX, state.pos.z - e.homeZ) < 26;
+      const seenByPlayer = playerLookingNormal || playerLightLock;
+      if (e.hopCd > 0) e.hopCd -= dt;
+      if (e.stunTimer > 0 || seenByPlayer || !inTerritory || playerHidden) {
+        moveSpd = 0; e.mesh.rotation.x *= 0.85;
+      } else {
+        if (!e.alerted && dist < 16) { e.alerted = true; showAnomalyBadge(`ENTITY: ${meta.name}（見ながら後退し縄張り外へ抜けろ）`); }
+        chasingCount++;
+        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        if (e.hopCd <= 0) {
+          e.hopCd = 0.9;
+          const hop = Math.min(3.2, Math.max(0, dist - 0.8));
+          const nx = e.x + (dx/(dist||1))*hop, nz = e.z + (dz/(dist||1))*hop;
+          if (!isInsideManilaRoom(nx, nz)) { e.x = nx; e.z = nz; e.mesh.position.set(e.x, 0, e.z); e.mesh.rotation.y = Math.atan2(dx, dz); e.mesh.rotation.x = 0.22; }
+        }
+      }
+    } else if (e.kind === 'deathrat') {
+      // §5-3 Death Rats: 6-rat swarm, food decoy lure, sonar scatter, high-ground lose target!
+      if (e.mesh.userData.rats) {
+        for (const r of e.mesh.userData.rats) {
+          r.grp.position.x = r.bx + Math.sin(state.elapsed*16 + r.ph)*0.12;
+          r.grp.position.z = r.bz + Math.cos(state.elapsed*14 + r.ph)*0.12;
+        }
+      }
+      if (e.scatterTimer > 0) {
+        moveDirX = -dx/(dist||1); moveDirZ = -dz/(dist||1); moveSpd = 4.2;
+      } else if (e.lureTimer > 0) {
+        const ldx = e.lureX - e.x, ldz = e.lureZ - e.z, ld = Math.hypot(ldx, ldz);
+        if (ld > 0.8) { moveDirX = ldx/ld; moveDirZ = ldz/ld; moveSpd = 4.5; }
+      } else if (state.floorY >= 0.45) {
+        e.highLoseTimer += dt;
+        if (e.highLoseTimer >= 3.0) { e.state = 'stalk'; e.alerted = false; }
+        moveSpd = 0;
+      } else {
+        e.highLoseTimer = 0;
+        const detectR = state.sprinting ? 16 : 12;
+        if (!playerHidden && dist < detectR && (hasLOS || playerMovedDist > 0.01)) {
+          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('deathrat', pan); showAnomalyBadge(`ENTITY: ${meta.name}（食料[2]で囮／探知[Q]で離散）`); }
+          e.state = 'chase'; e.lostSightTimer = 0;
+        }
+        if (e.state === 'chase') {
+          if (playerHidden || !hasLOS) { e.lostSightTimer += dt; if (e.lostSightTimer >= 4.0) { e.state = 'stalk'; e.alerted = false; } }
+          else e.lostSightTimer = 0;
+          const lightSlow = (flashLit && lookDot > 0.45 && dist < 14) ? 0.8 : 1.0;
+          chasingCount++; moveSpd = Math.min(MAX_SPEED, 5.5 * speedMul * lightSlow);
+          if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        } else { e.wanderAng += (Math.random()-0.5)*dt*1.8; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 2.0; }
+      }
+    } else if (e.kind === 'tvhead') {
+      // §5-4 TV Head: 15m LOS lock-on (1.6s, half speed if crouch+dark) -> white flash -> 5.6 m/s 4s charge!
+      const u = e.mesh.userData;
+      if (u.scrMat && Math.random() < 0.35) { u.scrMat.map.offset.set(Math.random(), Math.random()); }
+      if (e.state === 'chase') {
+        e.chargeTimer -= dt;
+        if (e.chargeTimer <= 0 || playerHidden) { e.state = 'stalk'; e.lockAccum = 0; if (u.scrMat) u.scrMat.emissiveIntensity = 0.85; }
+        else {
+          chasingCount++; moveSpd = Math.min(MAX_SPEED, 5.6*speedMul);
+          if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+          if (u.scrMat) u.scrMat.emissiveIntensity = 2.4;
+        }
+      } else if (!playerHidden && dist < 15 && hasLOS) {
+        const rate = (state.crouching && !flashLit) ? 0.5 : 1.0;
+        e.lockAccum += dt * rate;
+        if (e.soundCd <= 0) { sound.playTvLock(Math.min(1, e.lockAccum/1.6), pan); e.soundCd = 0.24; }
+        if (u.scrMat) u.scrMat.emissiveIntensity = 0.85 + (e.lockAccum/1.6)*1.8;
+        if (e.lockAccum >= 1.6) {
+          e.state = 'chase'; e.chargeTimer = 4.0;
+          sound.playEntityAlert('tvhead', pan);
+          showAnomalyBadge(`ENTITY: ${meta.name}（ロックオン閃光！突撃を回避せよ）`);
+        }
+        e.mesh.rotation.y = Math.atan2(dx, dz);
+      } else {
+        e.lockAccum = 0;
+        if (u.scrMat) u.scrMat.emissiveIntensity = 0.85;
+        e.wanderAng += (Math.random()-0.5)*dt; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.6;
+      }
     } else if (e.kind === 'clump') {
-      if (!playerHidden && dist < 24) { moveSpd = Math.min(MAX_SPEED, 2.0*speedMul); if (dist < 12) chasingCount++; }
+      if (!playerHidden && dist < 24) { moveSpd = Math.min(MAX_SPEED, 2.0*speedMul); if (dist < 12) { chasingCount++; if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist }; } }
       if (dist < 18 && e.soundCd <= 0) { sound.playClumpCreak(Math.max(0.03, (1-dist/18)*0.24)); e.soundCd = 1.35; }
       if (e.mesh.userData.limbs) e.mesh.userData.limbs.forEach((lb, idx) => { lb.rotation.x = 0.8 + Math.sin(state.elapsed*4+idx)*0.38; });
     } else {
       const detectR = state.sprinting ? 18 : (crouchStealth ? 6.0 : 12.0);
       if (!playerHidden && (e.kind === 'horde' || (dist < detectR && hasLOS) || (playerLookingNormal && dist < 15))) {
-        if (!e.alerted) { e.alerted = true; e.state = 'chase'; sound.playEntityAlert('bacteria'); showAnomalyBadge(e.kind === 'horde' ? '背後からクロカビ群が迫っている！走れ！' : `ENTITY: ${meta.name} が追跡開始！角で視線を切れ`); }
+        if (!e.alerted) { e.alerted = true; e.state = 'chase'; sound.playEntityAlert('bacteria', pan); showAnomalyBadge(e.kind === 'horde' ? '背後からクロカビ群が迫っている！走れ！' : `ENTITY: ${meta.name} が追跡開始！角で視線を切れ`); }
         e.lostSightTimer = 0;
       }
       if (e.state === 'chase') {
         if (e.kind !== 'horde' && (!hasLOS || playerHidden)) { e.lostSightTimer += dt; if (e.lostSightTimer >= 4.0) { e.state = 'stalk'; e.alerted = false; } }
         else e.lostSightTimer = 0;
         chasingCount++; moveSpd = Math.min(MAX_SPEED, (e.kind==='horde' ? 5.25 : 4.55)*speedMul);
+        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
       } else { e.wanderAng += (Math.random()-0.5)*dt; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.35; }
     }
 
-    if (moveSpd > 0.01 && (e.state === 'retreat' || dist > 0.9)) {
+    if (moveSpd > 0.01 && (e.state === 'retreat' || dist > 0.9 || e.kind === 'snail')) {
       const nx = e.x + moveDirX*moveSpd*dt, nz = e.z + moveDirZ*moveSpd*dt;
-      let allow = !isInsideManilaRoom(nx, nz); // Entities NEVER enter Manila Room!
+      let allow = (e.kind === 'snail') || !isInsideManilaRoom(nx, nz);
       if (e.kind === 'partygoer' && e.zone && Math.hypot(nx-e.zone.x, nz-e.zone.z) > e.zone.r - 0.3) allow = false;
       if (allow) {
         const nearCols = getNearbyColliders(nx, nz);
-        if (!pointCollides(nearCols, nx, e.z, 0.32, 0)) e.x = nx;
-        if (!pointCollides(nearCols, e.x, nz, 0.32, 0)) e.z = nz;
+        if (e.kind === 'snail' || !pointCollides(nearCols, nx, e.z, 0.32, 0)) e.x = nx;
+        if (e.kind === 'snail' || !pointCollides(nearCols, e.x, nz, 0.32, 0)) e.z = nz;
         e.mesh.position.x = e.x; e.mesh.position.z = e.z;
         if (e.kind !== 'smiler') e.mesh.rotation.y = Math.atan2(moveDirX, moveDirZ);
       }
@@ -4349,26 +4915,23 @@ function updateEntities(dt, playerMovedDist) {
       }
     }
 
-    if (e.kind !== 'faceling' && dist < nearestThreatDist) nearestThreatDist = dist;
+    if (e.kind !== 'faceling' && dist < nearestThreatDist) { nearestThreatDist = dist; nearestThreatPos = { x: e.x, z: e.z }; }
 
-    if (e.kind !== 'faceling' && !playerHidden && e.state !== 'retreat' && e.state !== 'stakeout' && dist < 1.32 && e.attackCd <= 0 && state.hurtInvuln <= 0) {
-      state.hp -= (e.kind === 'horde' ? 30 : 24); state.runTookDamage = true;
-      state.sanity = Math.max(0, state.sanity - 14);
-      state.hurtFlash = 0.95; state.hurtInvuln = 1.5; state.glitchAmount = 0.95; e.attackCd = 2.1;
-      sound.playHurt(); sound.playEntityAlert(e.kind);
-      e.x -= (dx/(dist||1))*2.6; e.z -= (dz/(dist||1))*2.6;
-      showToast(`${meta.name} に襲われた！ダッシュで離脱せよ！`);
+    if (e.kind !== 'faceling' && (!playerHidden || e.kind === 'snail') && e.state !== 'retreat' && e.state !== 'stakeout' && dist < (e.kind === 'snail' ? 0.95 : 1.32) && e.attackCd <= 0 && (e.kind === 'snail' || state.hurtInvuln <= 0)) {
+      if (applyContactDamage(e, dx, dz, dist)) return '';
     }
-    if (e.life <= 0 || (e.kind !== 'partygoer' && dist > 38)) { entityGroup.remove(e.mesh); activeEntities.splice(i, 1); }
+    if (e.kind !== 'snail' && (e.life <= 0 || (e.kind !== 'partygoer' && dist > 38))) { entityGroup.remove(e.mesh); activeEntities.splice(i, 1); }
   }
 
+  document.getElementById('kawagi-vignette').style.opacity = kawagiClose ? '0.92' : '0';
+  updateThreatEdgeGlow(nearestChaser);
   updateDirector(dt, chasingCount);
 
-  if (nearestThreatDist < 17) {
-    const prox = Math.max(0, 1 - nearestThreatDist / 17);
+  if (nearestThreatDist < 17 && nearestThreatPos) {
+    const prox = Math.max(0, 1 - nearestThreatDist / 17), { pan } = getRelativePanAndSide(nearestThreatPos.x, nearestThreatPos.z);
     state.glitchAmount = Math.max(state.glitchAmount, prox * 0.62);
     sound.heartbeatTimer -= dt;
-    if (sound.heartbeatTimer <= 0) { sound.playHeartbeat(prox); sound.heartbeatTimer = Math.max(0.36, 1.05 - prox*0.66); }
+    if (sound.heartbeatTimer <= 0) { sound.playHeartbeat(prox, pan); sound.heartbeatTimer = Math.max(0.36, 1.05 - prox*0.66); }
     if (stakeoutNear) return '';
     if (chasingCount > 0 && nearestThreatDist < 12) return '警告：エンティティがすぐ近くに迫っている！';
   }
@@ -4383,8 +4946,13 @@ scene.add(anomGroup);
 const activeAnomalies = [];
 let anomalyCooldown = 12, emergencyRollCd = 45;
 
-function showAnomalyBadge(text) {
+function registerPhenomenonSeen(pid) {
+  if (!pid || !PHENOMENA_META[pid]) return;
+  saveRecords(r => { r.phenomenaSeen[pid] = (r.phenomenaSeen[pid] || 0) + 1; });
+}
+function showAnomalyBadge(text, phenomId = null) {
   state.anomaliesSeen++;
+  if (phenomId) registerPhenomenonSeen(phenomId);
   saveRecords(r => { r.anomalies = Math.max(r.anomalies, state.anomaliesSeen); });
   const b = document.getElementById('anomaly-badge');
   b.textContent = `異常 #${state.anomaliesSeen}: ${text}`;
@@ -4395,40 +4963,50 @@ function triggerBlink() {
   setTimeout(() => { triggerUnseenShifts(0, true); el.style.opacity = '0'; }, 140);
 }
 function triggerRandomAnomaly() {
+  const lv = LEVELS[state.levelIdx];
+  // §6-2 HappyFile (Entity 666) in electronic environments: Level 3, Level 33 (id 13), Level 3999 (id 14)
+  if ((lv.id === 3 || lv.id === 13 || lv.id === 14) && state.happyfileTimer <= 0 && Math.random() < 0.26) {
+    state.happyfileTimer = 20.0; state.happyfileStillTimer = 0;
+    document.getElementById('happyfile-bar').style.display = 'block';
+    sound.playStaticBurst(0.45, 0.22);
+    showAnomalyBadge('現象「ハッピーファイル」感染！消灯＋5秒静止で再起動せよ', 'happyfile');
+    updateInventoryUI();
+    return;
+  }
   const fwd = new THREE.Vector3(-Math.sin(state.yaw), 0, -Math.cos(state.yaw)), right = new THREE.Vector3(Math.cos(state.yaw), 0, -Math.sin(state.yaw));
   const pick = Math.floor(Math.random() * 13);
-  if (pick === 0) { state.blackoutTimer = 2.6; sound.playSwitch(); triggerUnseenShifts(0, true); showAnomalyBadge('照明電圧サージ（停電＆空間変異）'); }
+  if (pick === 0) { state.blackoutTimer = 2.6; sound.playSwitch(); triggerUnseenShifts(0, true); showAnomalyBadge('照明電圧サージ（停電＆空間変異）', 'voltage_surge'); }
   else if (pick === 1) {
     const sm = new THREE.MeshBasicMaterial({ color: 0x050507, transparent: true, opacity: 0.82 }), fig = new THREE.Group();
     addPart(fig, Geo.cyl8, sm, 0.42, 1.38, 0.28, 0, 0.9, 0); addPart(fig, Geo.sphere, sm, 0.3, 0.35, 0.3, 0, 1.78, 0);
     const start = state.pos.clone().addScaledVector(fwd, 9.5).addScaledVector(right, -3.5);
     fig.position.set(start.x, 0, start.z); anomGroup.add(fig);
     activeAnomalies.push({ mesh: fig, type: 'shadow', vel: right.clone().multiplyScalar(3.8), life: 2.1 });
-    showAnomalyBadge('通路の奥を横切る黒い人影');
+    showAnomalyBadge('通路の奥を横切る黒い人影', 'crossing_shadow');
   } else if (pick === 2) {
     const door = PropFactory.exitDoor('door'), bp = state.pos.clone().addScaledVector(fwd, -5.2);
     door.position.set(bp.x, 0, bp.z); door.rotation.y = state.yaw; anomGroup.add(door);
     activeAnomalies.push({ mesh: door, type: 'vanish_door', life: 11, seenOnce: false });
-    sound.playSwitch(); showAnomalyBadge('背後に現れた偽の非常口');
-  } else if (pick === 3) { sound.playDistantSteps(Math.random()<0.5?-0.85:0.85); showAnomalyBadge('誰もいない通路からの足音'); }
-  else if (pick === 4) { sound.playWhisper((Math.random()-0.5)*1.8); state.sanity = Math.max(0, state.sanity-4); showAnomalyBadge('ノイズに混ざる低い囁き'); }
+    sound.playSwitch(); showAnomalyBadge('背後に現れた偽の非常口', 'fake_exit');
+  } else if (pick === 3) { sound.playDistantSteps(Math.random()<0.5?-0.85:0.85); showAnomalyBadge('誰もいない通路からの足音', 'phantom_steps'); }
+  else if (pick === 4) { sound.playWhisper((Math.random()-0.5)*1.8); state.sanity = Math.max(0, state.sanity-4); showAnomalyBadge('ノイズに混ざる低い囁き', 'whisper'); }
   else if (pick === 5) {
     const fl = PropFactory.foldingChair(false), p = state.pos.clone().addScaledVector(fwd, 6.2);
     fl.position.set(p.x, 1.4, p.z); anomGroup.add(fl); activeAnomalies.push({ mesh: fl, type: 'float', life: 7.5 });
-    showAnomalyBadge('局所的な無重力浮遊現象');
-  } else if (pick === 6) { state.fovAnomalyOffset = 15; setTimeout(() => { state.fovAnomalyOffset = 0; }, 2500); sound.playTone(88, 1.8, 'sine', 0.14, 48); showAnomalyBadge('空間の遠近歪み'); }
+    showAnomalyBadge('局所的な無重力浮遊現象', 'zero_gravity');
+  } else if (pick === 6) { state.fovAnomalyOffset = 15; setTimeout(() => { state.fovAnomalyOffset = 0; }, 2500); sound.playTone(88, 1.8, 'sine', 0.14, 48); showAnomalyBadge('空間の遠近歪み', 'perspective_warp'); }
   else if (pick === 7) {
     const mir = PropFactory.exitDoor('stairs'), p = state.pos.clone().addScaledVector(fwd, 11.5);
     mir.position.set(p.x, 0, p.z); mir.rotation.y = state.yaw; anomGroup.add(mir);
-    activeAnomalies.push({ mesh: mir, type: 'mirage', life: 12 }); showAnomalyBadge('近づくと消える蜃気楼階段');
-  } else if (pick === 8) { state.monoTimer = 4.5; showAnomalyBadge('色彩喪失と耳鳴り'); }
+    activeAnomalies.push({ mesh: mir, type: 'mirage', baseX: p.x, baseZ: p.z, life: 12 }); showAnomalyBadge('近づくと消える蜃気楼階段', 'mirage_stairs');
+  } else if (pick === 8) { state.monoTimer = 4.5; showAnomalyBadge('色彩喪失と耳鳴り', 'color_loss'); }
   else if (pick === 9) {
     const phrases = ['YOU WERE HERE', "DON'T TURN AROUND", 'EXIT IS A LIE', 'IT HEARS YOU', 'FLOOR IS THIN'];
     const mat = new THREE.MeshBasicMaterial({ map: makeTextTexture(phrases[Math.floor(Math.random()*phrases.length)], 'rgba(0,0,0,0.01)', '#e8d898', 512, 96, 38), transparent: true, side: THREE.DoubleSide, depthWrite: false });
     const pl = new THREE.Mesh(Geo.plane, mat); pl.scale.set(3.2, 0.6, 1);
     const p = state.pos.clone().addScaledVector(fwd, 7.2); pl.position.set(p.x, 1.9, p.z); pl.lookAt(state.pos.x, 1.9, state.pos.z);
-    anomGroup.add(pl); activeAnomalies.push({ mesh: pl, type: 'text', life: 5.2 }); showAnomalyBadge('空中に浮かぶ残像文字');
-  } else if (pick === 10) { triggerBlink(); showAnomalyBadge('視界瞬断（背後の空間が再配置）'); }
+    anomGroup.add(pl); activeAnomalies.push({ mesh: pl, type: 'text', life: 5.2 }); showAnomalyBadge('空中に浮かぶ残像文字', 'afterimage_text');
+  } else if (pick === 10) { triggerBlink(); showAnomalyBadge('視界瞬断（背後の空間が再配置）', 'blink_shift'); }
   else if (pick === 11) {
     let targetSpot = null;
     chunks.forEach(ch => { for (const sp of ch.mirrorSpots) if (Math.hypot(sp.x-state.pos.x, sp.z-state.pos.z) < 16) targetSpot = sp; });
@@ -4437,8 +5015,8 @@ function triggerRandomAnomaly() {
     if (targetSpot) { pl.position.set(targetSpot.x, targetSpot.y, targetSpot.z); pl.rotation.y = targetSpot.rotY; }
     else { const p = state.pos.clone().addScaledVector(fwd, 5.5); pl.position.set(p.x, 1.5, p.z); pl.lookAt(state.pos.x, 1.5, state.pos.z); }
     anomGroup.add(pl); activeAnomalies.push({ mesh: pl, type: 'reflection_ghost', life: 3.8 });
-    sound.playWhisper(0); showAnomalyBadge('窓ガラスに一瞬映った誰かの残像');
-  } else { sound.playPhoneRing(); showAnomalyBadge('どこか遠くで鳴り続ける電話音'); }
+    sound.playWhisper(0); showAnomalyBadge('窓ガラスに一瞬映った誰かの残像', 'mirror_ghost');
+  } else { sound.playPhoneRing(); showAnomalyBadge('どこか遠くで鳴り続ける電話音', 'distant_phone'); }
 }
 
 function updateNonEuclideanGimmicks(dt) {
@@ -4482,6 +5060,26 @@ function updateNonEuclideanGimmicks(dt) {
 }
 
 function updateAnomalies(dt) {
+  // §6-2 HappyFile (Entity 666) infection update & reboot cure
+  if (state.happyfileTimer > 0) {
+    state.happyfileTimer = Math.max(0, state.happyfileTimer - dt);
+    state.glitchAmount = Math.max(state.glitchAmount, 0.55);
+    const bar = document.getElementById('happyfile-bar');
+    if (!state.flashlightOn && state.stillTime > 0.25) {
+      state.happyfileStillTimer += dt;
+      bar.textContent = `⚠ HAPPYFILE 再起動中... (${Math.min(5, state.happyfileStillTimer).toFixed(1)}/5.0s)`;
+      if (state.happyfileStillTimer >= 5.0) {
+        state.happyfileTimer = 0; state.happyfileStillTimer = 0;
+        bar.style.display = 'none'; sound.playSwitch(); showToast('システム再起動完了！ハッピーファイルを駆除した');
+        updateInventoryUI();
+      }
+    } else {
+      state.happyfileStillTimer = 0;
+      bar.textContent = `⚠ HAPPYFILE 感染中 (${Math.ceil(state.happyfileTimer)}s)：消灯＋5秒静止で再起動 / 電池[5]で即駆除`;
+    }
+    if (state.happyfileTimer <= 0) { bar.style.display = 'none'; updateInventoryUI(); }
+  }
+
   const fMul = (settings.anomalyFreq === 'high' ? 0.58 : (settings.anomalyFreq === 'low' ? 1.75 : 1.0)) * (state.horrorMode ? 1.0 : 0.75);
   const rate = Math.max(6.5, 20 - state.depth * 1.1) * fMul;
   anomalyCooldown -= dt;
@@ -4491,7 +5089,17 @@ function updateAnomalies(dt) {
     const a = activeAnomalies[i]; a.life -= dt;
     if (a.type === 'shadow') a.mesh.position.addScaledVector(a.vel, dt);
     else if (a.type === 'float') { a.mesh.position.y += Math.sin(state.elapsed*3)*dt*0.4; a.mesh.rotation.y += dt*1.4; }
-    else if (a.type === 'mirage') { if (Math.hypot(a.mesh.position.x-state.pos.x, a.mesh.position.z-state.pos.z) < 4.2) a.life = 0; }
+    else if (a.type === 'mirage') {
+      const md = Math.hypot(a.baseX - state.pos.x, a.baseZ - state.pos.z);
+      // §2-5 Visual Tell: Mirage stairs visibly jitter & distort as player approaches within 10m!
+      if (md < 10.0) {
+        const j = (1 - md / 10.0) * 0.14;
+        a.mesh.position.x = a.baseX + (Math.random()-0.5)*j;
+        a.mesh.position.z = a.baseZ + (Math.random()-0.5)*j;
+        a.mesh.visible = Math.random() > j * 1.8;
+      }
+      if (md < 4.2) a.life = 0;
+    }
     else if (a.type === 'vanish_door') { const toD = new THREE.Vector3(a.mesh.position.x-state.pos.x, 0, a.mesh.position.z-state.pos.z).normalize(); if (toD.dot(fwd) > 0.72) a.seenOnce = true; else if (a.seenOnce) a.life = 0; }
     else if (a.type === 'reflection_ghost') a.mesh.material.opacity = Math.max(0, Math.min(0.75, a.life*0.4));
     if (a.life <= 0) { anomGroup.remove(a.mesh); activeAnomalies.splice(i, 1); }
@@ -4550,13 +5158,30 @@ function enterHideSpot(it) {
   }
   sound.playDoorCreak(); updateHideOverlayUI();
 }
+// §2-8 Safe Hiding Exit: scan 8 clear spots around object, fallback to guaranteed-clear returnX/returnZ!
 function exitHideSpot() {
   if (!state.hide.active) return;
   const it = state.hide.spot, d = it ? it.data : null;
   if (it && it.mesh) it.mesh.visible = true;
   state.hide.active = false; state.hide.ducked = false; state.hide.lookOffset = 0;
-  if (d) { state.pos.x = it.x + d.outX * 1.48; state.pos.z = it.z + d.outZ * 1.48; state.floorY = state.hide.returnFloorY; }
-  else { state.pos.x = state.hide.returnX; state.pos.z = state.hide.returnZ; state.floorY = state.hide.returnFloorY; }
+  const fy = state.hide.returnFloorY || 0;
+  let placed = false;
+  if (d) {
+    const baseAng = Math.atan2(d.outX, d.outZ);
+    const angles = [0, 0.45, -0.45, 1.0, -1.0, Math.PI/2, -Math.PI/2, Math.PI];
+    for (const rad of [1.55, 1.95]) {
+      for (const off of angles) {
+        const cx = it.x + Math.sin(baseAng + off) * rad;
+        const cz = it.z + Math.cos(baseAng + off) * rad;
+        const near = getNearbyColliders(cx, cz);
+        if (!pointCollides(near, cx, cz, PLAYER_R + 0.08, fy)) {
+          state.pos.x = cx; state.pos.z = cz; state.floorY = fy; placed = true; break;
+        }
+      }
+      if (placed) break;
+    }
+  }
+  if (!placed) { state.pos.x = state.hide.returnX; state.pos.z = state.hide.returnZ; state.floorY = fy; }
   sound.playDoorCreak(); updateHideOverlayUI();
 }
 function updateHideOverlayUI() {
@@ -4573,6 +5198,25 @@ function updateHideOverlayUI() {
 }
 function isHideActionRestricted() { return state.hide.active && (state.hide.kind !== 'car' || state.hide.ducked); }
 
+// §3-1 Sample Banking Helper
+function bankSamples(reasonLabel = '', bonusMult = 1.0) {
+  if (state.unconfirmedSamples <= 0 && bonusMult <= 1.0) return 0;
+  const rawGain = state.unconfirmedSamples;
+  state.unconfirmedSamples = 0;
+  const totalNew = bonusMult > 1.0
+    ? Math.ceil((state.confirmedSamples + rawGain) * bonusMult) - state.confirmedSamples
+    : rawGain;
+  if (totalNew > 0) {
+    state.confirmedSamples += totalNew;
+    state.runSamples = state.confirmedSamples;
+    saveRecords(r => { r.samplesCollected = (r.samplesCollected || 0) + totalNew; });
+    checkAchievements();
+    if (reasonLabel) showToast(`✦ ${reasonLabel}：サンプル ×${totalNew} を確定！`);
+  }
+  updateHUDText();
+  return totalNew;
+}
+
 /* ============================================================
    13. LEVEL GRAPH TRANSITIONS, ITEMS, TASKS & RESULT SCREEN
    ============================================================ */
@@ -4580,7 +5224,9 @@ function updateObjectiveUI() {
   const lv = LEVELS[state.levelIdx];
   const t = lv.task;
   const mainEl = document.getElementById('hud-main-obj');
+  const isCoopBreaker = mp.active && mp.peers.size >= 1 && t.type === 'breaker';
   if (state.taskDone) mainEl.textContent = '目的：完了 — 出口から次の階層へ進め！';
+  else if (isCoopBreaker) mainEl.textContent = `目的：協力同時ブレーカー（2箇所を5秒以内に同時操作！）`;
   else if (t.type === 'breaker') mainEl.textContent = `目的：ブレーカー復旧 (${state.taskProgress}/${t.target})`;
   else if (t.type === 'keycard') mainEl.textContent = `目的：キーカード回収 (${state.questKeys}/${t.target})`;
   else if (t.type === 'fuse') mainEl.textContent = `目的：ヒューズ回収 (${state.questFuses}/${t.target})`;
@@ -4625,10 +5271,22 @@ function enterLevel(idx, showCurtain = true, routeText = '') {
   state.pos.set(0, STAND_EYE, 0); state.velX = 0; state.velZ = 0; state.floorY = 0; state.prevFloorY = 0; state.eyeY = STAND_EYE;
   state.pitch = 0; state.stillTime = 0; state.peekBack = false; state.peekBlend = 0; state.noclipCooldown = 0;
   state.useAction = null; document.getElementById('use-progress-wrap').style.display = 'none';
-  state.taskProgress = 0; state.questKeys = 0; state.questFuses = 0;
+  state.taskProgress = 0; state.questKeys = 0; state.questFuses = 0; state.breakerLightsRestored = false;
+  state.trackedExitUid = null; state.manilaBanked = false;
+  state.happyfileTimer = 0; state.happyfileStillTimer = 0; document.getElementById('happyfile-bar').style.display = 'none';
+  state.coopBreakerLast = null;
   state.taskDone = (lv.task.type === 'explore' || lv.task.type === 'run');
   state.emergencyActive = false; document.getElementById('emergency-bar').style.display = 'none';
-  entitySpawnCd = lv.arch === 'red_hospital' ? 2.5 : 13;
+  // §2-2 45s spawn grace on Depth 1 (regardless of starting level!)
+  state.spawnGraceTimer = (state.depth <= 1) ? 45.0 : 0;
+  entitySpawnCd = lv.arch === 'red_hospital' ? 2.5 : (state.depth <= 1 ? 34.0 : 14.0);
+  // §5-5 Yellow Snail: 35% attach roll once at Depth >= 2; re-appears at entrance after 45s delay!
+  state.playerTrail = [{ x: 0, z: 0 }]; state.trailTimer = 0;
+  if (state.depth >= 2 && !state.snailRolled && state.horrorMode) {
+    state.snailRolled = true;
+    if (Math.random() < 0.35) state.snailAttached = true;
+  }
+  state.snailDelayTimer = state.snailAttached ? 45.0 : 0;
   mpExitWaiters.clear();
 
   scene.background = new THREE.Color(lv.fogColor);
@@ -4639,7 +5297,7 @@ function enterLevel(idx, showCurtain = true, routeText = '') {
   sound.setAmbient(lv.sound);
   updateChunks(true);
   state.yaw = computeBestSpawnYaw();
-  updateHUDText(); updateObjectiveUI();
+  updateHUDText(); updateObjectiveUI(); updateInventoryUI();
 
   if (showCurtain) {
     const cur = document.getElementById('transition-curtain');
@@ -4662,13 +5320,11 @@ function computeNextLevelByGraph(etype) {
 
   let next = state.levelIdx;
   if (settings.seedCollapse || etype === 'rift') {
-    // Random distant level privilege for Collapse mode & Rifts!
     while (next === state.levelIdx) next = Math.floor(rng() * LEVELS.length);
   } else if (etype === 'noclip') {
     next = lv.edges.noclip !== undefined ? lv.edges.noclip : (state.levelIdx + 1) % LEVELS.length;
   } else {
     const cands = lv.edges[etype] || lv.edges.door || [1, 4];
-    // Deeper depths bias toward later (more hazardous/unusual) edges
     const pickIdx = (state.depth >= 5 && cands.length > 1 && rng() < 0.65) ? cands.length - 1 : Math.floor(rng() * cands.length);
     next = cands[pickIdx];
   }
@@ -4678,15 +5334,24 @@ function computeNextLevelByGraph(etype) {
 
 function executeTransition(etype) {
   if (etype === 'white_door') {
+    bankSamples('脱出ボーナス(1.5倍)', 1.5);
     unlockAchievement('first_escape');
     saveRecords(r => { r.escaped = true; });
     showResultScreen(true, '白い扉の向こうに広がる眩しい光の中へ踏み出し、ついに現実世界へ生還した！');
+    return;
+  }
+  if (etype === 'return_rift') {
+    // §3-2 Safe Return Rift extraction!
+    bankSamples('帰還確定', 1.0);
+    showResultScreen('extracted', '帰還の裂け目から安全に離脱し、採取したサンプルを全て持ち帰った。');
     return;
   }
   if (etype === 'noclip') {
     unlockAchievement('first_noclip'); completeSideObjective('noclip');
     sound.playNoclipFall(); state.noclipDrop = 0.65;
   }
+  // §3-1 Bank unconfirmed samples on advancing to next floor!
+  bankSamples('階層到達', 1.0);
   if (state.emergencyActive) {
     state.emergencyActive = false; document.getElementById('emergency-bar').style.display = 'none';
     state.sanity = 100; state.inv[0]++; state.inv[4]++;
@@ -4704,8 +5369,8 @@ function executeTransition(etype) {
 function triggerExitTransition(it) {
   const etype = it.data.etype || 'door';
   const lv = LEVELS[state.levelIdx];
-  // Check level task lock (noclip, rift & white_door bypass normal lock as alternate route!)
-  if (!state.taskDone && etype !== 'noclip' && etype !== 'rift' && etype !== 'white_door') {
+  // Check level task lock (noclip, rift, return_rift & white_door bypass normal lock!)
+  if (!state.taskDone && etype !== 'noclip' && etype !== 'rift' && etype !== 'white_door' && etype !== 'return_rift') {
     const msgs = {
       keycard: '施錠中：キーカードを回収してから開けろ！',
       fuse: `電源未供給：ヒューズを集めろ (${state.questFuses}/${lv.task.target})`,
@@ -4742,17 +5407,28 @@ function showToast(msg) {
   clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 2900);
 }
 
-// §5-3 Item Use with Short Cast Time (Risk vs Reward!)
+// §5-3 Item Use with Short Cast Time (V7: Battery +50% & HappyFile purge, Food lures Death Rats!)
 const ITEM_DEFS = [
   { name: 'アーモンド水', dur: 1.05, apply: () => { state.hp = Math.min(100, state.hp+25); state.hunger = Math.min(100, state.hunger+16); state.sanity = Math.min(100, state.sanity+35); state.stamina = Math.min(100, state.stamina+30); sound.playDrink(); showToast('アーモンドウォーターを飲んだ（HP+25 / 安定+35）'); } },
-  { name: '携帯食料', dur: 1.2, apply: () => { state.hunger = Math.min(100, state.hunger+38); state.hp = Math.min(100, state.hp+6); sound.playPickup(); showToast('携帯食料を食べた（空腹+38）'); } },
+  { name: '携帯食料', dur: 1.2, apply: () => {
+    state.hunger = Math.min(100, state.hunger+38); state.hp = Math.min(100, state.hp+6); sound.playPickup();
+    let lured = 0;
+    for (const e of activeEntities) if (e.kind === 'deathrat' && Math.hypot(e.x-state.pos.x, e.z-state.pos.z) < 16) { e.lureX = state.pos.x; e.lureZ = state.pos.z; e.lureTimer = 6.0; lured++; }
+    showToast(lured > 0 ? '携帯食料を使用（空腹+38 / デスラットを6秒間おびき寄せた！）' : '携帯食料を食べた（空腹+38）');
+  } },
   { name: '救急キット', dur: 1.6, apply: () => { state.hp = Math.min(100, state.hp+55); sound.playPickup(); showToast('救急キットで手当した（HP+55）'); } },
-  { name: 'モスゼリー', dur: 1.0, apply: () => { state.hunger = Math.min(100, state.hunger+30); state.mothRepelTimer = 45; sound.playDrink(); showToast('モスゼリーを摂取（空腹+30 / 45秒間 Deathmoth 忌避）'); } },
-  { name: '乾電池', dur: 0.85, apply: () => { state.battery = Math.min(100, state.battery+60); sound.playSwitch(); showToast('懐中電灯の電池を交換した（+60%）'); } }
+  { name: 'モスゼリー', dur: 1.0, apply: () => { state.hunger = Math.min(100, state.hunger+30); state.mothRepelTimer = 45; sound.playDrink(); showToast('モスゼリーを摂取（空腹+30 / 45秒間 ドクガ忌避）'); } },
+  { name: '乾電池', dur: 0.85, apply: () => {
+    state.battery = Math.min(100, state.battery+50); sound.playSwitch();
+    if (state.happyfileTimer > 0) {
+      state.happyfileTimer = 0; state.happyfileStillTimer = 0; document.getElementById('happyfile-bar').style.display = 'none';
+      showToast('乾電池を交換（+50%）＆ハッピーファイルを即駆除した！');
+    } else showToast('懐中電灯の電池を交換した（+50%）');
+  } }
 ];
 
 function useInventorySlot(slot) {
-  if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen) return;
+  if (!state.playing || state.paused || state.downed || state.noteOpen || state.settingsOpen || state.codexOpen) return;
   if (isHideActionRestricted()) { showToast('隠れている間はアイテムを使用できない'); return; }
   if (state.useAction) return;
   if (state.inv[slot] <= 0) { showToast('そのアイテムは所持していません'); return; }
@@ -4780,9 +5456,9 @@ function updateItemUse(dt) {
   }
 }
 
-// §5-1 Sonar Pulse: Soft screen-edge directional glow + stereo pan tone (NO exact arrow!)
+// §4-1, §4-2, §2-1, §3-3 Sonar Pulse (Acoustic side-effect lures Dingo, Rear Marker for Kawagi, White Door ping, Scarecrow/White Model stun, Death Rat scatter!)
 function firePulse() {
-  if (!state.playing || state.paused || state.pulseTimer > 0) return;
+  if (!state.playing || state.paused || state.downed || state.pulseTimer > 0) return;
   if (isHideActionRestricted()) { showToast('隠れている間は空間探知を使用できない'); return; }
   state.pulseTimer = 6.5; state.pulseTargets = [];
   let nearestExit = null, nearD = 9999;
@@ -4790,7 +5466,8 @@ function firePulse() {
     for (const it of ch.interactables) {
       if (it.used) continue;
       if (it.type === 'exit' || it.type === 'crate' || it.type === 'vending' || it.type === 'keycard' || it.type === 'fuse') {
-        state.pulseTargets.push({ x: it.x, z: it.z, kind: it.type === 'exit' ? 'exit' : 'supply' });
+        const isWhite = it.type === 'exit' && it.data && it.data.etype === 'white_door';
+        state.pulseTargets.push({ x: it.x, z: it.z, kind: isWhite ? 'white' : (it.type === 'exit' ? 'exit' : 'supply'), uid: it.uid });
         if (it.type === 'exit') {
           const d = Math.hypot(it.x - state.pos.x, it.z - state.pos.z);
           if (d < nearD) { nearD = d; nearestExit = it; }
@@ -4798,6 +5475,14 @@ function firePulse() {
       }
     }
   });
+  // §2-1 Lock tracked exit UID so Unseen Shift NEVER deletes it!
+  if (nearestExit) state.trackedExitUid = nearestExit.uid;
+  // §6-2 HappyFile injects 1 clearly-glitched fake EXIT ping!
+  if (state.happyfileTimer > 0) {
+    const fa = Math.random()*Math.PI*2;
+    state.pulseTargets.push({ x: state.pos.x + Math.cos(fa)*18, z: state.pos.z + Math.sin(fa)*18, kind: 'glitch' });
+  }
+
   let pan = 0;
   if (nearestExit) {
     const ang = Math.atan2(-(nearestExit.x - state.pos.x), -(nearestExit.z - state.pos.z));
@@ -4809,16 +5494,34 @@ function firePulse() {
     elT.style.opacity = Math.abs(diff) <= 0.45 ? '0.9' : '0';
     setTimeout(() => { elL.style.opacity = '0'; elR.style.opacity = '0'; elT.style.opacity = '0'; }, 2400);
   }
-  let stunned = 0;
-  for (const e of activeEntities) if (e.kind === 'mannequin' && Math.hypot(e.x-state.pos.x, e.z-state.pos.z) < 20) { e.stunTimer = 3.0; stunned++; }
+  const viewYaw = getActiveViewYaw(), fwdX = -Math.sin(viewYaw), fwdZ = -Math.cos(viewYaw);
+  let stunned = 0, scattered = 0, luredHound = 0, kawagiBehind = false;
+  for (const e of activeEntities) {
+    const d = Math.hypot(e.x - state.pos.x, e.z - state.pos.z);
+    if ((e.kind === 'mannequin' || e.kind === 'scarecrow') && d < 20) { e.stunTimer = 3.0; stunned++; }
+    if (e.kind === 'deathrat' && d < 7.0) { e.scatterTimer = 5.0; scattered++; }
+    if (e.kind === 'hound' && d < 18.0) { e.lureX = state.pos.x; e.lureZ = state.pos.z; e.lureTimer = 6.0; luredHound++; }
+    if (e.kind === 'skinstealer' && d < 12.0) {
+      const dot = ((e.x - state.pos.x)/(d||1))*fwdX + ((e.z - state.pos.z)/(d||1))*fwdZ;
+      if (dot < -0.15) kawagiBehind = true;
+    }
+  }
+  // §4-2 Rear Marker for Kawagi (2s only, behind player only!)
+  const rm = document.getElementById('sonar-rear-marker');
+  if (kawagiBehind) {
+    rm.style.display = 'block';
+    clearTimeout(rm._t); rm._t = setTimeout(() => { rm.style.display = 'none'; }, 2000);
+  }
   sound.playPulse(pan);
-  const exits = state.pulseTargets.filter(t => t.kind === 'exit').length;
-  if (stunned > 0) showToast(`探知パルス：ホワイトモデルを3秒足止め！出口反応 ${exits}件`);
+  const exits = state.pulseTargets.filter(t => t.kind === 'exit' || t.kind === 'white').length;
+  if (scattered > 0) showToast('探知パルス：デスラットの群れを5秒間離散させた！');
+  else if (stunned > 0) showToast(`探知パルス：視線型エンティティを3秒足止め！出口反応 ${exits}件`);
+  else if (luredHound > 0) showToast('⚠ 探知音にディンゴが反応した！その場から離れろ！');
   else showToast(exits > 0 ? `空間探知：淡い光の方向に反応 (${exits}件)` : '周囲に明確な反応なし。先へ進め。');
 }
 
 function getBestInteractable() {
-  if (state.hide.active) return null;
+  if (state.hide.active || state.downed) return null;
   const viewYaw = getActiveViewYaw(), fwdX = -Math.sin(viewYaw), fwdZ = -Math.cos(viewYaw);
   let best = null, bestScore = -1;
   chunks.forEach(ch => {
@@ -4834,9 +5537,22 @@ function getBestInteractable() {
 }
 
 function triggerInteract() {
-  if (!state.playing || state.paused || state.settingsOpen || state.codexOpen) return;
+  if (!state.playing || state.paused || state.downed || state.settingsOpen || state.codexOpen) return;
   if (state.noteOpen) { closeNote(); return; }
   if (state.hide.active) { exitHideSpot(); return; }
+  // §7-3 Co-op Revive nearby downed teammate (4s interact)!
+  if (mp.active) {
+    for (const [pid, p] of mp.peers.entries()) {
+      if (p.downed && Math.hypot(p.tx - state.pos.x, p.tz - state.pos.z) < 2.4) {
+        if (!state.reviveTarget) {
+          state.reviveTarget = { id: pid, name: p.name, timer: 0 };
+          document.getElementById('use-progress-label').textContent = `${p.name} を蘇生中... (4秒)`;
+          document.getElementById('use-progress-wrap').style.display = 'block';
+        }
+        return;
+      }
+    }
+  }
   const it = getBestInteractable();
   if (!it) return;
 
@@ -4852,23 +5568,30 @@ function triggerInteract() {
   if (it.type === 'almond') { markUsed(); state.inv[0]++; sound.playPickup(); showToast('アーモンドウォーターを入手した'); }
   else if (it.type === 'food') { markUsed(); state.inv[1]++; sound.playPickup(); showToast('携帯食料を入手した'); }
   else if (it.type === 'medkit') { markUsed(); state.inv[2]++; sound.playPickup(); showToast('救急キットを入手した'); }
-  else if (it.type === 'jelly') { markUsed(); state.inv[3]++; sound.playPickup(); showToast('モスゼリーを入手した（Deathmoth忌避）'); }
+  else if (it.type === 'jelly') { markUsed(); state.inv[3]++; sound.playPickup(); showToast('モスゼリーを入手した（ドクガ忌避）'); }
   else if (it.type === 'battery') { markUsed(); state.inv[4]++; sound.playPickup(); showToast('乾電池を入手した [5]'); }
   else if (it.type === 'keycard') {
     markUsed('keycard'); state.questKeys++; sound.playPickup();
-    if (lv.task.type === 'keycard' && state.questKeys >= lv.task.target) { state.taskDone = true; showToast('★ キーカード回収完了！出口が開錠された！'); }
-    else showToast('キーカードを回収した');
+    if (lv.task.type === 'keycard' && state.questKeys >= lv.task.target) {
+      state.taskDone = true;
+      // §3-4 Keycard task unlocks bonus supplies!
+      state.inv[0]++; state.inv[4]++;
+      showToast('★ キーカード回収完了！出口が開錠され補給区画が開放された！');
+    } else showToast('キーカードを回収した');
     updateObjectiveUI();
   } else if (it.type === 'fuse') {
     markUsed('fuse'); state.questFuses++; sound.playPickup();
-    if (lv.task.type === 'fuse' && state.questFuses >= lv.task.target) { state.taskDone = true; showToast('★ ヒューズ復旧完了！出口が通電した！'); }
-    else showToast(`電源ヒューズを回収 (${state.questFuses}/${lv.task.target})`);
+    if (lv.task.type === 'fuse' && state.questFuses >= lv.task.target) {
+      state.taskDone = true;
+      showToast('★ ヒューズ復旧完了！エレベーター＆出口が恒久通電した！');
+    } else showToast(`電源ヒューズを回収 (${state.questFuses}/${lv.task.target})`);
     updateObjectiveUI();
   } else if (it.type === 'sample') {
-    markUsed(); state.runSamples++; sound.playCrystal();
-    saveRecords(r => { r.samplesCollected = (r.samplesCollected||0) + 1; r.sampleLevels.add(state.levelIdx); });
-    completeSideObjective('sample'); checkAchievements();
-    showToast('✦ 特異点サンプルを採取した！');
+    // §3-1 Sample Banking: collected as UNCONFIRMED until next floor / Manila Room / Return Rift / White Door!
+    markUsed(); state.unconfirmedSamples++; sound.playCrystal();
+    saveRecords(r => { r.sampleLevels.add(state.levelIdx); });
+    completeSideObjective('sample'); updateHUDText();
+    showToast(`✦ 特異点サンプルを採取！（未確定 ×${state.unconfirmedSamples} — 次階層かマニラルームで確定）`);
   } else if (it.type === 'crate') {
     markUsed(); state.inv[0]++; state.inv[1]++; state.inv[4]++;
     if (Math.random() < 0.45) state.inv[2]++;
@@ -4881,15 +5604,34 @@ function triggerInteract() {
       sound.playDrink(); showToast('自販機からアーモンドウォーターを取り出した！');
     }
   } else if (it.type === 'breaker') {
-    it.used = true; mpUsedUids.add(it.uid);
-    if (mp.active) mpBroadcastOrSend({ type: 'use_obj', uid: it.uid, taskKind: 'breaker', keepVisible: true });
-    state.blackoutTimer = 0; state.sanity = Math.min(100, state.sanity + 20);
-    state.taskProgress++;
-    sound.playSwitch();
-    if (lv.task.type === 'breaker' && state.taskProgress >= lv.task.target) {
-      state.taskDone = true; showToast('★ 全ブレーカー復旧完了！出口のロックが解除された！');
-    } else showToast('ブレーカーを復旧した');
-    updateObjectiveUI();
+    const isCoopSimul = mp.active && mp.peers.size >= 1 && lv.task.type === 'breaker' && !state.taskDone;
+    if (isCoopSimul) {
+      // §7-1 Simultaneous Co-op Breaker Task (2 different players within 5s & >=15m apart!)
+      const now = performance.now();
+      if (state.coopBreakerLast && state.coopBreakerLast.by !== mp.myId && (now - state.coopBreakerLast.t) <= 5000 && Math.hypot(it.x - state.coopBreakerLast.x, it.z - state.coopBreakerLast.z) >= 12) {
+        state.taskDone = true; state.breakerLightsRestored = true; ambLight.intensity = Math.min(0.45, lv.ambInt + 0.14);
+        mpBroadcastOrSend({ type: 'coop_breaker_done' });
+        sound.playSwitch(); showToast('★ 同時ブレーカー復旧成功！区画に照明が戻り出口が開錠された！');
+      } else {
+        state.coopBreakerLast = { by: mp.myId || 'local', x: it.x, z: it.z, t: now };
+        mpBroadcastOrSend({ type: 'coop_breaker_press', x: it.x, z: it.z, by: mp.myId || 'local' });
+        sound.playSwitch(); showToast('ブレーカー起動中！5秒以内に仲間が別のブレーカーを操作せよ！');
+      }
+      updateObjectiveUI();
+    } else {
+      it.used = true; mpUsedUids.add(it.uid);
+      if (mp.active) mpBroadcastOrSend({ type: 'use_obj', uid: it.uid, taskKind: 'breaker', keepVisible: true });
+      state.blackoutTimer = 0; state.sanity = Math.min(100, state.sanity + 20);
+      state.taskProgress++;
+      sound.playSwitch();
+      if (lv.task.type === 'breaker' && state.taskProgress >= lv.task.target) {
+        state.taskDone = true; state.breakerLightsRestored = true;
+        // §3-4 Completing breaker visibly brightens the floor (also affecting light-seeking entities!)
+        ambLight.intensity = Math.min(0.45, lv.ambInt + 0.14);
+        showToast('★ 全ブレーカー復旧完了！区画に照明が戻り出口が開錠された！');
+      } else showToast('ブレーカーを復旧した');
+      updateObjectiveUI();
+    }
   } else if (it.type === 'note') {
     const logId = it.data.logId !== undefined ? it.data.logId : state.levelIdx;
     const n = MEG_LOGS[logId % MEG_LOGS.length];
@@ -4911,10 +5653,15 @@ function triggerInteract() {
 }
 function closeNote() { state.noteOpen = false; document.getElementById('note-modal').classList.remove('show'); }
 
-// §5-6 & §6-1 Detailed Result / Escape Ending Screen
-function showResultScreen(escaped, reason) {
+// §5-6 & §3-1 Detailed Result / Return Rift / Escape Ending Screen
+function showResultScreen(outcome, reason) {
   if (state.hide.active) exitHideSpot();
-  state.playing = false; state.paused = false;
+  const escaped = (outcome === true);
+  const extracted = (outcome === 'extracted');
+  const lostSamples = (!escaped && !extracted) ? state.unconfirmedSamples : 0;
+  state.unconfirmedSamples = 0;
+  state.playing = false; state.paused = false; state.downed = false;
+  document.getElementById('downed-overlay').classList.remove('show');
   saveRecords(r => { r.totalDistAll = (r.totalDistAll || 0) + Math.floor(state.totalDist); });
   checkAchievements();
   try { if (document.pointerLockElement) document.exitPointerLock(); } catch (e) {}
@@ -4923,18 +5670,18 @@ function showResultScreen(escaped, reason) {
   document.getElementById('mobile-ui').classList.remove('show');
 
   const rs = document.getElementById('result-screen');
-  rs.classList.toggle('escaped', escaped);
-  document.getElementById('res-tag').textContent = escaped ? 'REALITY RESTORED // ESCAPE COMPLETE' : 'SIGNAL LOST // TAPE CORRUPTED';
-  document.getElementById('res-title').textContent = escaped ? '現実世界へ帰還した' : '意識が途絶えた';
+  rs.classList.toggle('escaped', escaped || extracted);
+  document.getElementById('res-tag').textContent = escaped ? 'REALITY RESTORED // ESCAPE COMPLETE' : (extracted ? 'EXTRACTION COMPLETE // SAMPLES BANKED' : 'SIGNAL LOST // TAPE CORRUPTED');
+  document.getElementById('res-title').textContent = escaped ? '現実世界へ帰還した' : (extracted ? '帰還の裂け目から生還した' : '意識が途絶えた');
   document.getElementById('res-reason').textContent = reason;
-  const score = state.depth * 20 + state.runSamples * 25 + state.runEntitiesSeen.size * 10 + (escaped ? 100 : 0);
+  const score = state.depth * 20 + state.confirmedSamples * 25 + state.runEntitiesSeen.size * 10 + (escaped ? 100 : (extracted ? 45 : 0));
   const rank = score >= 180 ? 'S' : (score >= 110 ? 'A' : (score >= 55 ? 'B' : 'C'));
   document.getElementById('res-rank').textContent = rank;
   document.getElementById('res-depth').textContent = state.depth;
   document.getElementById('res-dist').textContent = Math.floor(state.totalDist) + ' m';
   const mins = String(Math.floor(state.runTime / 60)).padStart(2, '0'), secs = String(Math.floor(state.runTime % 60)).padStart(2, '0');
   document.getElementById('res-time').textContent = `${mins}:${secs}`;
-  document.getElementById('res-samples').textContent = state.runSamples;
+  document.getElementById('res-samples').textContent = `確定${state.confirmedSamples} / 喪失${lostSamples}`;
   const ents = state.runEntitiesSeen.size ? Array.from(state.runEntitiesSeen).join(' / ') : 'なし';
   const lvls = Array.from(state.runLevelsVisited).join(' → ');
   document.getElementById('res-summary').innerHTML = `<b>踏破ルート：</b>${lvls}<br><b>遭遇エンティティ：</b>${ents}<br><b>副目的：</b>${state.sideObj ? (state.sideObj.done ? '達成 ✓' : '未達成') : '-'}`;
@@ -4943,7 +5690,7 @@ function showResultScreen(escaped, reason) {
 }
 
 /* ============================================================
-   14. ARCHIVE (CODEX / M.E.G. LOGS / ACHIEVEMENTS) & SETTINGS UI
+   14. ARCHIVE (ENTITIES / PHENOMENA / M.E.G. LOGS / ACHIEVEMENTS) & SETTINGS UI
    ============================================================ */
 function drawEntitySilhouette(canvas, id, unlocked) {
   const ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height;
@@ -4958,6 +5705,11 @@ function drawEntitySilhouette(canvas, id, unlocked) {
   else if (id === 'skinstealer') { ctx.beginPath(); ctx.arc(4,-20,6,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(2,-14); ctx.lineTo(-4,10); ctx.lineTo(-8,28); ctx.moveTo(-4,10); ctx.lineTo(6,28); ctx.stroke(); }
   else if (id === 'faceling') { ctx.beginPath(); ctx.arc(0,-18,7,0,Math.PI*2); ctx.fill(); ctx.fillRect(-9,-9,18,22); ctx.fillRect(-7,13,5,14); ctx.fillRect(2,13,5,14); }
   else if (id === 'partygoer') { ctx.fillStyle = '#e0c048'; ctx.beginPath(); ctx.arc(0,-16,8,0,Math.PI*2); ctx.fill(); ctx.fillRect(-10,-7,20,24); ctx.fillStyle = '#5c1414'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center'; ctx.fillText('=)', 0, -13); }
+  else if (id === 'watch') { ctx.fillRect(-3,-16,6,42); ctx.fillStyle = '#fff0aa'; ctx.beginPath(); ctx.arc(6,-18,8,0,Math.PI*2); ctx.fill(); }
+  else if (id === 'scarecrow') { ctx.fillRect(-2,-14,4,40); ctx.fillRect(-18,-6,36,4); ctx.beginPath(); ctx.arc(0,-18,6,0,Math.PI*2); ctx.fill(); ctx.fillRect(-14,-25,28,3); }
+  else if (id === 'deathrat') { for (let k = -1; k <= 1; k++) { ctx.beginPath(); ctx.ellipse(k*12, k*6, 8, 5, 0, 0, Math.PI*2); ctx.fill(); } }
+  else if (id === 'tvhead') { ctx.fillRect(-12,-24,24,18); ctx.fillStyle = '#9cd6ff'; ctx.fillRect(-9,-21,18,12); ctx.fillStyle = '#d4c9a8'; ctx.fillRect(-8,-4,16,26); }
+  else if (id === 'snail') { ctx.fillStyle = '#e0c048'; ctx.beginPath(); ctx.arc(-2,2,14,0,Math.PI*2); ctx.fill(); ctx.fillStyle = '#9a8c66'; ctx.fillRect(-16,12,34,6); }
   else { ctx.beginPath(); ctx.arc(0,2,13,0,Math.PI*2); ctx.fill(); for (let i = 0; i < 8; i++) { const a = i*Math.PI/4; ctx.beginPath(); ctx.moveTo(0,2); ctx.lineTo(Math.cos(a)*25, 2+Math.sin(a)*25); ctx.stroke(); } }
   ctx.restore();
 }
@@ -4976,10 +5728,23 @@ function openCodex() {
     info.innerHTML = `<div class="codex-head"><span class="codex-name">${(seenCnt>0||hasHint)?m.name:'???'}</span><span class="codex-tag ${seenCnt>0?'ok':(hasHint?'note':'')}">${seenCnt>0?`遭遇 ${seenCnt}回`:(hasHint?'メモ解禁':'未遭遇')}</span></div><div class="codex-desc">${seenCnt>0?m.desc:(hasHint?'姿は未確認（M.E.G.記録より対処法のみ解禁済）':'未確認の存在。遭遇するか記録を回収せよ。')}</div>${(seenCnt>0||hasHint)?`<div class="codex-counter"><b>対処法：</b>${m.counter}</div>`:''}`;
     item.appendChild(cvs); item.appendChild(info); list.appendChild(item);
   }
-  document.getElementById('codex-progress').textContent = `図鑑 ${seenTotal}/9 ・ 記録 ${rec.logsCollected.size}/16`;
+  // Phenomena Tab (§6-1, §6-2)
+  const phEl = document.getElementById('phenomena-list'); phEl.innerHTML = ''; let phTotal = 0;
+  for (const pid of PHENOMENA_ORDER) {
+    const pm = PHENOMENA_META[pid], cnt = (rec.phenomenaSeen && rec.phenomenaSeen[pid]) || 0;
+    if (cnt > 0) phTotal++;
+    const d = document.createElement('div'); d.className = 'codex-item' + (cnt > 0 ? ' seen' : '');
+    d.innerHTML = `<div class="codex-info"><div class="codex-head"><span class="codex-name">${cnt>0 ? pm.name : '未観測現象'}</span><span class="codex-tag ${cnt>0?'ok':''}">${cnt>0 ? `観測 ${cnt}回` : '未観測'}</span></div><div class="codex-desc">${cnt>0 ? pm.desc : '探索中に発生する異常現象。遭遇すると記録される。'}</div></div>`;
+    phEl.appendChild(d);
+  }
+  document.getElementById('codex-progress').textContent = `エンティティ ${seenTotal}/${ENTITY_ORDER.length} ・ 現象 ${phTotal}/${PHENOMENA_ORDER.length} ・ 記録 ${rec.logsCollected.size}/16`;
 
-  // M.E.G. Logs Tab (§6-3)
+  // M.E.G. Logs Tab (§6-3 & §3-3 Progressive White Door Clues!)
   const logsEl = document.getElementById('logs-list'); logsEl.innerHTML = '';
+  const clueBox = document.createElement('div'); clueBox.className = 'codex-item hint';
+  const unlockedClues = WHITE_DOOR_CLUES.map(c => rec.logsCollected.size >= c.need ? `✓ ${c.text}` : `🔒 記録 ${c.need}個収集で開示`).join('<br>');
+  clueBox.innerHTML = `<div class="codex-info"><div class="codex-head"><span class="codex-name" style="color:#ffffff;">白い扉の追跡手がかり（記録 ${rec.logsCollected.size}/16）</span></div><div class="codex-desc">${unlockedClues}</div></div>`;
+  logsEl.appendChild(clueBox);
   for (const lg of MEG_LOGS) {
     const got = rec.logsCollected.has(lg.id);
     const div = document.createElement('div'); div.className = 'codex-item' + (got ? ' seen' : '');
@@ -5193,7 +5958,7 @@ function mpHandleMessage(fromId, msg) {
       });
     } else if (msg.type === 'p_state') {
       const p = mp.peers.get(fromId);
-      if (p) { p.tx = msg.x; p.ty = msg.y; p.tz = msg.z; p.ry = msg.ry; p.crouch = msg.c; p.flash = msg.f; p.hide = msg.h; }
+      if (p) { p.tx = msg.x; p.ty = msg.y; p.tz = msg.z; p.ry = msg.ry; p.crouch = msg.c; p.flash = msg.f; p.hide = msg.h; p.downed = !!msg.d; }
     } else if (msg.type === 'use_obj') {
       if (!mpUsedUids.has(msg.uid)) {
         mpUsedUids.add(msg.uid);
@@ -5201,6 +5966,23 @@ function mpHandleMessage(fromId, msg) {
         mpApplyRemoteTask(msg.taskKind);
         mpBroadcast(msg, fromId);
       }
+    } else if (msg.type === 'pin') {
+      spawnWorldPin(msg.id, msg.name, msg.x, msg.y, msg.z);
+      mpBroadcast(msg, fromId);
+    } else if (msg.type === 'coop_breaker_press') {
+      state.coopBreakerLast = { by: msg.by, x: msg.x, z: msg.z, t: performance.now() };
+      showToast('仲間がブレーカーを操作！5秒以内に別のブレーカーを押せ！');
+      mpBroadcast(msg, fromId);
+    } else if (msg.type === 'coop_breaker_done') {
+      state.taskDone = true; state.breakerLightsRestored = true;
+      ambLight.intensity = Math.min(0.45, LEVELS[state.levelIdx].ambInt + 0.14);
+      updateObjectiveUI(); showToast('★ 同時ブレーカー復旧成功！出口が開錠された！');
+      mpBroadcast(msg, fromId);
+    } else if (msg.type === 'revive') {
+      if (msg.targetId === mp.myId) {
+        state.downed = false; state.hp = 40; document.getElementById('downed-overlay').classList.remove('show');
+        showToast('仲間に蘇生された！(HP 40)');
+      } else mpBroadcast(msg, fromId);
     } else if (msg.type === 'exit_vote') {
       mpExitWaiters.add(fromId);
       const needed = Math.ceil((1 + mp.peers.size) / 2);
@@ -5230,6 +6012,20 @@ function mpHandleMessage(fromId, msg) {
       startGame(false, msg.levelIdx, true, msg.depth || 1);
     } else if (msg.type === 'level') {
       state.depth = msg.depth; enterLevel(msg.levelIdx, true, msg.routeText || '');
+    } else if (msg.type === 'pin') {
+      spawnWorldPin(msg.id, msg.name, msg.x, msg.y, msg.z);
+    } else if (msg.type === 'coop_breaker_press') {
+      state.coopBreakerLast = { by: msg.by, x: msg.x, z: msg.z, t: performance.now() };
+      showToast('仲間がブレーカーを操作！5秒以内に別のブレーカーを押せ！');
+    } else if (msg.type === 'coop_breaker_done') {
+      state.taskDone = true; state.breakerLightsRestored = true;
+      ambLight.intensity = Math.min(0.45, LEVELS[state.levelIdx].ambInt + 0.14);
+      updateObjectiveUI(); showToast('★ 同時ブレーカー復旧成功！出口が開錠された！');
+    } else if (msg.type === 'revive') {
+      if (msg.targetId === mp.myId) {
+        state.downed = false; state.hp = 40; document.getElementById('downed-overlay').classList.remove('show');
+        showToast('仲間に蘇生された！(HP 40)');
+      }
     } else if (msg.type === 'use_obj') {
       if (!mpUsedUids.has(msg.uid)) {
         mpUsedUids.add(msg.uid);
@@ -5237,13 +6033,12 @@ function mpHandleMessage(fromId, msg) {
         mpApplyRemoteTask(msg.taskKind);
       }
     } else if (msg.type === 'world_snap') {
-      // Sync remote players & authoritative entities from host
       const seenPeers = new Set();
       for (const ps of (msg.players || [])) {
         if (ps.id === mp.myId) continue;
         seenPeers.add(ps.id);
         const p = mpAddRemoteAvatar(ps.id, ps.name);
-        p.tx = ps.x; p.ty = ps.y; p.tz = ps.z; p.ry = ps.ry; p.crouch = ps.c; p.flash = ps.f; p.hide = ps.h;
+        p.tx = ps.x; p.ty = ps.y; p.tz = ps.z; p.ry = ps.ry; p.crouch = ps.c; p.flash = ps.f; p.hide = ps.h; p.downed = !!ps.d;
       }
       for (const id of Array.from(mp.peers.keys())) if (!seenPeers.has(id)) mpRemovePeer(id);
       const seenE = new Set();
@@ -5263,6 +6058,28 @@ function mpHandleMessage(fromId, msg) {
       }
     }
   }
+}
+
+// §7-2 Co-op Shared 3D World Pin (1 per player, 10s duration)
+const worldPins = new Map();
+function spawnWorldPin(ownerId, name, x, y, z) {
+  if (worldPins.has(ownerId)) { peerGroup.remove(worldPins.get(ownerId).mesh); worldPins.delete(ownerId); }
+  const g = new THREE.Group();
+  const mat = getMat('pinMat', { color: 0xffe57f, emissive: 0xffd24d, emissiveIntensity: 1.4, transparent: true, opacity: 0.8 });
+  addPart(g, Geo.cyl8, mat, 0.08, 3.2, 0.08, 0, 1.6, 0);
+  addPart(g, Geo.octa, mat, 0.55, 0.55, 0.55, 0, 2.5, 0);
+  g.position.set(x, y, z); peerGroup.add(g);
+  worldPins.set(ownerId, { mesh: g, x, z, name, life: 10.0 });
+  sound.playPin();
+}
+function placeWorldPin() {
+  if (!state.playing || state.paused || state.downed) return;
+  const viewYaw = getActiveViewYaw(), dist = 6.0;
+  const px = state.pos.x - Math.sin(viewYaw)*dist, pz = state.pos.z - Math.cos(viewYaw)*dist;
+  const oid = mp.myId || 'local';
+  spawnWorldPin(oid, mp.myName || 'You', px, state.floorY, pz);
+  if (mp.active) mpBroadcastOrSend({ type: 'pin', id: oid, name: mp.myName || 'Peer', x: +px.toFixed(2), y: +state.floorY.toFixed(2), z: +pz.toFixed(2) });
+  showToast('📍 10秒間ピンを設置しました（全員に表示）');
 }
 
 function mpCreateRoom() {
@@ -5514,7 +6331,18 @@ function bindTouchBtn(id, fn) {
   el.addEventListener('click', (e) => { e.stopPropagation(); if (touched) { touched = false; return; } sound.init(); sound.playUiClick(); fn(); });
 }
 bindTouchBtn('m-use', triggerInteract); bindTouchBtn('m-light', toggleFlashlight);
-bindTouchBtn('m-crouch', toggleCrouch); bindTouchBtn('m-pulse', firePulse);
+bindTouchBtn('m-crouch', toggleCrouch);
+// §7-2 Mobile m-pulse: short tap = Sonar Pulse, long press (>=420ms) = Place World Pin!
+(() => {
+  const el = document.getElementById('m-pulse'); let pt = null, firedPin = false;
+  el.addEventListener('touchstart', (e) => {
+    e.preventDefault(); e.stopPropagation(); sound.init(); el.classList.add('pressed'); firedPin = false;
+    pt = setTimeout(() => { firedPin = true; placeWorldPin(); }, 420);
+  }, { passive: false });
+  const endP = () => { el.classList.remove('pressed'); if (pt) { clearTimeout(pt); pt = null; } if (!firedPin) { sound.playUiClick(); firePulse(); } };
+  el.addEventListener('touchend', endP); el.addEventListener('touchcancel', () => { el.classList.remove('pressed'); if (pt) { clearTimeout(pt); pt = null; } });
+  el.addEventListener('click', (e) => { e.stopPropagation(); sound.init(); firePulse(); });
+})();
 for (let i = 0; i < 5; i++) bindTouchBtn('slot-' + i, () => useInventorySlot(i));
 
 /* ============================================================
@@ -5529,25 +6357,42 @@ function updateHUDText() {
   if (settings.seedCollapse) { seedEl.textContent = 'SEED: COLLAPSED'; seedEl.classList.add('collapsed'); }
   else { seedEl.textContent = state.isDailyRun ? 'DAILY' : `SEED: ${state.seed}`; seedEl.classList.remove('collapsed'); }
   document.getElementById('hud-disc').textContent = `発見: ${state.discovered.size}/${LEVELS.length}`;
+  document.getElementById('hud-samples').textContent = `サンプル ×${state.confirmedSamples}（未確定 ×${state.unconfirmedSamples}）`;
 }
+const INV_REAL_NAMES = ['アーモンド水', '携帯食料', '救急キット', 'モスゼリー', '乾電池'];
+const INV_GARBLED = ['ｱｰﾓﾝﾄﾞ#ERR', '食料?0x4F', '救%急K!T', 'ﾓｽ_NULL', '電#池_666'];
 function updateInventoryUI() {
+  const infected = state.happyfileTimer > 0;
   for (let i = 0; i < 5; i++) {
-    document.getElementById('cnt-' + i).textContent = state.inv[i];
+    document.getElementById('cnt-' + i).textContent = infected ? '?' : state.inv[i];
     const slot = document.getElementById('slot-' + i);
+    const nm = slot.querySelector('.inv-name');
+    if (nm) nm.textContent = infected ? INV_GARBLED[i] : INV_REAL_NAMES[i];
     slot.classList.toggle('has-item', state.inv[i] > 0);
     slot.classList.toggle('empty', state.inv[i] <= 0);
   }
 }
 function updateSignalStrip() {
   const wrap = document.getElementById('signal-strip-wrap'), strip = document.getElementById('signal-strip');
-  if (state.pulseTimer <= 0) { wrap.classList.remove('active'); return; }
+  if (state.pulseTimer <= 0 && worldPins.size === 0) { wrap.classList.remove('active'); return; }
   wrap.classList.add('active'); let html = '';
   const viewYaw = getActiveViewYaw(), norm = (a) => Math.atan2(Math.sin(a), Math.cos(a));
-  for (const t of state.pulseTargets) {
-    const ang = Math.atan2(-(t.x-state.pos.x), -(t.z-state.pos.z)), diff = norm(ang - viewYaw);
+  if (state.pulseTimer > 0) {
+    for (const t of state.pulseTargets) {
+      const ang = Math.atan2(-(t.x-state.pos.x), -(t.z-state.pos.z)), diff = norm(ang - viewYaw);
+      if (Math.abs(diff) < 1.15) {
+        const pct = 50 - (diff/1.15)*50, dist = Math.round(Math.hypot(t.x-state.pos.x, t.z-state.pos.z));
+        if (t.kind === 'white') html += `<span class="sig-ping white" style="left:${pct.toFixed(1)}%">◆白い扉</span>`;
+        else if (t.kind === 'glitch') html += `<span class="sig-ping glitch" style="left:${pct.toFixed(1)}%">◆ERR_EXIT??m</span>`;
+        else html += `<span class="sig-ping ${t.kind}" style="left:${pct.toFixed(1)}%">${t.kind==='exit'?'◆EXIT':'●'}${dist}m</span>`;
+      }
+    }
+  }
+  for (const pin of worldPins.values()) {
+    const ang = Math.atan2(-(pin.x-state.pos.x), -(pin.z-state.pos.z)), diff = norm(ang - viewYaw);
     if (Math.abs(diff) < 1.15) {
-      const pct = 50 - (diff/1.15)*50, dist = Math.round(Math.hypot(t.x-state.pos.x, t.z-state.pos.z));
-      html += `<span class="sig-ping ${t.kind}" style="left:${pct.toFixed(1)}%">${t.kind==='exit'?'◆EXIT':'●'}${dist}m</span>`;
+      const pct = 50 - (diff/1.15)*50, dist = Math.round(Math.hypot(pin.x-state.pos.x, pin.z-state.pos.z));
+      html += `<span class="sig-ping pin" style="left:${pct.toFixed(1)}%">📍${dist}m</span>`;
     }
   }
   strip.innerHTML = html;
@@ -5708,14 +6553,47 @@ function animate(now) {
   }
   state.landDip *= Math.max(0, 1 - dt * 10);
 
-  // §3-6 Flashlight Battery Drain
+  // §2-8 Stuck Rescue: if movement input held for 1.2s with near-zero movement, nudge to nearest clear point!
+  if (!state.hide.active && !state.downed && len > 0.3 && stepDist < 0.008) {
+    state.stuckTimer = (state.stuckTimer || 0) + dt;
+    if (state.stuckTimer >= 1.2) {
+      state.stuckTimer = 0;
+      const near = getNearbyColliders(state.pos.x, state.pos.z);
+      let freed = false;
+      for (const rad of [0.6, 1.1, 1.6]) {
+        for (let a = 0; a < 8; a++) {
+          const tx = state.pos.x + Math.cos(a*Math.PI/4)*rad, tz = state.pos.z + Math.sin(a*Math.PI/4)*rad;
+          if (!pointCollides(near, tx, tz, PLAYER_R, state.floorY)) { state.pos.x = tx; state.pos.z = tz; freed = true; break; }
+        }
+        if (freed) break;
+      }
+    }
+  } else state.stuckTimer = 0;
+
+  // §2-4 Real-time Flashlight Battery Drain (100% -> 0% in 600s = 10 min, FPS-independent!)
   if (settings.batteryEnabled && state.flashlightOn) {
-    state.battery = Math.max(0, state.battery - 0.65 * dt);
+    state.battery = Math.max(0, state.battery - (100 / 600) * Math.min(0.25, rawDt));
     if (state.battery < 40) showFirstHint('low_bat', '電池が減ってきた！探索で乾電池を拾い[5]で交換しよう');
   }
 
+  // §7-3 Co-op Revive Progress (4s)
+  if (state.reviveTarget) {
+    const p = mp.peers.get(state.reviveTarget.id);
+    if (!p || !p.downed || Math.hypot(p.tx - state.pos.x, p.tz - state.pos.z) > 2.8) {
+      state.reviveTarget = null; document.getElementById('use-progress-wrap').style.display = 'none';
+    } else {
+      state.reviveTarget.timer += dt;
+      document.getElementById('use-progress-fill').style.width = Math.min(100, (state.reviveTarget.timer / 4.0) * 100).toFixed(0) + '%';
+      if (state.reviveTarget.timer >= 4.0) {
+        mpBroadcastOrSend({ type: 'revive', targetId: state.reviveTarget.id });
+        showToast(`${state.reviveTarget.name} を蘇生した！`);
+        state.reviveTarget = null; document.getElementById('use-progress-wrap').style.display = 'none';
+      }
+    }
+  }
+
   // Eye Height
-  let targetEye = state.crouching ? CROUCH_EYE : STAND_EYE;
+  let targetEye = state.downed ? 0.38 : (state.crouching ? CROUCH_EYE : STAND_EYE);
   if (state.hide.active) {
     if (state.hide.kind === 'car') targetEye = state.hide.ducked ? 0.72 : 1.18;
     else if (state.hide.kind === 'underbed') targetEye = 0.34;
@@ -5723,20 +6601,24 @@ function animate(now) {
   }
   state.eyeY += (targetEye - state.eyeY) * Math.min(1, dt * 10);
 
-  // Survival & Manila Room Safe Recovery
+  // Survival & Manila Room Safe Recovery + Sample Banking (§3-1)
   state.hunger = Math.max(0, state.hunger - (canSprint ? 0.85 : 0.42) * settings.hungerRate * dt);
   if (state.hunger < 68) showFirstHint('low_hunger', '空腹が減ってきた！携帯品[1][2]またはスマホのアイコンタップで補給しよう');
   let takingDmg = false, warnText = '';
   if (state.hunger <= 0) { state.hp -= 3.2*dt; state.runTookDamage = true; takingDmg = true; warnText = '飢餓状態：体力が減少している！'; }
-  else if (state.hunger >= 78 && state.sanity > 50 && state.hp < 100) state.hp = Math.min(100, state.hp + 0.9*dt);
+  else if (state.hunger >= 78 && state.sanity > 50 && state.hp < 100 && !state.downed) state.hp = Math.min(100, state.hp + 0.9*dt);
 
   const inManila = isInsideManilaRoom(state.pos.x, state.pos.z);
+  if (inManila && state.unconfirmedSamples > 0) bankSamples('マニラルーム到達', 1.0);
   const flashLit = state.flashlightOn && (!settings.batteryEnabled || state.battery > 1);
   const inDark = !inManila && ((!flashLit && (lv.ambInt < 0.25 || state.blackoutTimer > 0)) || lv.hazard === 'sanity');
   if (inManila || lv.id === 6 || lv.id === 4) state.sanity = Math.min(100, state.sanity + (inManila ? 3.2 : 1.4)*dt);
-  else if (inDark) state.sanity = Math.max(0, state.sanity - (flashLit ? 0.5 : 2.1) * settings.sanityRate * dt);
-  if (state.sanity <= 0) { state.hp -= 2.8*dt; state.runTookDamage = true; takingDmg = true; warnText = '精神崩壊：空間侵食で体力が削られている！'; }
-  if (lv.hazard === 'pressure' && state.stillTime > 1.5) { state.hp -= 9.5*dt; state.runTookDamage = true; takingDmg = true; warnText = '過圧警報：立ち止まるな！前へ走り抜けろ！'; }
+  else if (inDark || state.downed) {
+    if (inDark) showFirstHint('dark_sanity', '暗闇では正気が削れる。光は身を守るが、光に寄る者もいる');
+    state.sanity = Math.max(0, state.sanity - (flashLit ? 0.5 : 2.1) * settings.sanityRate * dt);
+  }
+  if (state.sanity <= 0 && !state.downed) { state.hp -= 2.8*dt; state.runTookDamage = true; takingDmg = true; warnText = '精神崩壊：空間侵食で体力が削られている！'; }
+  if (lv.hazard === 'pressure' && state.stillTime > 1.5 && !state.downed) { state.hp -= 9.5*dt; state.runTookDamage = true; takingDmg = true; warnText = '過圧警報：立ち止まるな！前へ走り抜けろ！'; }
 
   chunks.forEach(ch => {
     if (ch.waterMesh) { ch.waterMesh.material.map.offset.x = (state.elapsed*0.03)%1; ch.waterMesh.material.map.offset.y = (state.elapsed*0.02)%1; }
@@ -5758,7 +6640,7 @@ function animate(now) {
       } else if (h.type === 'mold' && h.spores) {
         for (const sp of h.spores) { sp.mesh.position.y = 0.12+((state.elapsed*sp.speed+sp.phase)%1.35); sp.mesh.position.x = sp.baseX+Math.sin(state.elapsed*1.5+sp.phase)*0.14; }
       }
-      if (!state.hide.active && d < h.r && Math.abs(state.floorY) < 0.8) {
+      if (!state.hide.active && !state.downed && d < h.r && Math.abs(state.floorY) < 0.8) {
         state.hp -= h.dps*dt; state.runTookDamage = true; takingDmg = true; warnText = h.msg;
         if (Math.random() < 0.14) { if (h.type === 'steam') sound.playSteam(0.2); else if (h.type === 'electric') sound.playSpark(0.26); else sound.playHurt(); }
       }
@@ -5773,7 +6655,20 @@ function animate(now) {
   updateMultiplayerSync(dt);
 
   if (takingDmg) state.hurtFlash = Math.min(0.88, state.hurtFlash + dt*3.5);
-  if (state.hp <= 0) { state.hp = 0; showResultScreen(false, warnText || '体力が尽き、始点の階層へ引き戻された。'); return; }
+  // §7-3 Co-op Downed State (45s timer) vs Solo Instant Death!
+  if (state.downed) {
+    state.downedTimer -= dt;
+    document.getElementById('downed-timer').textContent = `猶予 ${Math.max(0, Math.ceil(state.downedTimer))}s — 仲間の蘇生を待機中`;
+    if (state.downedTimer <= 0) { showResultScreen(false, '蘇生猶予が尽き、空間へ呑まれた。'); return; }
+  } else if (state.hp <= 0) {
+    if (mp.active && mp.peers.size > 0) {
+      state.hp = 0; state.downed = true; state.downedTimer = 45.0;
+      document.getElementById('downed-overlay').classList.add('show');
+      showToast('行動不能！45秒以内に仲間に近づいて蘇生してもらえ！');
+    } else {
+      state.hp = 0; showResultScreen(false, warnText || '体力が尽き、始点の階層へ引き戻された。'); return;
+    }
+  }
 
   updateChunks(false);
   updateLightPool(lv);
@@ -5989,6 +6884,14 @@ function startGame(newRandomSeed = false, forcedLevel = null, keepMp = false, fo
   state.mothRepelTimer = 0; state.useAction = null; document.getElementById('use-progress-wrap').style.display = 'none';
   state.exhausted = false; state.crouching = false; mobileDashToggle = false;
   state.depth = forcedDepth || 1; state.totalDist = 0; state.runTime = 0; state.runSamples = 0; state.runTookDamage = false;
+  state.confirmedSamples = 0; state.unconfirmedSamples = 0;
+  state.snailRolled = false; state.snailAttached = false; state.snailDelayTimer = 0; state.playerTrail = []; state.trailTimer = 0;
+  state.downed = false; state.downedTimer = 0; state.reviveTarget = null; state.stuckTimer = 0;
+  state.happyfileTimer = 0; state.happyfileStillTimer = 0; state.trackedExitUid = null; state.breakerLightsRestored = false;
+  document.getElementById('downed-overlay').classList.remove('show');
+  document.getElementById('happyfile-bar').style.display = 'none';
+  document.getElementById('kawagi-vignette').style.opacity = '0';
+  for (const s of ['l','r','t','b']) { document.getElementById('threat-edge-'+s).style.opacity = '0'; document.getElementById('hit-edge-'+s).style.opacity = '0'; }
   state.runEntitiesSeen = new Set(); state.runLevelsVisited = new Set([LEVELS[startLv].code]);
   state.anomaliesSeen = 0; state.discovered = new Set(loadRecords().discovered); state.discovered.add(startLv);
   state.playing = true; state.paused = false; state.noteOpen = false; state.settingsOpen = false; state.codexOpen = false;
