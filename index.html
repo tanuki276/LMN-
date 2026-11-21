@@ -168,12 +168,12 @@
     background: radial-gradient(circle at 35% 35%, rgba(250,232,162,0.94), rgba(186,154,74,0.8));
     border: 2px solid rgba(255,255,255,0.48); box-shadow: 0 4px 14px rgba(0,0,0,0.55);
   }
-  /* §V7.2 §6.7 Mobile Bottom-Right: Strictly max 3 spacious >=56px buttons + left-edge sonar/pin */
+  /* §V9 §1-4 Mobile Bottom-Right: Spacious buttons including restored visible #m-peek + left-edge sonar/pin */
   #mobile-arc {
     position: absolute; z-index: 5;
-    right: max(18px, calc(env(safe-area-inset-right) + 12px));
-    bottom: max(22px, calc(env(safe-area-inset-bottom) + 16px));
-    width: 176px; height: 164px; pointer-events: none;
+    right: max(16px, calc(env(safe-area-inset-right) + 10px));
+    bottom: max(20px, calc(env(safe-area-inset-bottom) + 14px));
+    width: 186px; height: 176px; pointer-events: none;
   }
   .m-round-btn {
     position: absolute; border-radius: 50%;
@@ -188,18 +188,20 @@
   .m-round-btn.pressed { transform: scale(0.9); background: rgba(224,199,121,0.92); color: #111; border-color: #fff2aa; }
   .m-round-btn.toggled { background: rgba(224,199,121,0.34); border-color: var(--accent); color: #fff4c2; }
   .m-btn-sub { font-size: 8px; opacity: 0.82; font-family: monospace; margin-top: 1px; }
-  #m-use { right: 4px; bottom: 4px; width: 76px; height: 76px; font-size: 12.5px; border-color: rgba(255,235,150,0.65); }
+  #m-use { right: 4px; bottom: 4px; width: 74px; height: 74px; font-size: 12.5px; border-color: rgba(255,235,150,0.65); }
   #m-use.can-interact { background: rgba(226,200,108,0.94); color: #121008; border-color: #fff7c4; box-shadow: 0 0 18px rgba(240,212,112,0.68); animation: pulseInteract 0.75s infinite alternate; }
   @keyframes pulseInteract { from { transform: scale(1); } to { transform: scale(1.06); } }
-  #m-light  { right: 98px; bottom: 8px; width: 60px; height: 60px; font-size: 10.5px; }
-  #m-crouch { right: 12px; bottom: 96px; width: 60px; height: 60px; font-size: 10.5px; }
+  #m-light  { right: 92px; bottom: 8px; width: 58px; height: 58px; font-size: 10.5px; }
+  #m-crouch { right: 8px; bottom: 92px; width: 58px; height: 58px; font-size: 10.5px; }
   #m-crouch.peeking { background: rgba(105,190,255,0.88); color: #09131c; border-color: #dff4ff; }
+  #m-peek { right: 82px; bottom: 80px; width: 56px; height: 56px; font-size: 10px; border-color: rgba(110,190,255,0.56); }
+  #m-peek.peeking { background: rgba(105,190,255,0.9); color: #09131c; border-color: #dff4ff; box-shadow: 0 0 16px rgba(105,190,255,0.62); }
   #m-pulse  {
     position: fixed; z-index: 16; left: max(18px, env(safe-area-inset-left));
     bottom: max(172px, calc(env(safe-area-inset-bottom) + 166px));
     width: 58px; height: 58px; font-size: 10px; border-color: rgba(110,235,165,0.52);
   }
-  #m-dash, #m-peek { display: none; } /* Consolidated into 92% auto-dash stick & long-press crouch peek */
+  #m-dash { display: none; } /* Consolidated into 92% auto-dash stick; #m-peek restored visible in V9 §1-4 */
 
   /* ===== HUD (z-index: 18) ===== */
   #hud { position: fixed; inset: 0; z-index: 18; pointer-events: none; display: none; }
@@ -636,27 +638,52 @@
     border: 1px solid rgba(255,255,255,0.45); margin-right: 6px; vertical-align: -1px;
   }
   #watch-sweep-overlay {
-    position: fixed; inset: 0; z-index: 6; pointer-events: none; opacity: 0; transition: opacity 0.28s;
-    background: radial-gradient(circle at 50% 25%, rgba(255,244,185,0.52), rgba(255,220,120,0.22) 60%, rgba(255,140,60,0.34) 100%);
+    position: fixed; inset: 0; z-index: 6; pointer-events: none; opacity: 0; transition: opacity 0.22s;
+    background: radial-gradient(circle at 50% 25%, rgba(255,244,185,0.56), rgba(255,220,120,0.24) 58%, rgba(255,140,60,0.38) 100%);
+  }
+  #watch-sweep-overlay.omen {
+    background: radial-gradient(circle at 50% 50%, rgba(255,230,140,0.04) 22%, rgba(255,214,110,0.26) 72%, rgba(255,180,70,0.52) 100%);
   }
   #watch-sweep-banner {
     position: fixed; top: max(84px, calc(env(safe-area-inset-top) + 76px)); left: 50%; transform: translateX(-50%);
     z-index: 22; background: rgba(42,26,6,0.92); border: 1px solid #ffe070; color: #fff4b8;
     font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 6px; display: none; pointer-events: none; text-align: center;
   }
+  #watch-sweep-banner.show { display: block; }
+  /* V9 §1-5 Lockpick modal with large bottom-right thumb button */
   #lockpick-modal {
     position: fixed; inset: 0; z-index: 36; background: rgba(4,6,10,0.82); backdrop-filter: blur(5px);
-    display: none; align-items: center; justify-content: center;
+    display: none; align-items: center; justify-content: center; padding-bottom: 84px;
   }
   #lockpick-modal.show { display: flex; }
   #lockpick-card {
-    width: min(320px, 90vw); background: rgba(12,15,20,0.96); border: 1px solid rgba(224,199,121,0.55);
-    border-radius: 12px; padding: 18px; text-align: center;
+    width: min(320px, 88vw); background: rgba(12,15,20,0.96); border: 1px solid rgba(224,199,121,0.55);
+    border-radius: 12px; padding: 16px 18px; text-align: center;
   }
-  #lockpick-gauge { width: 180px; height: 180px; display: block; margin: 10px auto; }
+  #lockpick-gauge { width: 176px; height: 176px; display: block; margin: 8px auto; }
+  #lockpick-tap-btn {
+    position: fixed; z-index: 38;
+    right: max(22px, calc(env(safe-area-inset-right) + 16px));
+    bottom: max(24px, calc(env(safe-area-inset-bottom) + 18px));
+    width: 138px; height: 112px; border-radius: 22px;
+    font-size: 18px; font-weight: 900; letter-spacing: 0.08em;
+    box-shadow: 0 8px 28px rgba(230,200,100,0.42);
+    border: 2px solid #fff3b0; touch-action: none;
+  }
+  #lockpick-cancel-btn {
+    position: fixed; z-index: 38;
+    left: max(18px, calc(env(safe-area-inset-left) + 14px));
+    bottom: max(28px, calc(env(safe-area-inset-bottom) + 22px));
+    min-width: 84px; height: 48px; border-radius: 10px;
+  }
+  #hud-sample-risk {
+    display: none; font-family: monospace; font-size: 9.5px; font-weight: 700;
+    color: #ffb870; background: rgba(120,48,14,0.34); border: 1px solid rgba(255,168,86,0.45);
+    border-radius: 4px; padding: 1px 5px; margin-top: 2px; line-height: 1.3;
+  }
   #btn-vitals-toggle {
-    display: none; pointer-events: auto; background: rgba(255,255,255,0.08); color: #e8e2cc;
-    border: 1px solid rgba(255,255,255,0.18); border-radius: 4px; font-size: 9px; padding: 1px 5px;
+    display: none; pointer-events: auto; background: rgba(255,255,255,0.1); color: #e8e2cc;
+    border: 1px solid rgba(255,255,255,0.22); border-radius: 4px; font-size: 9px; padding: 2px 5px;
     margin-bottom: 3px; width: 100%; cursor: pointer;
   }
   .hud-bottom-left.collapsed .stat-row { display: none; }
@@ -673,14 +700,24 @@
   }
   @media (max-width: 860px), (pointer: coarse) {
     #btn-codex-hud { display: none; } /* §6.7 Move Codex into Menu/Pause on mobile */
+    #btn-vitals-toggle { display: block; }
+    .hud-top-left { z-index: 20; }
+    .hud-bottom-left { z-index: 19; background: rgba(10,12,16,0.72); }
   }
-  @media (max-width: 560px) {
-    .hud-top-left { min-width: 128px; max-width: 48vw; padding: 4px 6px; }
+  /* V9 §1-7 Narrow screens (<=600px, incl. 512px): prevent vitals panel from overlapping objective text! */
+  @media (max-width: 600px) {
+    .hud-top-left { min-width: 128px; max-width: 56vw; padding: 4px 6px; }
     #hud-level-code, #hud-depth { font-size: 9.5px; }
     #hud-level-name { font-size: 10.5px; }
-    #hud-meta, #hud-samples { font-size: 8.5px; }
-    #obj-panel { font-size: 8.5px; line-height: 1.22; }
-    .hud-bottom-left { top: auto; bottom: max(195px, calc(env(safe-area-inset-bottom) + 188px)); left: 10px; width: 118px; padding: 4px 6px; }
+    #hud-meta, #hud-samples, #hud-sample-risk { font-size: 8.5px; }
+    #obj-panel { font-size: 8.5px; line-height: 1.25; }
+    .hud-bottom-left {
+      top: auto; bottom: max(195px, calc(env(safe-area-inset-bottom) + 188px));
+      left: 10px; width: 116px; padding: 4px 6px;
+      background: rgba(10,12,16,0.74);
+    }
+    #hud.vitals-expanded .hud-top-left { max-width: calc(100vw - 144px); }
+    #hud.vitals-expanded .hud-bottom-left { z-index: 19; }
     #btn-vitals-toggle { display: block; }
   }
 </style>
@@ -771,6 +808,7 @@
       <span id="hud-disc">発見: 1/20</span>
     </div>
     <div id="hud-samples">サンプル ×0（未確定 ×0）</div>
+    <div id="hud-sample-risk"></div>
     <div id="obj-panel">
       <div id="hud-main-obj">① 制御盤で電源復旧（またはピッキング） → ② 出口解錠 → ③ 出口へ</div>
       <div id="hud-sub-obj">副目的：---</div>
@@ -855,7 +893,7 @@
   </div>
 </div>
 
-<!-- V8 §3 Door Lockpicking Mini-Game Modal -->
+<!-- V8 §3 + V9 §1-5 Door Lockpicking Mini-Game Modal (Large Bottom-Right Thumb Button!) -->
 <div id="lockpick-modal">
   <div id="lockpick-card">
     <div style="font-family:monospace;font-size:11px;color:var(--accent);letter-spacing:0.12em;">LOCKPICKING // 開錠中</div>
@@ -866,12 +904,10 @@
       <line id="lockpick-needle" x1="90" y1="90" x2="90" y2="14" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
       <circle cx="90" cy="90" r="8" fill="#e0c779"/>
     </svg>
-    <div id="lockpick-info" style="font-size:11.5px;color:var(--muted);margin-bottom:10px;">針が金色ゾーンに入った瞬間に [SPACE / E / タップ]！（失敗でピック消費＆騒音）</div>
-    <div class="form-row" style="margin-bottom:0;">
-      <button class="primary" id="lockpick-tap-btn" style="flex:2;">止める！</button>
-      <button class="secondary" id="lockpick-cancel-btn" style="flex:1;">中断</button>
-    </div>
+    <div id="lockpick-info" style="font-size:11.5px;color:var(--muted);margin-bottom:4px;">針が金色ゾーンに入った瞬間に [SPACE / E / 右下ボタン]！（失敗でピック消費＆騒音）</div>
   </div>
+  <button class="secondary" id="lockpick-cancel-btn">中断</button>
+  <button class="primary" id="lockpick-tap-btn">止める！</button>
 </div>
 
 <!-- Note Modal -->
@@ -1119,7 +1155,7 @@
 <div id="title-screen">
   <div class="card">
     <div class="tag">
-      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V8.0.0</span>
+      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V9.0.0</span>
       <span class="escape-badge" id="title-escape-badge">★ 現実へ脱出済み</span>
     </div>
     <h1>Like Homes</h1>
@@ -1175,7 +1211,7 @@
     <div id="model-load-status" style="font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;min-height:14px;"></div>
 
     <div class="credits-bar">
-      <span id="credits-ver">Like Homes // V8.0.0</span>
+      <span id="credits-ver">Like Homes // V9.0.0</span>
       <span>CREDITS: LIKE HOMES PROJECT (THREE.JS / PEERJS)</span>
     </div>
   </div>
@@ -1217,7 +1253,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V8.0.0';
+const VERSION = 'V9.0.0';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -1848,16 +1884,31 @@ class SoundEngine {
     const g = this.ctx.createGain(); g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(vol, t + 0.04);
     g.gain.exponentialRampToValueAtTime(0.001, t + 0.32); s.connect(f); f.connect(g); g.connect(this.master); s.start(t, Math.random(), 0.36);
   }
-  playTonePan(freq, dur, type = 'sine', vol = 0.14, freqEnd = null, pan = 0) {
+  // V9 §2-2 Distance-based lowpass cutoff (near: crisp 14kHz, far: muffled 520Hz)
+  getDistanceCutoff(dist = 0) {
+    if (!dist || dist <= 2.2) return 14000;
+    const t = Math.max(0, Math.min(1, (dist - 2.2) / 26));
+    return Math.round(14000 * Math.pow(520 / 14000, t));
+  }
+  playTonePan(freq, dur, type = 'sine', vol = 0.14, freqEnd = null, pan = 0, dist = 0) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime, o = this.ctx.createOscillator(), g = this.ctx.createGain();
     o.type = type; o.frequency.setValueAtTime(freq, t);
     if (freqEnd) o.frequency.exponentialRampToValueAtTime(Math.max(20, freqEnd), t + dur);
-    g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(vol, t + Math.min(0.02, dur*0.25));
+    const atten = dist > 2.2 ? Math.max(0.22, 1 - (dist - 2.2) / 34) : 1.0;
+    const finalVol = Math.max(0.002, vol * atten);
+    g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(finalVol, t + Math.min(0.02, dur*0.25));
     g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    let node = o;
+    if (dist > 2.2) {
+      const lp = this.ctx.createBiquadFilter(); lp.type = 'lowpass';
+      lp.frequency.setValueAtTime(this.getDistanceCutoff(dist), t);
+      node.connect(lp); node = lp;
+    }
+    node.connect(g);
     const p = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
-    if (p) { p.pan.value = Math.max(-1, Math.min(1, pan)); o.connect(g); g.connect(p); p.connect(this.master); }
-    else { o.connect(g); g.connect(this.master); }
+    if (p) { p.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(p); p.connect(this.master); }
+    else { g.connect(this.master); }
     o.start(t); o.stop(t + dur + 0.02);
   }
   playShiftCreak() { this.playTone(72 + Math.random()*18, 0.52, 'sine', 0.065, 42); this.playStaticBurst(0.055, 0.04); }
@@ -1879,37 +1930,45 @@ class SoundEngine {
     this.playStaticBurst(0.22, 0.08);
   }
   playKawagiPulse() { this.playTone(118, 0.14, 'triangle', 0.085, 84); }
-  playSnailBell(pan = 0, vol = 0.12) {
-    this.playTonePan(1480, 0.55, 'sine', vol, 1460, pan);
-    this.playTonePan(2960, 0.32, 'triangle', vol*0.45, 2940, pan);
+  playSnailBell(pan = 0, vol = 0.12, dist = 0) {
+    this.playTonePan(1480, 0.55, 'sine', vol, 1460, pan, dist);
+    this.playTonePan(2960, 0.32, 'triangle', vol*0.45, 2940, pan, dist);
   }
-  playTvLock(progress = 0.5, pan = 0) {
-    this.playTonePan(340 + progress * 980, 0.12, 'sawtooth', 0.06 + progress * 0.09, 360 + progress * 1040, pan);
+  playTvLock(progress = 0.5, pan = 0, dist = 0) {
+    this.playTonePan(340 + progress * 980, 0.12, 'sawtooth', 0.06 + progress * 0.09, 360 + progress * 1040, pan, dist);
   }
   playPin() { this.playTone(880, 0.1, 'sine', 0.13); setTimeout(() => this.playTone(1320, 0.18, 'sine', 0.12), 75); }
-  playEntityAlert(kind, pan = 0) {
-    if (!this.ctx) return;
-    if (kind === 'bacteria' || kind === 'horde') { this.playTonePan(210, 0.8, 'sawtooth', 0.22, 90, pan); this.playTonePan(435, 0.7, 'square', 0.1, 180, pan); this.playStaticBurst(0.45, 0.14); }
-    else if (kind === 'hound') { this.playTonePan(180, 0.22, 'sawtooth', 0.22, 78, pan); setTimeout(() => this.playTonePan(220, 0.28, 'sawtooth', 0.2, 85, pan), 140); }
-    else if (kind === 'smiler') { this.playTonePan(95, 0.85, 'sine', 0.2, 46, pan); this.playWhisper(pan); }
-    else if (kind === 'partygoer') { this.playTonePan(520, 0.18, 'triangle', 0.16, 680, pan); setTimeout(() => this.playTonePan(410, 0.26, 'sawtooth', 0.15, 290, pan), 150); }
-    else if (kind === 'mannequin') { this.playCeramicScrape(0.16); }
-    else if (kind === 'watch') { this.playTonePan(520, 0.35, 'square', 0.18, 220, pan); setTimeout(() => this.playTonePan(520, 0.35, 'square', 0.18, 220, pan), 200); }
-    else if (kind === 'tvhead') { this.playTonePan(1240, 0.32, 'sawtooth', 0.2, 180, pan); this.playStaticBurst(0.28, 0.18); }
-    else if (kind === 'deathrat') { this.playTonePan(1800, 0.12, 'sawtooth', 0.13, 900, pan); setTimeout(() => this.playTonePan(2100, 0.1, 'sawtooth', 0.12, 1100, pan), 90); }
-    else if (kind === 'skinstealer') { this.playKawagiStinger(); }
-    else { this.playTonePan(145, 0.34, 'triangle', 0.16, 64, pan); }
+  // V9 §1-2 + §2-2 Smiler (Megan) Omen Phase Audio Cue with pan + distance lowpass
+  playSmilerOmen(pan = 0, dist = 8) {
+    this.playTonePan(118, 0.72, 'sine', 0.16, 62, pan, dist);
+    this.playTonePan(380, 0.55, 'triangle', 0.07, 195, pan, dist);
+    this.playWhisper(pan, dist);
   }
-  playWhisper(pan = 0) {
+  playEntityAlert(kind, pan = 0, dist = 0) {
+    if (!this.ctx) return;
+    if (kind === 'bacteria' || kind === 'horde' || kind === 'mycelium') { this.playTonePan(210, 0.8, 'sawtooth', 0.22, 90, pan, dist); this.playTonePan(435, 0.7, 'square', 0.1, 180, pan, dist); this.playStaticBurst(0.45, 0.14); }
+    else if (kind === 'hound') { this.playTonePan(180, 0.22, 'sawtooth', 0.22, 78, pan, dist); setTimeout(() => this.playTonePan(220, 0.28, 'sawtooth', 0.2, 85, pan, dist), 140); }
+    else if (kind === 'smiler') { this.playTonePan(95, 0.85, 'sine', 0.2, 46, pan, dist); this.playWhisper(pan, dist); }
+    else if (kind === 'partygoer') { this.playTonePan(520, 0.18, 'triangle', 0.16, 680, pan, dist); setTimeout(() => this.playTonePan(410, 0.26, 'sawtooth', 0.15, 290, pan, dist), 150); }
+    else if (kind === 'mannequin') { this.playCeramicScrape(0.16); }
+    else if (kind === 'watch') { this.playTonePan(520, 0.35, 'square', 0.18, 220, pan, dist); setTimeout(() => this.playTonePan(520, 0.35, 'square', 0.18, 220, pan, dist), 200); }
+    else if (kind === 'tvhead') { this.playTonePan(1240, 0.32, 'sawtooth', 0.2, 180, pan, dist); this.playStaticBurst(0.28, 0.18); }
+    else if (kind === 'deathrat') { this.playTonePan(1800, 0.12, 'sawtooth', 0.13, 900, pan, dist); setTimeout(() => this.playTonePan(2100, 0.1, 'sawtooth', 0.12, 1100, pan, dist), 90); }
+    else if (kind === 'skinstealer') { this.playKawagiStinger(); }
+    else { this.playTonePan(145, 0.34, 'triangle', 0.16, 64, pan, dist); }
+  }
+  playWhisper(pan = 0, dist = 0) {
     if (!this.ctx || !this.noiseBuf) return;
     const t = this.ctx.currentTime, s = this.ctx.createBufferSource(); s.buffer = this.noiseBuf;
     const f1 = this.ctx.createBiquadFilter(); f1.type = 'bandpass'; f1.frequency.setValueAtTime(820, t);
     f1.frequency.linearRampToValueAtTime(2050, t + 0.35); f1.frequency.linearRampToValueAtTime(620, t + 0.95); f1.Q.value = 8;
-    const g = this.ctx.createGain(); g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(0.22, t + 0.15);
+    const lp = this.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(this.getDistanceCutoff(dist), t);
+    const atten = dist > 2.2 ? Math.max(0.24, 1 - (dist - 2.2) / 30) : 1.0;
+    const g = this.ctx.createGain(); g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(0.22 * atten, t + 0.15);
     g.gain.exponentialRampToValueAtTime(0.001, t + 1.0);
     const p = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
-    if (p) { p.pan.value = Math.max(-1, Math.min(1, pan)); s.connect(f1); f1.connect(g); g.connect(p); p.connect(this.master); }
-    else { s.connect(f1); f1.connect(g); g.connect(this.master); }
+    if (p) { p.pan.value = Math.max(-1, Math.min(1, pan)); s.connect(f1); f1.connect(lp); lp.connect(g); g.connect(p); p.connect(this.master); }
+    else { s.connect(f1); f1.connect(lp); lp.connect(g); g.connect(this.master); }
     s.start(t, Math.random(), 1.05);
   }
   playDistantSteps(pan = 0) {
@@ -1926,11 +1985,24 @@ class SoundEngine {
       s.start(t, Math.random(), 0.13);
     }, i * 350);
   }
+  // V9 §6-8 + §2-2 Peer / Non-silent Mimic Spatial Footstep
+  playPeerStep(vol = 0.11, pan = 0, dist = 6) {
+    if (!this.ctx || !this.noiseBuf) return;
+    const t = this.ctx.currentTime, s = this.ctx.createBufferSource(); s.buffer = this.noiseBuf;
+    const lp = this.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = Math.min(950, this.getDistanceCutoff(dist));
+    const atten = dist > 2 ? Math.max(0.15, 1 - (dist - 2) / 18) : 1.0;
+    const g = this.ctx.createGain(); g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(vol * atten, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+    const p = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+    if (p) { p.pan.value = Math.max(-1, Math.min(1, pan)); s.connect(lp); lp.connect(g); g.connect(p); p.connect(this.master); }
+    else { s.connect(lp); lp.connect(g); g.connect(this.master); }
+    s.start(t, Math.random(), 0.11);
+  }
   playPhoneRing() {
     for (let r = 0; r < 2; r++) setTimeout(() => { this.playTone(440, 0.35, 'sine', 0.09); this.playTone(480, 0.35, 'sine', 0.08); }, r * 520);
   }
   playTransition() { this.playTone(170, 0.72, 'sine', 0.24, 48); this.playTone(340, 0.48, 'triangle', 0.12, 120); this.playStaticBurst(0.26, 0.13); }
-  // V8 Audio Cues (Lockpicking, Ball, Power Restore, Watch Sweep, Countermeasure Feedback, Chasm)
+  // V8/V9 Audio Cues (Lockpicking, Ball, Power Restore, Watch Sweep Omen, Countermeasure Feedback, Chasm)
   playLockClick() { this.playTone(920, 0.06, 'triangle', 0.14, 1320); }
   playLockFail() { this.playTone(190, 0.28, 'sawtooth', 0.24, 72); this.playStaticBurst(0.18, 0.18); }
   playLockSuccess() { this.playTone(540, 0.12, 'triangle', 0.16, 820); setTimeout(() => this.playTone(820, 0.22, 'sine', 0.18, 1240), 90); }
@@ -1939,10 +2011,16 @@ class SoundEngine {
     setTimeout(() => this.playTone(440, 0.28, 'triangle', 0.16, 660), 160);
     setTimeout(() => this.playTone(880, 0.35, 'sine', 0.14, 1100), 320);
   }
-  playBallBounce(vol = 0.16, pan = 0) { this.playTonePan(310, 0.085, 'triangle', vol, 140, pan); }
+  playBallBounce(vol = 0.16, pan = 0, dist = 0) { this.playTonePan(310, 0.085, 'triangle', vol, 140, pan, dist); }
   playCounterSuccess(pan = 0) { this.playTonePan(680, 0.18, 'sine', 0.15, 980, pan); }
-  playWatchSweepWarn() { this.playTone(320, 0.55, 'sawtooth', 0.18, 140); setTimeout(() => this.playTone(480, 0.45, 'square', 0.14, 210), 220); }
-  playMimicDissolve(pan = 0) { this.playTonePan(520, 0.5, 'sine', 0.18, 110, pan); this.playStaticBurst(0.35, 0.16); }
+  // V9 §1-3 Watch Spotlight Convergence Warning (progress 0..1 raises pitch & opens lowpass as beam converges)
+  playWatchSweepWarn(progress = 0) {
+    const distSim = Math.max(2, (1 - progress) * 20);
+    const baseF = 240 + progress * 220;
+    this.playTonePan(baseF, 0.52, 'sawtooth', 0.15 + progress * 0.06, baseF * 0.65, 0, distSim);
+    setTimeout(() => this.playTonePan(baseF * 1.45, 0.42, 'square', 0.11 + progress * 0.05, baseF * 0.9, 0, distSim), 210);
+  }
+  playMimicDissolve(pan = 0, dist = 0) { this.playTonePan(520, 0.5, 'sine', 0.18, 110, pan, dist); this.playStaticBurst(0.35, 0.16); }
   playChasmWind(vol = 0.12) {
     if (!this.ctx || !this.noiseBuf) return;
     const t = this.ctx.currentTime, s = this.ctx.createBufferSource(); s.buffer = this.noiseBuf;
@@ -1951,18 +2029,22 @@ class SoundEngine {
     g.gain.exponentialRampToValueAtTime(0.001, t + 0.6); s.connect(f); f.connect(g); g.connect(this.master);
     s.start(t, Math.random(), 0.64);
   }
-  playExitHum(vol = 0.08, pan = 0) { this.playTonePan(120, 0.36, 'sine', vol, 126, pan); }
-  playHeavyStep(vol = 0.22, pan = 0) {
+  playExitHum(vol = 0.08, pan = 0, dist = 0) { this.playTonePan(120, 0.36, 'sine', vol, 126, pan, dist); }
+  playClumpCreakSpatial(vol = 0.16, pan = 0, dist = 8) {
+    this.playTonePan(68 + Math.random()*18, 0.38, 'sawtooth', vol*0.65, 42, pan, dist);
+    this.playTonePan(112, 0.28, 'triangle', vol*0.48, 72, pan, dist);
+  }
+  playHeavyStep(vol = 0.22, pan = 0, dist = 0) {
     if (!this.ctx || !this.noiseBuf) return;
     const t = this.ctx.currentTime, s = this.ctx.createBufferSource(); s.buffer = this.noiseBuf;
-    const f = this.ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 260;
+    const f = this.ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = Math.min(340, this.getDistanceCutoff(dist));
     const g = this.ctx.createGain(); g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(vol, t + 0.02);
     g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
     const p = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
     if (p) { p.pan.value = Math.max(-1, Math.min(1, pan)); s.connect(f); f.connect(g); g.connect(p); p.connect(this.master); }
     else { s.connect(f); f.connect(g); g.connect(this.master); }
     s.start(t, Math.random(), 0.18);
-    this.playTonePan(74, 0.14, 'sine', vol * 0.7, 42, pan);
+    this.playTonePan(74, 0.14, 'sine', vol * 0.7, 42, pan, dist);
   }
 }
 const sound = new SoundEngine();
@@ -2803,6 +2885,28 @@ function initSharedGeos() {
   triShape.moveTo(-0.5, 0); triShape.lineTo(0.5, 0); triShape.lineTo(0, 1); triShape.closePath();
   Geo.gable = new THREE.ExtrudeGeometry(triShape, { depth: 1, bevelEnabled: false });
   Geo.gable.translate(0, 0, -0.5);
+
+  // V9 §1-6 Tapered trapezoidal geometries for realistic car silhouettes (cabin, sloped hood, van cabin)
+  const makeTaperBox = (bw, bd, tw, td, h, topZOff = 0) => {
+    const g = new THREE.BoxGeometry(1, 1, 1);
+    const pos = g.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+      const isTop = y > 0;
+      pos.setXYZ(
+        i,
+        x * (isTop ? tw : bw),
+        y * h,
+        z * (isTop ? td : bd) + (isTop ? topZOff : 0)
+      );
+    }
+    g.computeVertexNormals();
+    return g;
+  };
+  Geo.carCabin = makeTaperBox(1.0, 1.0, 0.78, 0.62, 1.0, -0.04);
+  Geo.carGlassBand = makeTaperBox(0.98, 0.96, 0.80, 0.66, 1.0, -0.04);
+  Geo.carHood = makeTaperBox(1.0, 1.0, 0.92, 0.86, 1.0, -0.06);
+  Geo.carVanCabin = makeTaperBox(1.0, 1.0, 0.86, 0.90, 1.0, -0.04);
 }
 function addPart(parent, geo, mat, sx, sy, sz, px, py, pz, rx = 0, ry = 0, rz = 0) {
   const m = new THREE.Mesh(geo, mat);
@@ -3312,36 +3416,104 @@ const PropFactory = {
     addPart(g, Geo.box1, M.warmGlow, 0.48, 0.12, 0.26, 1.32, 6.06, 0);
     return g;
   },
+  // V9 §1-6 Realistic Sedan Car (tapered trapezoidal cabin, sloped hood/trunk, angled glass, mirrors, wheel arches)
   sedanCar(colorIdx = 0, headlights = false) {
     const g = new THREE.Group(), M = this.mats;
     const bodyMat = M.carColors[colorIdx % M.carColors.length];
-    addPart(g, Geo.box1, bodyMat, 1.84, 0.62, 4.35, 0, 0.62, 0);
-    addPart(g, Geo.box1, M.darkMetal, 1.88, 0.22, 0.22, 0, 0.42, 2.18);
-    addPart(g, Geo.box1, M.darkMetal, 1.88, 0.22, 0.22, 0, 0.42, -2.18);
-    addPart(g, Geo.box1, bodyMat, 1.56, 0.56, 1.95, 0, 1.18, -0.18);
-    addPart(g, Geo.box1, M.carGlass, 1.5, 0.52, 0.08, 0, 1.14, 0.88, -0.45, 0, 0);
-    addPart(g, Geo.box1, M.carGlass, 1.6, 0.42, 1.72, 0, 1.18, -0.18);
-    for (const sx of [-0.9, 0.9]) for (const sz of [-1.32, 1.34]) {
+    // Lower chassis & rocker panels
+    addPart(g, Geo.box1, bodyMat, 1.84, 0.44, 4.18, 0, 0.52, 0);
+    // Sloped front hood (tapers down toward nose)
+    addPart(g, Geo.carHood, bodyMat, 1.80, 0.24, 1.38, 0, 0.80, 1.44, 0.08, 0, 0);
+    // Slightly sloped rear trunk deck
+    addPart(g, Geo.carHood, bodyMat, 1.78, 0.22, 1.02, 0, 0.82, -1.56, -0.06, Math.PI, 0);
+    // Front & rear dark bumpers + front grille
+    addPart(g, Geo.box1, M.darkMetal, 1.88, 0.20, 0.22, 0, 0.36, 2.15);
+    addPart(g, Geo.box1, M.darkMetal, 1.88, 0.20, 0.22, 0, 0.36, -2.15);
+    addPart(g, Geo.box1, M.blackRubber, 0.92, 0.16, 0.06, 0, 0.56, 2.12);
+    // Tapered trapezoidal greenhouse (glass core + painted roof/pillars)
+    addPart(g, Geo.carGlassBand, M.carGlass, 1.66, 0.54, 2.18, 0, 1.12, -0.14);
+    addPart(g, Geo.carCabin, bodyMat, 1.48, 0.12, 1.46, 0, 1.38, -0.18);
+    // Angled A/C pillars along cabin taper
+    for (const sx of [-0.68, 0.68]) {
+      addPart(g, Geo.box1, bodyMat, 0.09, 0.56, 0.10, sx, 1.12, 0.62, -0.44, 0, sx > 0 ? 0.16 : -0.16);
+      addPart(g, Geo.box1, bodyMat, 0.09, 0.54, 0.12, sx, 1.12, -0.88, 0.38, 0, sx > 0 ? 0.16 : -0.16);
+      // Side mirrors
+      addPart(g, Geo.box1, bodyMat, 0.16, 0.10, 0.12, sx > 0 ? 0.98 : -0.98, 0.90, 0.62);
+    }
+    // Wheels + hubcaps + dark wheel wells
+    for (const sx of [-0.90, 0.90]) for (const sz of [-1.32, 1.34]) {
+      addPart(g, Geo.box1, M.blackRubber, 0.16, 0.44, 0.78, sx * 0.94, 0.42, sz);
       addPart(g, Geo.cyl, M.blackRubber, 0.66, 0.25, 0.66, sx, 0.33, sz, 0, 0, Math.PI/2);
       addPart(g, Geo.cyl8, M.steel, 0.38, 0.27, 0.38, sx, 0.33, sz, 0, 0, Math.PI/2);
     }
     const hlMat = headlights ? M.warmGlow : M.whitePlastic;
-    addPart(g, Geo.box1, hlMat, 0.36, 0.16, 0.08, -0.62, 0.68, 2.18);
-    addPart(g, Geo.box1, hlMat, 0.36, 0.16, 0.08, 0.62, 0.68, 2.18);
-    addPart(g, Geo.box1, M.redMetal, 0.4, 0.15, 0.08, -0.62, 0.7, -2.18);
-    addPart(g, Geo.box1, M.redMetal, 0.4, 0.15, 0.08, 0.62, 0.7, -2.18);
+    addPart(g, Geo.box1, hlMat, 0.36, 0.14, 0.08, -0.62, 0.64, 2.12);
+    addPart(g, Geo.box1, hlMat, 0.36, 0.14, 0.08, 0.62, 0.64, 2.12);
+    addPart(g, Geo.box1, M.redMetal, 0.40, 0.14, 0.08, -0.62, 0.68, -2.12);
+    addPart(g, Geo.box1, M.redMetal, 0.40, 0.14, 0.08, 0.62, 0.68, -2.12);
     return g;
   },
+  // V9 §1-6 Realistic Van (tapered roof, sloped nose & windshield, mirrors, bumpers, taillights)
   vanCar(colorIdx = 0, headlights = false) {
     const g = new THREE.Group(), M = this.mats;
-    const bodyMat = M.carColors[(colorIdx+2) % M.carColors.length];
-    addPart(g, Geo.box1, bodyMat, 1.94, 1.48, 4.45, 0, 1.08, -0.15);
-    addPart(g, Geo.box1, bodyMat, 1.92, 0.76, 0.95, 0, 0.72, 2.18);
-    addPart(g, Geo.box1, M.carGlass, 1.78, 0.66, 0.08, 0, 1.44, 1.98, -0.28, 0, 0);
-    for (const sx of [-0.95, 0.95]) for (const sz of [-1.45, 1.45]) addPart(g, Geo.cyl, M.blackRubber, 0.72, 0.28, 0.72, sx, 0.36, sz, 0, 0, Math.PI/2);
+    const bodyMat = M.carColors[(colorIdx + 2) % M.carColors.length];
+    // Lower chassis & bumpers
+    addPart(g, Geo.box1, bodyMat, 1.94, 0.72, 4.35, 0, 0.70, -0.08);
+    addPart(g, Geo.box1, M.darkMetal, 1.98, 0.22, 0.22, 0, 0.38, 2.52);
+    addPart(g, Geo.box1, M.darkMetal, 1.98, 0.22, 0.22, 0, 0.38, -2.28);
+    // Tapered upper van cabin
+    addPart(g, Geo.carVanCabin, bodyMat, 1.90, 0.84, 3.88, 0, 1.44, -0.26);
+    // Sloped front nose/hood + grille
+    addPart(g, Geo.carHood, bodyMat, 1.88, 0.56, 0.96, 0, 0.74, 2.08, 0.12, 0, 0);
+    addPart(g, Geo.box1, M.blackRubber, 1.05, 0.22, 0.06, 0, 0.66, 2.55);
+    // Angled windshield & side cabin windows
+    addPart(g, Geo.box1, M.carGlass, 1.72, 0.64, 0.08, 0, 1.40, 1.66, -0.32, 0, 0);
+    addPart(g, Geo.box1, M.carGlass, 1.84, 0.48, 1.12, 0, 1.40, 1.02);
+    for (const sx of [-1.02, 1.02]) addPart(g, Geo.box1, M.darkMetal, 0.14, 0.16, 0.10, sx, 1.18, 1.48);
+    for (const sx of [-0.95, 0.95]) for (const sz of [-1.42, 1.44]) {
+      addPart(g, Geo.cyl, M.blackRubber, 0.72, 0.28, 0.72, sx, 0.36, sz, 0, 0, Math.PI/2);
+      addPart(g, Geo.cyl8, M.steel, 0.40, 0.30, 0.40, sx, 0.36, sz, 0, 0, Math.PI/2);
+    }
     const hlMat = headlights ? M.warmGlow : M.whitePlastic;
-    addPart(g, Geo.box1, hlMat, 0.34, 0.2, 0.08, -0.66, 0.78, 2.66);
-    addPart(g, Geo.box1, hlMat, 0.34, 0.2, 0.08, 0.66, 0.78, 2.66);
+    addPart(g, Geo.box1, hlMat, 0.34, 0.18, 0.08, -0.66, 0.72, 2.55);
+    addPart(g, Geo.box1, hlMat, 0.34, 0.18, 0.08, 0.66, 0.72, 2.55);
+    addPart(g, Geo.box1, M.redMetal, 0.24, 0.36, 0.08, -0.78, 0.86, -2.26);
+    addPart(g, Geo.box1, M.redMetal, 0.24, 0.36, 0.08, 0.78, 0.86, -2.26);
+    return g;
+  },
+  // V9 §1-6 3D Car Interior Cockpit (shown when hiding inside a car so interior never looks like a flat white panel!)
+  carInteriorMesh() {
+    const g = new THREE.Group(), M = this.mats;
+    const dashMat = getMat('car_dash', { color: 0x1b1e24, roughness: 0.88, metalness: 0.08 });
+    const trimMat = getMat('car_trim', { color: 0x2a2e36, roughness: 0.84 });
+    const seatMat = getMat('car_seat', { color: 0x2e2a26, roughness: 0.94 });
+    const gaugeMat = getMat('car_gauge', { color: 0x58c488, emissive: 0x267448, emissiveIntensity: 0.85, roughness: 0.4 });
+    // Dashboard & hood cowl (in front of player along -Z in local cockpit space)
+    addPart(g, Geo.box1, dashMat, 1.56, 0.36, 0.48, 0, 0.72, -0.68);
+    addPart(g, Geo.box1, trimMat, 1.56, 0.06, 0.52, 0, 0.91, -0.70);
+    // Instrument cluster & subtle glowing gauges
+    addPart(g, Geo.box1, M.blackRubber, 0.44, 0.16, 0.08, -0.32, 0.88, -0.52);
+    addPart(g, Geo.plane, gaugeMat, 0.34, 0.10, 1, -0.32, 0.88, -0.47);
+    // Steering column & steering wheel
+    addPart(g, Geo.cyl8, M.darkMetal, 0.07, 0.34, 0.07, -0.32, 0.80, -0.44, 1.15, 0, 0);
+    addPart(g, Geo.torus, M.blackRubber, 0.36, 0.36, 0.18, -0.32, 0.84, -0.32, 0.35, 0, 0);
+    // Left & right slanted A-pillars + roof rail + rearview mirror
+    addPart(g, Geo.box1, trimMat, 0.09, 0.76, 0.10, -0.76, 1.24, -0.56, 0.36, 0, -0.14);
+    addPart(g, Geo.box1, trimMat, 0.09, 0.76, 0.10, 0.76, 1.24, -0.56, 0.36, 0, 0.14);
+    addPart(g, Geo.box1, dashMat, 1.44, 0.08, 0.16, 0, 1.56, -0.44);
+    addPart(g, Geo.box1, M.blackRubber, 0.26, 0.08, 0.05, 0, 1.44, -0.46);
+    // Side door panels (lower)
+    addPart(g, Geo.box1, dashMat, 0.08, 0.62, 1.65, -0.82, 0.64, 0.05);
+    addPart(g, Geo.box1, dashMat, 0.08, 0.62, 1.65, 0.82, 0.64, 0.05);
+    // Front seats (driver & passenger cushions, backrests, headrests)
+    for (const sx of [-0.36, 0.36]) {
+      addPart(g, Geo.box1, seatMat, 0.52, 0.14, 0.52, sx, 0.44, 0.08);
+      addPart(g, Geo.box1, seatMat, 0.50, 0.62, 0.14, sx, 0.78, 0.34, -0.14, 0, 0);
+      addPart(g, Geo.box1, seatMat, 0.24, 0.18, 0.10, sx, 1.18, 0.38);
+    }
+    // Center console
+    addPart(g, Geo.box1, trimMat, 0.22, 0.24, 0.86, 0, 0.56, -0.12);
+    g.visible = false;
     return g;
   },
   shoppingCart() {
@@ -4120,11 +4292,51 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'hi
 let adaptiveDpr = Math.min(window.devicePixelRatio || 1, settings.lowPerf ? 1.0 : 1.5);
 let avgFrameDt = 0.016, dprAdjustTimer = 0;
 
+function applyMaterialPerf(mat, low) {
+  if (!mat) return;
+  if (Array.isArray(mat)) { mat.forEach(m => applyMaterialPerf(m, low)); return; }
+  if (typeof mat.roughness === 'number' || typeof mat.metalness === 'number') {
+    if (!mat.userData) mat.userData = {};
+    if (mat.userData._origRoughness === undefined && typeof mat.roughness === 'number') mat.userData._origRoughness = mat.roughness;
+    if (mat.userData._origMetalness === undefined && typeof mat.metalness === 'number') mat.userData._origMetalness = mat.metalness;
+    if (mat.userData._origEnvInt === undefined && typeof mat.envMapIntensity === 'number') mat.userData._origEnvInt = mat.envMapIntensity;
+    if (low) {
+      if (typeof mat.roughness === 'number') mat.roughness = Math.max(0.94, mat.userData._origRoughness);
+      if (typeof mat.metalness === 'number') mat.metalness = 0.0;
+      if (typeof mat.envMapIntensity === 'number') mat.envMapIntensity = 0.0;
+    } else {
+      if (mat.userData._origRoughness !== undefined) mat.roughness = mat.userData._origRoughness;
+      if (mat.userData._origMetalness !== undefined) mat.metalness = mat.userData._origMetalness;
+      if (mat.userData._origEnvInt !== undefined) mat.envMapIntensity = mat.userData._origEnvInt;
+    }
+    mat.needsUpdate = true;
+  }
+}
+
 function applyPerfSettings() {
-  const maxDpr = settings.lowPerf ? 1.0 : 1.5;
+  const low = !!settings.lowPerf;
+  const maxDpr = low ? 1.0 : 1.5;
   adaptiveDpr = Math.min(window.devicePixelRatio || 1, maxDpr);
   renderer.setPixelRatio(adaptiveDpr);
   renderer.setSize(window.innerWidth, window.innerHeight);
+  // V9 §2-5 Toggle shadows & reflections in lightweight graphics mode (fog & gameplay visibility stay identical!)
+  renderer.shadowMap.enabled = !low;
+  // NOTE: on the initial call below, flashlight/scene/playerShadow/dustPoints are still
+  // uninitialized consts (TDZ) — typeof guards throw on those, so guard with try/catch.
+  // Later calls (settings change) run after full init and apply everything.
+  try {
+    flashlight.castShadow = false; // keep lightweight shadow map clean
+    if (playerShadow) playerShadow.visible = !low && !state.hide.active;
+    if (dustPoints) dustPoints.visible = !low;
+    if (typeof MatCache !== 'undefined') {
+      for (const k in MatCache) applyMaterialPerf(MatCache[k], low);
+    }
+    if (scene) {
+      scene.traverse((obj) => {
+        if (obj.isMesh && obj.material) applyMaterialPerf(obj.material, low);
+      });
+    }
+  } catch (_) { /* not yet initialized on first call; re-applied on settings change */ }
 }
 applyPerfSettings();
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -4166,7 +4378,7 @@ const dustMat = new THREE.PointsMaterial({ color: 0xf2ebd8, size: 0.036, transpa
 const dustPoints = new THREE.Points(dustGeo, dustMat);
 scene.add(dustPoints);
 
-let playerBody = null, playerShadow = null;
+let playerBody = null, playerShadow = null, carInterior = null;
 function applyPlayerBodySkin() {
   if (!playerBody || !playerBody.userData) return;
   const parsed = parseSkinId(settings.skinId);
@@ -4198,6 +4410,10 @@ function initPlayerBody() {
   const shMat = new THREE.MeshBasicMaterial({ map: TexCache.blob_shadow, transparent: true, depthWrite: false, opacity: 0.8 });
   playerShadow = new THREE.Mesh(Geo.plane, shMat);
   playerShadow.rotation.x = -Math.PI/2; playerShadow.scale.set(0.95, 0.95, 1); scene.add(playerShadow);
+
+  // V9 §1-6 3D Car Cockpit Interior (shown only when hiding inside a car)
+  carInterior = PropFactory.carInteriorMesh();
+  scene.add(carInterior);
 }
 
 const CHUNK_SIZE = 16, RENDER_RADIUS = 2, STAND_EYE = 1.66, CROUCH_EYE = 1.04, PLAYER_R = 0.36;
@@ -5204,7 +5420,12 @@ function updateChunks(isInit = false) {
     if (lv.arch === 'red_hospital' && Math.abs(pcx + dx) > 0) continue;
     const cx = pcx + dx, cz = pcz + dz, key = cx + ',' + cz;
     needed.add(key);
-    if (!chunks.has(key)) buildChunk(cx, cz, 0);
+    if (!chunks.has(key)) {
+      buildChunk(cx, cz, 0);
+      if (settings.lowPerf && chunks.has(key)) {
+        chunks.get(key).group.traverse((o) => { if (o.isMesh && o.material) applyMaterialPerf(o.material, true); });
+      }
+    }
   }
   for (const [key, ch] of chunks.entries()) if (!needed.has(key)) { disposeChunk(ch); chunks.delete(key); }
   ensureRangeExitExists(isInit);
@@ -5475,16 +5696,20 @@ function spawnEntity(kindOverride = null, posOverride = null, zoneRef = null, ex
     return;
   }
 
-  // V8 §6 Mimic copies a remote peer's name & skinId with 2 random tells; NEVER shown to copied peer!
+  // V8/V9 §6 Mimic copies a connected peer's (or host's) name & skinId with 2 random tells; NEVER shown to copied player!
   let mimicMeta = null;
   if (kind === 'mimic') {
-    const peersArr = Array.from(mp.peers.entries());
-    if (!peersArr.length) return;
-    const [copyId, copyPeer] = peersArr[Math.floor(Math.random() * peersArr.length)];
+    const candidates = [];
+    mp.peers.forEach((p, id) => { if (!p.disconnected) candidates.push({ id, name: p.name || 'Explorer', skinId: p.skinId || 'teal_orange_solid' }); });
+    if (mp.myId && candidates.length > 0 && Math.random() < 0.35) {
+      candidates.push({ id: mp.myId, name: mp.myName || 'Host', skinId: settings.skinId || 'teal_orange_solid' });
+    }
+    if (!candidates.length) return;
+    const picked = candidates[Math.floor(Math.random() * candidates.length)];
     const allTells = ['noSteps', 'noPinReact', 'idleFreeze', 'offTagColor'];
     const shuffled = allTells.sort(() => Math.random() - 0.5);
     const tells = new Set(shuffled.slice(0, 2));
-    mimicMeta = { copyPeerId: copyId, name: copyPeer.name || 'Explorer', skinId: copyPeer.skinId || 'teal_orange_solid', tells, offTagColor: tells.has('offTagColor') };
+    mimicMeta = { copyPeerId: picked.id, name: picked.name, skinId: picked.skinId, tells, offTagColor: tells.has('offTagColor') };
   }
 
   const isChild = (kind === 'faceling' && Math.random() < 0.42);
@@ -5521,6 +5746,8 @@ function spawnEntity(kindOverride = null, posOverride = null, zoneRef = null, ex
     clusterId: extraOpts ? extraOpts.clusterId : 0,
     flankAngle: extraOpts ? (extraOpts.flankAngle || 0) : 0,
     mimicMeta,
+    // V9 §1-2 Mandatory Smiler omen phase (1.85s telegraph before attack!)
+    omenTimer: 1.85, omenActive: false, omenDone: false, stepAcc: 0,
     state: 'stalk', life: (kind === 'snail' || kind === 'imagination_diver') ? 999999 : (kind === 'horde' ? 60 : (38 + Math.random()*24)),
     alerted: false, codexLogged: false, attackCd: 0, phase: Math.random()*6,
     lostSightTimer: 0, stareAccum: 0, lightBurn: 0, facelingAgitation: 0,
@@ -5605,7 +5832,7 @@ function updateThreatEdgeGlow(nearestChaser) {
   document.getElementById('threat-edge-' + side).style.opacity = (prox * pulse).toFixed(2);
 }
 
-// V8 §2 Stage-Wide Neighborhood Watch Spotlight Sweep (Suburbs / Endless City / Parking Layer)
+// V8 §2 + V9 §1-3 Stage-Wide Neighborhood Watch Spotlight Sweep (4.5s converging omen, harmless during omen, >=24s min interval!)
 function updateWatchSweep(dt) {
   const lv = LEVELS[state.levelIdx];
   const hasWatch = state.horrorMode && settings.entityFreq !== 'none' && lv.entities && lv.entities.includes('watch');
@@ -5613,7 +5840,7 @@ function updateWatchSweep(dt) {
   const bn = document.getElementById('watch-sweep-banner');
   if (!hasWatch) {
     state.watchSweep.active = false; state.watchSweep.warn = false; state.inWatchSlow = 0;
-    if (ov) ov.style.opacity = '0';
+    if (ov) { ov.style.opacity = '0'; ov.classList.remove('omen'); }
     if (bn) bn.classList.remove('show');
     return;
   }
@@ -5621,50 +5848,92 @@ function updateWatchSweep(dt) {
   if (ws.active) {
     ws.dur -= dt;
     const sheltered = isPlayerSheltered();
-    if (ov) ov.style.opacity = sheltered ? '0.18' : '0.88';
+    if (ov) { ov.classList.remove('omen'); ov.style.opacity = sheltered ? '0.18' : '0.88'; }
     if (bn) {
       bn.textContent = sheltered ? '✓ 遮蔽物に隠れ中 — 監視光を回避している' : '⚠ 監視光照射中！家・店舗・車・ロッカーへ隠れろ！';
       bn.classList.add('show');
     }
     if (!sheltered && !state.downed) {
       state.inWatchSlow = 0.35;
-      state.lastDamageSource = 'watch';
+      state.lastDamageSource = 'watch_sweep';
       state.hp -= 10 * dt;
       state.runTookDamage = true;
       state.hurtFlash = Math.max(state.hurtFlash, 0.35);
       registerCodexSeen('watch');
     }
     if (ws.dur <= 0) {
-      ws.active = false; ws.warn = false; ws.timer = 22 + Math.random() * 14;
-      if (ov) ov.style.opacity = '0';
+      // V9 §1-3 Guaranteed minimum cooldown (24-36s) so player is never hit back-to-back!
+      ws.active = false; ws.warn = false; ws.timer = 24 + Math.random() * 12; ws.warnBeepStep = 0;
+      if (ov) { ov.style.opacity = '0'; ov.classList.remove('omen'); }
       if (bn) bn.classList.remove('show');
     }
   } else if (ws.warn) {
     ws.dur -= dt;
-    if (ov) ov.style.opacity = (0.15 + Math.abs(Math.sin(state.elapsed * 12)) * 0.22).toFixed(2);
-    if (bn) { bn.textContent = `⚠ ネイバーフッド・ウォッチ監視光 予兆（${Math.max(0, ws.dur).toFixed(1)}s）— 建物・車・ロッカーへ！`; bn.classList.add('show'); }
+    const totalOmen = 4.5;
+    const prog = Math.max(0, Math.min(1, 1 - ws.dur / totalOmen));
+    // Converging rim glow (strictly harmless during omen phase!)
+    if (ov) {
+      ov.classList.add('omen');
+      ov.style.opacity = (0.12 + prog * 0.36 + Math.abs(Math.sin(state.elapsed * (6 + prog * 8))) * 0.14).toFixed(2);
+    }
+    if (bn) {
+      bn.textContent = `⚠ 監視光収束中（あと ${Math.max(0, ws.dur).toFixed(1)}s）— 建物・店舗・車・ロッカーへ逃げ込め！`;
+      bn.classList.add('show');
+    }
+    if (ws.dur <= 2.4 && (ws.warnBeepStep || 0) < 1) { ws.warnBeepStep = 1; sound.playWatchSweepWarn(0.5); }
+    if (ws.dur <= 1.0 && (ws.warnBeepStep || 0) < 2) { ws.warnBeepStep = 2; sound.playWatchSweepWarn(0.92); }
     if (ws.dur <= 0) {
-      ws.warn = false; ws.active = true; ws.dur = 5.5;
-      sound.playEntityAlert('watch', 0);
+      ws.warn = false; ws.active = true; ws.dur = 5.5; ws.warnBeepStep = 0;
+      sound.playEntityAlert('watch', 0, 4);
       registerCodexSeen('watch');
     }
   } else {
     ws.timer -= dt;
-    if (ov) ov.style.opacity = '0';
+    if (ov) { ov.style.opacity = '0'; ov.classList.remove('omen'); }
     if (bn) bn.classList.remove('show');
     if (ws.timer <= 0) {
-      ws.warn = true; ws.dur = 3.6;
-      sound.playWatchSweepWarn();
+      // V9 §1-3 Mandatory >=4.5s telegraph before beam activates!
+      ws.warn = true; ws.dur = 4.5; ws.warnBeepStep = 0;
+      sound.playWatchSweepWarn(0.05);
     }
   }
 }
 
-// V8 §6 MP-Only Helper: determine most isolated player for Straggler targeting
+// V9 §6-6 All living player targets (host + connected non-downed guests) so entities actively hunt ALL players!
+function getAllLivingTargets(hostMovedDist = 0) {
+  const targets = [];
+  const hostHidden = state.downed || (state.hide.active && (state.hide.kind !== 'car' || state.hide.ducked)) || isInsideManilaRoom(state.pos.x, state.pos.z);
+  const hostFlash = state.flashlightOn && (!settings.batteryEnabled || state.battery > 1);
+  if (!state.downed) {
+    targets.push({
+      id: mp.myId || 'self', isHost: true,
+      x: state.pos.x, z: state.pos.z, yaw: getActiveViewYaw(),
+      hidden: hostHidden, crouch: state.crouching, flash: hostFlash,
+      sprinting: state.sprinting, movedDist: hostMovedDist, conn: null
+    });
+  }
+  if (isMpActive()) {
+    mp.peers.forEach((p, id) => {
+      if (p.downed || p.disconnected) return;
+      const px = p.tx || 0, pz = p.tz || 0;
+      const pHidden = !!p.hide || isInsideManilaRoom(px, pz);
+      targets.push({
+        id, isHost: false,
+        x: px, z: pz, yaw: p.ry || 0,
+        hidden: pHidden, crouch: !!p.crouch, flash: !!p.flash,
+        sprinting: !!(p.movedDist && p.movedDist > 0.08 && !p.crouch),
+        movedDist: p.movedDist || 0, conn: p.conn
+      });
+    });
+  }
+  return targets;
+}
+
+// V8/V9 §6 MP-Only Helper: determine most isolated living player for Straggler targeting (fixed p.tx/p.tz!)
 function getMostIsolatedTarget() {
-  if (!isMpActive()) return { x: state.pos.x, z: state.pos.z, id: 'self' };
-  const pts = [{ id: 'self', x: state.pos.x, z: state.pos.z, downed: state.downed }];
-  mp.peers.forEach((p, id) => { if (!p.downed) pts.push({ id, x: p.x || 0, z: p.z || 0, downed: !!p.downed }); });
-  if (pts.length <= 1) return pts[0];
+  const pts = getAllLivingTargets(0);
+  if (!pts.length) return { x: state.pos.x, z: state.pos.z, id: mp.myId || 'self', isHost: true };
+  if (pts.length === 1) return { x: pts[0].x, z: pts[0].z, id: pts[0].id, isHost: pts[0].isHost };
   let best = pts[0], bestMinD = -1;
   for (let i = 0; i < pts.length; i++) {
     let minD = 9999;
@@ -5675,7 +5944,7 @@ function getMostIsolatedTarget() {
     }
     if (minD > bestMinD) { bestMinD = minD; best = pts[i]; }
   }
-  return { x: best.x, z: best.z, id: best.id, isolationDist: bestMinD };
+  return { x: best.x, z: best.z, id: best.id, isHost: best.isHost, isolationDist: bestMinD };
 }
 
 function updateEntities(dt, playerMovedDist) {
@@ -5698,7 +5967,8 @@ function updateEntities(dt, playerMovedDist) {
       if (Math.abs(b.vy) > 1.2) {
         b.vy *= -0.52; b.vx *= 0.72; b.vz *= 0.72;
         const { pan } = getRelativePanAndSide(b.x, b.z);
-        sound.playBallBounce(0.18, pan);
+        const bd = Math.hypot(b.x - state.pos.x, b.z - state.pos.z);
+        sound.playBallBounce(0.18, pan, bd);
       } else { b.vy = 0; b.vx *= 0.85; b.vz *= 0.85; }
     }
     b.mesh.position.set(b.x, b.y, b.z);
@@ -5736,21 +6006,42 @@ function updateEntities(dt, playerMovedDist) {
     }
   }
 
-  // Guest receives entity positions from host!
+  // Guest receives entity positions from host! (V9 §6-1 & §6-8 fixed Mimic visibility + tells on guest!)
   if (mp.role === 'guest') {
     const playerHidden = state.downed || (state.hide.active && (state.hide.kind !== 'car' || state.hide.ducked)) || isInsideManilaRoom(state.pos.x, state.pos.z);
     let nearest = 999, nearestEnt = null;
     for (const e of activeEntities) {
-      // V8 MP §2-1 Mimic NEVER renders to its copied peer!
-      if (e.kind === 'mimic' && e.copyPeerId && e.copyPeerId === mp.myId) { e.mesh.visible = false; continue; }
+      e.spawnAge = (e.spawnAge || 0) + dt;
+      // V9 §6-1 Mimic NEVER renders to its copied player!
+      const copyId = e.mimicMeta ? e.mimicMeta.copyPeerId : e.mimicCopyPeerId;
+      if (e.kind === 'mimic' && copyId && copyId === mp.myId) { e.mesh.visible = false; continue; }
       e.mesh.visible = true;
+      const prevX = e.x, prevZ = e.z;
       e.x += (e.tx - e.x) * Math.min(1, dt * 10); e.z += (e.tz - e.z) * Math.min(1, dt * 10);
+      const moved = Math.hypot(e.x - prevX, e.z - prevZ);
       e.mesh.position.set(e.x, e.kind === 'imagination_diver' ? (LEVELS[state.levelIdx].waterY || 0.24) : 0, e.z);
       e.mesh.rotation.y = e.ry || 0;
       const dx = state.pos.x - e.x, dz = state.pos.z - e.z, dist = Math.hypot(dx, dz);
+      // V9 §6-8 Guest-side Mimic tells (footsteps vs silence & stiff idle vs subtle sway)
+      if (e.kind === 'mimic') {
+        const tells = e.mimicMeta && e.mimicMeta.tells ? e.mimicMeta.tells : new Set();
+        const u = e.mesh.userData;
+        if (moved > 0.008) {
+          e.stepAcc = (e.stepAcc || 0) + moved;
+          if (u && u.lLeg) { const sw = Math.sin((e.phase = (e.phase || 0) + moved * 5.2)) * 0.5; u.lLeg.rotation.x = sw; u.rLeg.rotation.x = -sw; u.lArm.rotation.x = -sw * 0.7; u.rArm.rotation.x = sw * 0.7; }
+          if (!tells.has('noSteps') && e.stepAcc >= 1.45 && dist < 16) {
+            e.stepAcc = 0;
+            const { pan } = getRelativePanAndSide(e.x, e.z);
+            sound.playPeerStep(0.12, pan, dist);
+          }
+        } else if (u && u.lArm) {
+          if (tells.has('idleFreeze')) { u.lArm.rotation.x = 0; u.rArm.rotation.x = 0; u.lLeg.rotation.x = 0; u.rLeg.rotation.x = 0; }
+          else { const sway = Math.sin(state.elapsed * 2.1 + (e.eid % 7)) * 0.06; u.lArm.rotation.x = sway; u.rArm.rotation.x = -sway; }
+        }
+      }
       if (!e.codexLogged && dist < 16 && e.kind !== 'horde') { e.codexLogged = true; registerCodexSeen(e.kind); }
       if (e.kind !== 'faceling' && e.kind !== 'imagination_diver' && dist < nearest) { nearest = dist; nearestEnt = { x: e.x, z: e.z, dist }; }
-      if (e.kind !== 'faceling' && e.kind !== 'imagination_diver' && (!playerHidden || e.kind === 'snail') && dist < 1.32 && state.hurtInvuln <= 0) {
+      if (e.spawnAge >= 1.5 && e.kind !== 'faceling' && e.kind !== 'imagination_diver' && (!playerHidden || e.kind === 'snail') && dist < 1.32 && state.hurtInvuln <= 0) {
         if (applyContactDamage(e, dx, dz, dist)) return '';
       }
     }
@@ -5799,13 +6090,13 @@ function updateEntities(dt, playerMovedDist) {
   }
 
   const viewYaw = getActiveViewYaw(), fwdX = -Math.sin(viewYaw), fwdZ = -Math.cos(viewYaw);
-  const playerHidden = state.downed || (state.hide.active && (state.hide.kind !== 'car' || state.hide.ducked)) || isInsideManilaRoom(state.pos.x, state.pos.z);
-  const crouchStealth = state.crouching && playerMovedDist < 0.006;
+  const hostHidden = state.downed || (state.hide.active && (state.hide.kind !== 'car' || state.hide.ducked)) || isInsideManilaRoom(state.pos.x, state.pos.z);
+  const allTargets = getAllLivingTargets(playerMovedDist);
+  const fallbackTarget = { id: mp.myId || 'self', isHost: true, x: state.pos.x, z: state.pos.z, yaw: viewYaw, hidden: hostHidden, crouch: state.crouching, flash: state.flashlightOn && (!settings.batteryEnabled || state.battery > 1), sprinting: state.sprinting, movedDist: playerMovedDist, conn: null };
   const speedMul = settings.entitySpeed, MAX_SPEED = 6.45;
   // V8 §5 & §8 Sound modifiers: Library amplifies x1.7, Pool dampens x0.5, Unconfirmed Samples add +8% noise per sample!
   const sampleNoiseMul = 1.0 + Math.min(0.48, (state.unconfirmedSamples || 0) * 0.08);
   const levelSoundMul = (lv.arch === 'library_layer' ? 1.7 : (lv.arch === 'pool_layer' ? 0.52 : 1.0)) * sampleNoiseMul;
-  const pCellX = Math.round(state.pos.x / BFS_CELL), pCellZ = Math.round(state.pos.z / BFS_CELL);
 
   let nearestThreatDist = 999, nearestThreatPos = null, nearestChaser = null, chasingCount = 0, stakeoutNear = false, kawagiClose = false;
 
@@ -5820,19 +6111,56 @@ function updateEntities(dt, playerMovedDist) {
     if (e.lureTimer > 0) e.lureTimer -= dt;
     if (e.scatterTimer > 0) e.scatterTimer -= dt;
 
-    const dx = state.pos.x - e.x, dz = state.pos.z - e.z, dist = Math.hypot(dx, dz);
-    const toEntX = -dx / (dist || 1), toEntZ = -dz / (dist || 1);
-    const lookDot = toEntX * fwdX + toEntZ * fwdZ;
-    const hasLOS = dist < 26 && hasLineOfSight(e.x, e.z, state.pos.x, state.pos.z);
-    const flashLit = state.flashlightOn && (!settings.batteryEnabled || state.battery > 1);
-    const playerLookingNormal = (lookDot > 0.56 && dist < 24 && hasLOS && state.blackoutTimer <= 0);
-    const playerLightLock = (flashLit && lookDot > 0.38 && dist < 24 && hasLOS);
-    const { pan } = getRelativePanAndSide(e.x, e.z);
+    // V9 §6-1 Hide Mimic on host screen too if it copied the host!
+    if (e.kind === 'mimic' && e.mimicMeta && e.mimicMeta.copyPeerId && e.mimicMeta.copyPeerId === mp.myId) {
+      e.mesh.visible = false;
+    } else {
+      e.mesh.visible = true;
+    }
 
-    if (!e.codexLogged && dist < 16 && hasLOS && e.kind !== 'horde') { e.codexLogged = true; registerCodexSeen(e.kind); }
+    // V9 §6-6 Select best living target across host + all connected guests!
+    let tgt = fallbackTarget, bestTgtScore = 99999;
+    let minAnyPlayerDist = Math.hypot(state.pos.x - e.x, state.pos.z - e.z);
+    for (const cand of allTargets) {
+      if (e.kind === 'mimic' && e.mimicMeta && e.mimicMeta.copyPeerId === cand.id) continue;
+      const cd = Math.hypot(cand.x - e.x, cand.z - e.z);
+      if (cd < minAnyPlayerDist) minAnyPlayerDist = cd;
+      // Prefer non-hidden targets (and lit targets for deathmoth, noisy targets for hound)
+      let score = cd + (cand.hidden ? 26 : 0);
+      if (e.kind === 'deathmoth' && cand.flash) score -= 6;
+      if (e.kind === 'hound' && (cand.sprinting || (cand.movedDist > 0.01 && !cand.crouch))) score -= 7;
+      if (score < bestTgtScore) { bestTgtScore = score; tgt = cand; }
+    }
+
+    // Target-relative variables (for AI hunting all players)
+    const dx = tgt.x - e.x, dz = tgt.z - e.z, dist = Math.hypot(dx, dz);
+    const tHidden = tgt.hidden;
+    const tFlash = tgt.flash;
+    const tCrouchStealth = tgt.crouch && tgt.movedDist < 0.006;
+    const tFwdX = -Math.sin(tgt.yaw), tFwdZ = -Math.cos(tgt.yaw);
+    const toEntX = -dx / (dist || 1), toEntZ = -dz / (dist || 1);
+    const tLookDot = toEntX * tFwdX + toEntZ * tFwdZ;
+    const hasLOS = dist < 26 && hasLineOfSight(e.x, e.z, tgt.x, tgt.z);
+
+    // Host-relative variables (for local HUD, audio pan/lowpass, stare progress, flashlights)
+    const hdx = state.pos.x - e.x, hdz = state.pos.z - e.z, hDist = Math.hypot(hdx, hdz);
+    const hToEntX = -hdx / (hDist || 1), hToEntZ = -hdz / (hDist || 1);
+    const lookDot = hToEntX * fwdX + hToEntZ * fwdZ;
+    const hHasLOS = hDist < 26 && hasLineOfSight(e.x, e.z, state.pos.x, state.pos.z);
+    const flashLit = state.flashlightOn && (!settings.batteryEnabled || state.battery > 1);
+    const hostLookingNormal = (lookDot > 0.56 && hDist < 24 && hHasLOS && state.blackoutTimer <= 0);
+    const hostLightLock = (flashLit && lookDot > 0.38 && hDist < 24 && hHasLOS);
+    const tgtLookingNormal = (tLookDot > 0.56 && dist < 24 && hasLOS && state.blackoutTimer <= 0);
+    const tgtLightLock = (tFlash && tLookDot > 0.38 && dist < 24 && hasLOS);
+    const playerLookingNormal = hostLookingNormal || tgtLookingNormal;
+    const playerLightLock = hostLightLock || tgtLightLock;
+    const { pan } = getRelativePanAndSide(e.x, e.z);
+    const pCellX = Math.round(tgt.x / BFS_CELL), pCellZ = Math.round(tgt.z / BFS_CELL);
+
+    if (!e.codexLogged && hDist < 16 && hHasLOS && e.kind !== 'horde') { e.codexLogged = true; registerCodexSeen(e.kind); }
 
     let moveSpd = 0, moveDirX = dx / (dist || 1), moveDirZ = dz / (dist || 1);
-    let useBfs = false, bfsGoalX = state.pos.x, bfsGoalZ = state.pos.z;
+    let useBfs = false, bfsGoalX = tgt.x, bfsGoalZ = tgt.z;
     const meta = ENTITY_META[e.kind === 'horde' ? 'bacteria' : e.kind] || ENTITY_META.bacteria;
 
     // V8 §3.5 Ball attraction check (ONLY partygoer, bacteria, hound!)
@@ -5846,7 +6174,7 @@ function updateEntities(dt, playerMovedDist) {
     }
 
     if (e.kind === 'imagination_diver') {
-      // V8 §2 Harmless giant eye on Pool Layer floor (tracks player at normal speed, 0 damage!)
+      // V8 §2 Harmless giant eye on Pool Layer floor (tracks target at normal speed, 0 damage!)
       const targetY = lv.waterY || 0.26;
       e.mesh.position.y = targetY;
       if (dist > 1.8) { moveSpd = 3.2; moveDirX = dx / (dist || 1); moveDirZ = dz / (dist || 1); }
@@ -5859,7 +6187,7 @@ function updateEntities(dt, playerMovedDist) {
       e.bellCd -= dt; e.slimeCd -= dt;
       if (e.bellCd <= 0) {
         e.bellCd = 10.0;
-        if (dist < 28) sound.playSnailBell(pan, Math.max(0.03, (1 - dist/28) * 0.16));
+        if (hDist < 28) sound.playSnailBell(pan, Math.max(0.03, (1 - hDist/28) * 0.16), hDist);
       }
       if (e.slimeCd <= 0) {
         e.slimeCd = 2.4;
@@ -5869,8 +6197,8 @@ function updateEntities(dt, playerMovedDist) {
         activeSlimePatches.push({ mesh: sm, x: e.x, z: e.z, life: 22.0 });
         if (activeSlimePatches.length > 26) { const old = activeSlimePatches.shift(); scene.remove(old.mesh); }
       }
-      let tx = state.pos.x, tz = state.pos.z;
-      if (state.playerTrail.length > 0) {
+      let tx = tgt.x, tz = tgt.z;
+      if (tgt.isHost && state.playerTrail.length > 0) {
         while (e.trailIdx < state.playerTrail.length - 1 && Math.hypot(state.playerTrail[e.trailIdx].x - e.x, state.playerTrail[e.trailIdx].z - e.z) < 0.8) e.trailIdx++;
         const pt = state.playerTrail[Math.min(e.trailIdx, state.playerTrail.length - 1)];
         if (pt && dist > 3.5) { tx = pt.x; tz = pt.z; }
@@ -5898,29 +6226,29 @@ function updateEntities(dt, playerMovedDist) {
       if (e.stunTimer > 0) moveSpd = 0;
       else if (seenByPlayer) {
         moveSpd = 0; e.wasMoving = false; e.stareAccum += dt;
-        state.stareProgress = Math.max(state.stareProgress, Math.min(1, e.stareAccum / 4.0));
-        if (e.stareAccum > 1.6) e.mesh.position.x = e.x + (Math.random() - 0.5) * 0.05; // Tremble feedback!
-        if (!e.alerted && dist < 15) { e.alerted = true; showAnomalyBadge(`ENTITY: ${meta.name}（4秒見続けると震えて撤退）`); }
+        if (hostLookingNormal || hostLightLock) state.stareProgress = Math.max(state.stareProgress, Math.min(1, e.stareAccum / 4.0));
+        if (e.stareAccum > 1.6) e.mesh.position.x = e.x + (Math.random() - 0.5) * 0.05;
+        if (!e.alerted && hDist < 15) { e.alerted = true; showAnomalyBadge(`ENTITY: ${meta.name}（4秒見続けると震えて撤退）`); }
         if (e.stareAccum >= 4.0) { e.state = 'retreat'; e.retreatTimer = 4.2; sound.playCounterSuccess(pan); sound.playCeramicScrape(0.18); showToast('ホワイトモデルが震えて撤退した！'); }
-      } else if (!playerHidden) {
+      } else if (!tHidden) {
         moveSpd = Math.min(MAX_SPEED, 5.2 * speedMul); useBfs = true;
-        if (!e.wasMoving && dist < 12 && e.soundCd <= 0) { sound.playCeramicScrape(Math.max(0.05, (1-dist/12)*0.18)); e.soundCd = 1.6; }
-        e.wasMoving = true; if (dist < 15) { chasingCount++; if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist }; }
+        if (!e.wasMoving && hDist < 14 && e.soundCd <= 0) { sound.playCeramicScrape(Math.max(0.05, (1-hDist/14)*0.18)); e.soundCd = 1.6; }
+        e.wasMoving = true; if (hDist < 15) { chasingCount++; if (!nearestChaser || hDist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist: hDist }; }
       }
     } else if (e.kind === 'scarecrow') {
       // V8 §2 Scarecrow: INVERSE White Model — moves ONLY while looked at, freezes when unseen!
       const seenByPlayer = playerLookingNormal || playerLightLock;
-      if (e.stunTimer > 0 || !seenByPlayer || playerHidden) {
+      if (e.stunTimer > 0 || !seenByPlayer || tHidden) {
         moveSpd = 0;
       } else {
-        if (!e.alerted && dist < 18) { e.alerted = true; sound.playEntityAlert('scarecrow', pan); showAnomalyBadge(`ENTITY: ${meta.name}（見ると動く！視線を外して止めろ）`); }
+        if (!e.alerted && hDist < 18) { e.alerted = true; sound.playEntityAlert('scarecrow', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（見ると動く！視線を外して止めろ）`); }
         chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.9 * speedMul); useBfs = true;
-        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        if (hDist < 16 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
       }
     } else if (e.kind === 'smiler') {
-      // V8 §2 Megan (Smiler): slow dark/blindspot attacker, WEAK TO LIGHT (shining flashlight dissolves it!)
-      e.mesh.lookAt(state.pos.x, 1.5, state.pos.z);
-      const hitByFlashlight = flashLit && lookDot > 0.50 && dist < 18 && hasLOS;
+      // V9 §1-2 Megan (Smiler): MANDATORY 1.85s omen phase before approach/attack! Light dissolves it even during omen!
+      e.mesh.lookAt(tgt.x, 1.5, tgt.z);
+      const hitByFlashlight = (flashLit && lookDot > 0.50 && hDist < 18 && hHasLOS) || (tFlash && tLookDot > 0.50 && dist < 18 && hasLOS);
       if (hitByFlashlight) {
         e.lightBurn += dt;
         const remain = Math.max(0.05, 1 - e.lightBurn / 0.9);
@@ -5934,36 +6262,55 @@ function updateEntities(dt, playerMovedDist) {
       } else {
         e.lightBurn = Math.max(0, e.lightBurn - dt * 0.4);
         e.mesh.scale.setScalar(1);
-        const inDarkOrBlind = !flashLit || lookDot < 0.35;
-        if (!playerHidden && inDarkOrBlind && dist < 20) {
-          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('smiler', pan); showAnomalyBadge(`ENTITY: ${meta.name}（光に弱い！懐中電灯[F]を当てろ！）`); }
-          e.state = 'chase'; chasingCount++; moveSpd = Math.min(MAX_SPEED, 2.75 * speedMul); useBfs = true;
-          if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        const inDarkOrBlind = !tFlash || tLookDot < 0.35;
+        if (!tHidden && inDarkOrBlind && dist < 20) {
+          if (!e.omenDone) {
+            // Mandatory 1.85s Omen Phase: ZERO attack hitbox, audible spatial whisper + visual edge distortion!
+            if (!e.omenActive) {
+              e.omenActive = true; e.omenTimer = 1.85; e.soundCd = 0;
+              showAnomalyBadge(`気配：${meta.name}が暗闇に潜んでいる！ライト[F]を当てて払え！`);
+            }
+            e.omenTimer -= dt;
+            if (e.soundCd <= 0) {
+              sound.playSmilerOmen(pan, hDist);
+              e.soundCd = 0.85;
+            }
+            if (hDist < 18) state.glitchAmount = Math.max(state.glitchAmount, 0.28);
+            moveSpd = 0; // Stationary during omen so player has fair reaction window!
+            if (e.omenTimer <= 0) {
+              e.omenDone = true; e.omenActive = false;
+              sound.playEntityAlert('smiler', pan, hDist);
+            }
+          } else {
+            if (!e.alerted) { e.alerted = true; sound.playEntityAlert('smiler', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（光に弱い！懐中電灯[F]を当てろ！）`); }
+            e.state = 'chase'; chasingCount++; moveSpd = Math.min(MAX_SPEED, 2.75 * speedMul); useBfs = true;
+            if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
+          }
         } else {
-          e.state = 'stalk'; moveSpd = 1.2; e.wanderAng += (Math.random()-0.5)*dt; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
+          e.state = 'stalk'; e.omenActive = false; moveSpd = 1.2; e.wanderAng += (Math.random()-0.5)*dt; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
         }
       }
     } else if (e.kind === 'hound') {
-      const noisy = !playerHidden && (state.sprinting || (playerMovedDist > 0.01 && !state.crouching));
-      const hearR = (state.sprinting ? 21 : (noisy ? 12 : (crouchStealth ? 2.5 : 4.5))) * levelSoundMul;
-      if (!playerHidden && noisy && dist < hearR) {
-        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('hound', pan); showAnomalyBadge(`ENTITY: ${meta.name}（音に反応！しゃがみ静止かボール[B]で回避）`); }
-        e.state = 'chase'; e.lostSightTimer = 0; e.lastSeenX = state.pos.x; e.lastSeenZ = state.pos.z; e.hasLastSeen = true;
+      const noisy = !tHidden && (tgt.sprinting || (tgt.movedDist > 0.01 && !tgt.crouch));
+      const hearR = (tgt.sprinting ? 21 : (noisy ? 12 : (tCrouchStealth ? 2.5 : 4.5))) * levelSoundMul;
+      if (!tHidden && noisy && dist < hearR) {
+        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('hound', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（音に反応！しゃがみ静止かボール[B]で回避）`); }
+        e.state = 'chase'; e.lostSightTimer = 0; e.lastSeenX = tgt.x; e.lastSeenZ = tgt.z; e.hasLastSeen = true;
       }
       if (e.state === 'chase') {
-        if (playerHidden || (!noisy && !hasLOS) || crouchStealth) { e.lostSightTimer += dt; if (e.lostSightTimer >= 3.4) { e.state = 'stalk'; e.alerted = false; sound.playCounterSuccess(pan); } }
-        else { e.lostSightTimer = 0; e.lastSeenX = state.pos.x; e.lastSeenZ = state.pos.z; e.hasLastSeen = true; }
+        if (tHidden || (!noisy && !hasLOS) || tCrouchStealth) { e.lostSightTimer += dt; if (e.lostSightTimer >= 3.4) { e.state = 'stalk'; e.alerted = false; sound.playCounterSuccess(pan); } }
+        else { e.lostSightTimer = 0; e.lastSeenX = tgt.x; e.lastSeenZ = tgt.z; e.hasLastSeen = true; }
         chasingCount++; moveSpd = Math.min(MAX_SPEED, 5.75 * speedMul); useBfs = true;
-        bfsGoalX = e.lostSightTimer > 0.2 ? e.lastSeenX : state.pos.x;
-        bfsGoalZ = e.lostSightTimer > 0.2 ? e.lastSeenZ : state.pos.z;
-        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        bfsGoalX = e.lostSightTimer > 0.2 ? e.lastSeenX : tgt.x;
+        bfsGoalZ = e.lostSightTimer > 0.2 ? e.lastSeenZ : tgt.z;
+        if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
       } else if (e.lureTimer > 0) {
         const ldx = e.lureX - e.x, ldz = e.lureZ - e.z, ld = Math.hypot(ldx, ldz);
-        if (ld > 1.2) { moveDirX = ldx/ld; moveDirZ = ldz/ld; moveSpd = Math.min(MAX_SPEED, 4.8 * speedMul); useBfs = true; bfsGoalX = e.lureX; bfsGoalZ = e.lureZ; }
+        if (ld > 1.2) { moveDirX = ldx/ld; moveDirZ = ldz/ld; moveSpd = Math.min(MAX_SPEED, 5.1 * speedMul); useBfs = true; bfsGoalX = e.lureX; bfsGoalZ = e.lureZ; }
       } else { e.wanderAng += (Math.random()-0.5)*dt*1.4; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.8; }
     } else if (e.kind === 'deathmoth') {
       // V8 §2 Dokuga: attracted to flashlight, restored bright zones, OR dropped decoy flashlight!
-      if (state.mothRepelTimer > 0 && dist < 14) { e.state = 'retreat'; e.retreatTimer = 3.5; }
+      if (tgt.isHost && state.mothRepelTimer > 0 && hDist < 14) { e.state = 'retreat'; e.retreatTimer = 3.5; }
       else {
         let decoyTarget = null, decoyDist = 20;
         for (const dl of activeDecoyLights) { const dd = Math.hypot(dl.x - e.x, dl.z - e.z); if (dd < decoyDist) { decoyDist = dd; decoyTarget = dl; } }
@@ -5972,11 +6319,11 @@ function updateEntities(dt, playerMovedDist) {
           if (dd > 1.0) { moveDirX = ddx/dd; moveDirZ = ddz/dd; moveSpd = Math.min(MAX_SPEED, 4.4 * speedMul); }
           e.state = 'stalk';
         } else {
-          const litTarget = !playerHidden && (flashLit || state.powerRestored);
+          const litTarget = !tHidden && (tFlash || state.powerRestored);
           if (litTarget && dist < (state.powerRestored ? 22 : 18) && hasLOS) {
-            if (!e.alerted) { e.alerted = true; sound.playEntityAlert('deathmoth', pan); showAnomalyBadge(`ENTITY: ${meta.name}（消灯・囮ライト[F長押し]・モスゼリーで回避）`); }
+            if (!e.alerted) { e.alerted = true; sound.playEntityAlert('deathmoth', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（消灯・囮ライト[F長押し]・モスゼリーで回避）`); }
             e.state = 'chase'; e.lostSightTimer = 0; chasingCount++; moveSpd = Math.min(MAX_SPEED, (state.powerRestored ? 4.9 : 4.5) * speedMul); useBfs = true;
-            if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+            if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
           } else {
             if (e.state === 'chase') { e.lostSightTimer += dt; if (e.lostSightTimer >= 3.2) { e.state = 'stalk'; e.alerted = false; sound.playCounterSuccess(pan); } }
             e.wanderAng += dt * 0.9; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.9;
@@ -5989,46 +6336,67 @@ function updateEntities(dt, playerMovedDist) {
       if (playerLookingNormal && dist < 20) {
         e.state = 'retreat'; e.retreatTimer = 5.0; sound.playCounterSuccess(pan);
         showToast('振り返ってカワハギを視界に捉えた！撤退していく！');
-      } else if (!playerHidden && dist < 20) {
-        if (!e.alerted) { e.alerted = true; sound.playKawagiStinger(); showKawagiBanner(); }
+      } else if (!tHidden && dist < 20) {
+        if (!e.alerted) { e.alerted = true; sound.playKawagiStinger(); if (tgt.isHost) showKawagiBanner(); }
         if (e.soundCd <= 0) {
-          sound.playHeavyStep(Math.max(0.08, (1 - dist / 20) * 0.34), pan);
+          sound.playHeavyStep(Math.max(0.08, (1 - hDist / 22) * 0.34), pan, hDist);
           e.soundCd = 0.52;
         }
-        if (dist < 9.0) kawagiClose = true;
+        if (hDist < 9.0) kawagiClose = true;
         chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.35 * speedMul); useBfs = true;
       } else moveSpd = 1.4;
     } else if (e.kind === 'faceling') {
       // V8 §2 Noppera: calm normally, agitated if player stares directly in its face!
-      const staringAtFace = lookDot > 0.78 && dist < 13 && hasLOS && !playerHidden;
+      const staringAtFace = ((lookDot > 0.78 && hDist < 13 && hHasLOS && !hostHidden) || (tLookDot > 0.78 && dist < 13 && hasLOS && !tHidden));
       if (staringAtFace && !e.isChild) {
         e.facelingAgitation += dt;
         if (e.facelingAgitation >= 0.85) {
-          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('faceling', pan); showAnomalyBadge(`ENTITY: ${meta.name}（直視するな！顔を逸らして歩け）`); }
+          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('faceling', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（直視するな！顔を逸らして歩け）`); }
           e.state = 'chase'; chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.5 * speedMul); useBfs = true;
-          if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+          if (hDist < 16 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
         }
       } else {
         e.facelingAgitation = Math.max(0, e.facelingAgitation - dt * 1.4);
         if (e.state === 'chase' && e.facelingAgitation <= 0) { e.state = 'stalk'; e.alerted = false; sound.playCounterSuccess(pan); }
         e.wanderAng += (Math.random()-0.5)*dt*0.9;
-        if (e.isChild && !playerHidden && dist < 8 && e.prankCd <= 0) {
-          moveSpd = 3.2; if (dist < 1.35) { dropPlayerItemForPrank(); e.prankCd = 16; e.state = 'retreat'; e.retreatTimer = 4.5; }
+        if (e.isChild && !hostHidden && hDist < 8 && e.prankCd <= 0) {
+          moveSpd = 3.2; moveDirX = hdx / (hDist || 1); moveDirZ = hdz / (hDist || 1);
+          if (hDist < 1.35) { dropPlayerItemForPrank(); e.prankCd = 16; e.state = 'retreat'; e.retreatTimer = 4.5; }
         } else { moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.35; }
       }
     } else if (e.kind === 'partygoer') {
-      // V8 §2 Reku: exact visible party boundary check! Cross in -> fast high-dmg chase; step out -> immediate retreat!
+      // V8 §2 + V9 §6-7 Reku: exact visible party boundary check + STRONG reaction to lockpick failure noise!
       const z = e.zone;
-      const inZone = !playerHidden && z && Math.hypot(state.pos.x - z.x, state.pos.z - z.z) < z.r;
-      if (inZone) {
-        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('partygoer', pan); showAnomalyBadge(`ENTITY: ${meta.name}（境界内侵入！外へ出れば即撤退する！）`); }
+      let zoneIntruder = null;
+      if (z) {
+        for (const cand of allTargets) {
+          if (!cand.hidden && Math.hypot(cand.x - z.x, cand.z - z.z) < z.r) { zoneIntruder = cand; break; }
+        }
+      }
+      if (zoneIntruder) {
+        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('partygoer', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（境界内侵入！外へ出れば即撤退する！）`); }
         e.state = 'chase'; chasingCount++; moveSpd = Math.min(MAX_SPEED, 6.25 * speedMul); useBfs = true;
-        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        bfsGoalX = zoneIntruder.x; bfsGoalZ = zoneIntruder.z;
+        const zdx = zoneIntruder.x - e.x, zdz = zoneIntruder.z - e.z, zd = Math.hypot(zdx, zdz);
+        moveDirX = zdx / (zd || 1); moveDirZ = zdz / (zd || 1);
+        if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
+      } else if (e.lureTimer > 0) {
+        // V9 §6-7 React strongly to lockpicking failure noise (rush toward sound up to zone edge or direct if unzoned!)
+        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('partygoer', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（騒音に強く反応した！）`); }
+        let gx = e.lureX, gz = e.lureZ;
+        if (z) {
+          const zlx = gx - z.x, zlz = gz - z.z, zld = Math.hypot(zlx, zlz);
+          if (zld > z.r - 0.5) { gx = z.x + (zlx / zld) * (z.r - 0.5); gz = z.z + (zlz / zld) * (z.r - 0.5); }
+        }
+        const ldx = gx - e.x, ldz = gz - e.z, ld = Math.hypot(ldx, ldz);
+        if (ld > 0.9) { moveDirX = ldx / ld; moveDirZ = ldz / ld; moveSpd = Math.min(MAX_SPEED, 5.8 * speedMul); useBfs = true; bfsGoalX = gx; bfsGoalZ = gz; }
+        else moveSpd = 0;
+        if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
       } else if (z) {
         if (e.alerted) { sound.playCounterSuccess(pan); showToast('パーティ境界の外へ出た — レクが撤退した！'); }
         e.state = 'stalk'; e.alerted = false;
-        const hdx = z.x - e.x, hdz = z.z - e.z, hd = Math.hypot(hdx, hdz);
-        if (hd > 1.5) { moveDirX = hdx/hd; moveDirZ = hdz/hd; moveSpd = 3.0; }
+        const hdxZ = z.x - e.x, hdzZ = z.z - e.z, hd = Math.hypot(hdxZ, hdzZ);
+        if (hd > 1.5) { moveDirX = hdxZ/hd; moveDirZ = hdzZ/hd; moveSpd = 3.0; }
       }
     } else if (e.kind === 'deathrat') {
       // V8 §2 Death Rats: hates light! Shining flashlight scatters the swarm; avoids lit areas after power restore!
@@ -6038,7 +6406,7 @@ function updateEntities(dt, playerMovedDist) {
           r.grp.position.z = r.bz + Math.cos(state.elapsed*14 + r.ph)*0.12;
         }
       }
-      if (flashLit && lookDot > 0.45 && dist < 15 && hasLOS) {
+      if ((flashLit && lookDot > 0.45 && hDist < 15 && hHasLOS) || (tFlash && tLookDot > 0.45 && dist < 15 && hasLOS)) {
         if (e.scatterTimer <= 0.1) { sound.playCounterSuccess(pan); showToast('懐中電灯の光でデスラットの群れが散った！'); }
         e.scatterTimer = 3.0;
       }
@@ -6048,36 +6416,35 @@ function updateEntities(dt, playerMovedDist) {
         const ldx = e.lureX - e.x, ldz = e.lureZ - e.z, ld = Math.hypot(ldx, ldz);
         if (ld > 0.8) { moveDirX = ldx/ld; moveDirZ = ldz/ld; moveSpd = 4.5; }
       } else {
-        const detectR = state.sprinting ? 16 : 12;
-        if (!playerHidden && dist < detectR && (hasLOS || playerMovedDist > 0.01)) {
-          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('deathrat', pan); showAnomalyBadge(`ENTITY: ${meta.name}（光を嫌う！懐中電灯[F]を当てて散らせ）`); }
+        const detectR = tgt.sprinting ? 16 : 12;
+        if (!tHidden && dist < detectR && (hasLOS || tgt.movedDist > 0.01)) {
+          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('deathrat', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（光を嫌う！懐中電灯[F]を当てて散らせ）`); }
           e.state = 'chase'; e.lostSightTimer = 0;
         }
         if (e.state === 'chase') {
-          if (playerHidden || !hasLOS) { e.lostSightTimer += dt; if (e.lostSightTimer >= 3.5) { e.state = 'stalk'; e.alerted = false; } }
+          if (tHidden || !hasLOS) { e.lostSightTimer += dt; if (e.lostSightTimer >= 3.5) { e.state = 'stalk'; e.alerted = false; } }
           else e.lostSightTimer = 0;
           chasingCount++; moveSpd = Math.min(MAX_SPEED, 5.4 * speedMul); useBfs = true;
-          if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+          if (hDist < 16 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
         } else { e.wanderAng += (Math.random()-0.5)*dt*1.8; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 2.0; }
       }
     } else if (e.kind === 'tvhead') {
       // V8 §2 TV Head: staring at screen drains SANITY & pulls player; turning away breaks it!
       const u = e.mesh.userData;
       if (u.scrMat && Math.random() < 0.35) { u.scrMat.map.offset.set(Math.random(), Math.random()); }
-      const staringScreen = !playerHidden && lookDot > 0.62 && dist < 16 && hasLOS;
+      const staringScreen = !hostHidden && lookDot > 0.62 && hDist < 16 && hHasLOS;
       if (staringScreen) {
-        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('tvhead', pan); showAnomalyBadge(`ENTITY: ${meta.name}（画面を見るな！背を向けて離れろ！）`); }
+        if (!e.alerted) { e.alerted = true; sound.playEntityAlert('tvhead', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（画面を見るな！背を向けて離れろ！）`); }
         state.sanity = Math.max(0, state.sanity - 14 * dt);
         state.glitchAmount = Math.max(state.glitchAmount, 0.55);
-        if (e.soundCd <= 0) { sound.playTvLock(0.85, pan); e.soundCd = 0.25; }
+        if (e.soundCd <= 0) { sound.playTvLock(0.85, pan, hDist); e.soundCd = 0.25; }
         if (u.scrMat) u.scrMat.emissiveIntensity = 2.4;
-        // Gentle pull toward TV screen!
         const pullStep = 1.65 * dt;
-        const pnx = state.pos.x - (dx / (dist || 1)) * pullStep, pnz = state.pos.z - (dz / (dist || 1)) * pullStep;
+        const pnx = state.pos.x - (hdx / (hDist || 1)) * pullStep, pnz = state.pos.z - (hdz / (hDist || 1)) * pullStep;
         if (!pointCollides(getNearbyColliders(pnx, pnz), pnx, pnz, PLAYER_R, state.floorY)) { state.pos.x = pnx; state.pos.z = pnz; }
-        e.mesh.rotation.y = Math.atan2(dx, dz);
+        e.mesh.rotation.y = Math.atan2(hdx, hdz);
         chasingCount++; moveSpd = 1.6;
-        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        if (!nearestChaser || hDist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist: hDist };
       } else {
         if (e.alerted) { e.alerted = false; sound.playCounterSuccess(pan); }
         if (u.scrMat) u.scrMat.emissiveIntensity = 0.85;
@@ -6085,56 +6452,67 @@ function updateEntities(dt, playerMovedDist) {
       }
     } else if (e.kind === 'clump') {
       // V8 §2 Teashi (Clump): floor vibration sensing -> stand still or slow crouch to slip past!
-      const vibrating = !playerHidden && playerMovedDist > 0.012 && !state.crouching;
-      const vibR = (state.sprinting ? 22 : (vibrating ? 14 : 3.2)) * levelSoundMul;
-      if (!playerHidden && dist < vibR) {
+      const vibrating = !tHidden && tgt.movedDist > 0.012 && !tgt.crouch;
+      const vibR = (tgt.sprinting ? 22 : (vibrating ? 14 : 3.2)) * levelSoundMul;
+      if (!tHidden && dist < vibR) {
         if (!e.alerted) { e.alerted = true; showAnomalyBadge(`ENTITY: ${meta.name}（床振動感知！静止かしゃがみ歩きで回避）`); }
         moveSpd = Math.min(MAX_SPEED, 2.2 * speedMul); useBfs = true;
-        if (dist < 12) { chasingCount++; if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist }; }
+        if (hDist < 12) { chasingCount++; if (!nearestChaser || hDist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist: hDist }; }
       } else {
         e.alerted = false; moveSpd = 0.6; e.wanderAng += (Math.random()-0.5)*dt*0.7; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
       }
-      if (dist < 18 && e.soundCd <= 0) { sound.playClumpCreak(Math.max(0.03, (1-dist/18)*0.24)); e.soundCd = 1.35; }
+      if (hDist < 18 && e.soundCd <= 0) { sound.playClumpCreakSpatial(Math.max(0.03, (1-hDist/18)*0.24), pan, hDist); e.soundCd = 1.35; }
       if (e.mesh.userData.limbs) e.mesh.userData.limbs.forEach((lb, idx) => { lb.rotation.x = 0.8 + Math.sin(state.elapsed*4+idx)*0.38; });
     } else if (e.kind === 'mycelium') {
       // V8 §2 Mycelium (3-body cluster): passive at distance (>11m), smart pincer flanking when close!
-      if (!playerHidden && dist < 11.5) {
-        if (!e.alerted) { e.alerted = true; e.state = 'chase'; sound.playEntityAlert('bacteria', pan); showAnomalyBadge(`ENTITY: ${meta.name}（群れが挟み撃ちを開始！距離を取れ！）`); }
+      if (!tHidden && dist < 11.5) {
+        if (!e.alerted) { e.alerted = true; e.state = 'chase'; sound.playEntityAlert('mycelium', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（群れが挟み撃ちを開始！距離を取れ！）`); }
         e.lostSightTimer = 0;
       }
       if (e.state === 'chase') {
-        if (playerHidden || dist > 22) { e.lostSightTimer += dt; if (e.lostSightTimer >= 4.0) { e.state = 'stalk'; e.alerted = false; } }
+        if (tHidden || dist > 22) { e.lostSightTimer += dt; if (e.lostSightTimer >= 4.0) { e.state = 'stalk'; e.alerted = false; } }
         else e.lostSightTimer = 0;
-        // Pincer flanking offset goal!
         const angToP = Math.atan2(dz, dx) + e.flankAngle;
         const flankDist = Math.min(4.2, Math.max(0, dist - 2.2));
-        bfsGoalX = state.pos.x - Math.cos(angToP) * flankDist;
-        bfsGoalZ = state.pos.z - Math.sin(angToP) * flankDist;
+        bfsGoalX = tgt.x - Math.cos(angToP) * flankDist;
+        bfsGoalZ = tgt.z - Math.sin(angToP) * flankDist;
         chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.75 * speedMul); useBfs = true;
-        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        if (hDist < 16 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
       } else {
         moveSpd = 0.4; e.wanderAng += (Math.random()-0.5)*dt*0.5; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
       }
     } else if (e.kind === 'mimic') {
-      // V8 MP §2-1 Mimic: approaches disguised as peer, 2 tells; shining light & staring 2.2s dissolves it!
-      if (flashLit && lookDot > 0.58 && dist < 16 && hasLOS) {
+      // V8/V9 §6-8 Mimic: ALL 4 tells implemented (noSteps, noPinReact, idleFreeze, offTagColor)!
+      const tells = (e.mimicMeta && e.mimicMeta.tells) ? e.mimicMeta.tells : new Set();
+      const exposedByHost = (e.mimicMeta && e.mimicMeta.copyPeerId !== mp.myId) && flashLit && lookDot > 0.58 && hDist < 16 && hHasLOS;
+      const exposedByTgt = (!tgt.isHost && tFlash && tLookDot > 0.58 && dist < 16 && hasLOS);
+      if (exposedByHost || exposedByTgt) {
         e.stareAccum += dt;
-        state.stareProgress = Math.max(state.stareProgress, Math.min(1, e.stareAccum / 2.2));
+        if (exposedByHost) state.stareProgress = Math.max(state.stareProgress, Math.min(1, e.stareAccum / 2.2));
         if (e.stareAccum >= 2.2) {
-          sound.playMimicDissolve(pan); showToast('なりすましの正体を見抜いて霧散させた！');
+          sound.playMimicDissolve(pan, hDist); showToast('なりすましの正体を見抜いて霧散させた！');
           e.life = 0;
         }
       } else {
         e.stareAccum = Math.max(0, e.stareAccum - dt * 0.5);
       }
-      if (dist < 4.5 && !playerHidden) {
+      // Tell #2: noPinReact — Mimics WITHOUT 'noPinReact' naturally turn/walk toward nearby world pins; Mimics WITH 'noPinReact' ignore pins completely!
+      let nearPin = null, nearPinD = 18;
+      if (!tells.has('noPinReact') && worldPins.size > 0) {
+        worldPins.forEach(pin => { const pd = Math.hypot(pin.x - e.x, pin.z - e.z); if (pd < nearPinD) { nearPinD = pd; nearPin = pin; } });
+      }
+      if (dist < 4.5 && !tHidden) {
         chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.8 * speedMul); useBfs = true;
-        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
-      } else if (!(e.mimicMeta && e.mimicMeta.tells.has('idleFreeze') && dist < 8)) {
+        if (hDist < 14 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
+      } else if (nearPin && nearPinD > 1.8) {
+        const pdx = nearPin.x - e.x, pdz = nearPin.z - e.z;
+        moveDirX = pdx / nearPinD; moveDirZ = pdz / nearPinD;
+        moveSpd = 2.7; useBfs = true; bfsGoalX = nearPin.x; bfsGoalZ = nearPin.z;
+      } else if (!(tells.has('idleFreeze') && dist < 8)) {
         moveSpd = 2.6; useBfs = true;
       }
     } else if (e.kind === 'straggler') {
-      // V8 MP §2-2 Straggler: targets ONLY the most isolated player!
+      // V8/V9 §6-6 MP-Only Straggler: targets ONLY the most isolated living player!
       const iso = getMostIsolatedTarget();
       if (iso.isolationDist !== undefined && iso.isolationDist < 7.0) {
         e.state = 'stalk'; moveSpd = 1.2; e.wanderAng += dt; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
@@ -6143,28 +6521,32 @@ function updateEntities(dt, playerMovedDist) {
         const idx = iso.x - e.x, idz = iso.z - e.z, id = Math.hypot(idx, idz);
         moveDirX = idx / (id || 1); moveDirZ = idz / (id || 1);
         moveSpd = Math.min(MAX_SPEED, 5.1 * speedMul); useBfs = true;
-        if (iso.id === 'self' && dist < 16) {
-          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('bacteria', pan); showAnomalyBadge('ENTITY: はぐれ狙い（孤立している！仲間へ合流せよ！）'); }
-          chasingCount++; if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        if (iso.isHost && hDist < 16) {
+          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('bacteria', pan, hDist); showAnomalyBadge('ENTITY: はぐれ狙い（孤立している！仲間へ合流せよ！）'); }
+          chasingCount++; if (!nearestChaser || hDist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist: hDist };
         }
       }
     } else {
-      // V8 §2 Bacteria (クロカビ) & Horde: low intelligence sight pursuit, loses easily around corners/crouch!
-      const detectR = state.sprinting ? 17 : (crouchStealth ? 5.2 : 12.0);
-      if (!playerHidden && (e.kind === 'horde' || (dist < detectR && hasLOS) || (playerLookingNormal && dist < 14))) {
-        if (!e.alerted) { e.alerted = true; e.state = 'chase'; sound.playEntityAlert('bacteria', pan); showAnomalyBadge(e.kind === 'horde' ? '背後からクロカビ群が迫っている！走れ！' : `ENTITY: ${meta.name}（角を曲がって視線を切れ・ボール[B]有効）`); }
-        e.lostSightTimer = 0; e.lastSeenX = state.pos.x; e.lastSeenZ = state.pos.z; e.hasLastSeen = true;
+      // V8 §2 + V9 §6-7 Bacteria (クロカビ) & Horde: sight pursuit + investigates lockpick failure noise!
+      const detectR = tgt.sprinting ? 17 : (tCrouchStealth ? 5.2 : 12.0);
+      if (!tHidden && (e.kind === 'horde' || (dist < detectR && hasLOS) || (playerLookingNormal && dist < 14))) {
+        if (!e.alerted) { e.alerted = true; e.state = 'chase'; sound.playEntityAlert('bacteria', pan, hDist); showAnomalyBadge(e.kind === 'horde' ? '背後からクロカビ群が迫っている！走れ！' : `ENTITY: ${meta.name}（角を曲がって視線を切れ・ボール[B]有効）`); }
+        e.lostSightTimer = 0; e.lastSeenX = tgt.x; e.lastSeenZ = tgt.z; e.hasLastSeen = true;
       }
       if (e.state === 'chase') {
-        const loseLim = state.crouching ? 1.6 : 2.6; // Low-intelligence quick sight loss!
-        if (e.kind !== 'horde' && (!hasLOS || playerHidden)) {
+        const loseLim = tgt.crouch ? 1.6 : 2.6;
+        if (e.kind !== 'horde' && (!hasLOS || tHidden)) {
           e.lostSightTimer += dt;
           if (e.lostSightTimer >= loseLim) { e.state = 'stalk'; e.alerted = false; sound.playCounterSuccess(pan); }
-        } else { e.lostSightTimer = 0; e.lastSeenX = state.pos.x; e.lastSeenZ = state.pos.z; e.hasLastSeen = true; }
+        } else { e.lostSightTimer = 0; e.lastSeenX = tgt.x; e.lastSeenZ = tgt.z; e.hasLastSeen = true; }
         chasingCount++; moveSpd = Math.min(MAX_SPEED, (e.kind==='horde' ? 5.25 : 4.7) * speedMul); useBfs = true;
-        bfsGoalX = e.lostSightTimer > 0.2 ? e.lastSeenX : state.pos.x;
-        bfsGoalZ = e.lostSightTimer > 0.2 ? e.lastSeenZ : state.pos.z;
-        if (!nearestChaser || dist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist };
+        bfsGoalX = e.lostSightTimer > 0.2 ? e.lastSeenX : tgt.x;
+        bfsGoalZ = e.lostSightTimer > 0.2 ? e.lastSeenZ : tgt.z;
+        if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
+      } else if (e.lureTimer > 0) {
+        // V9 §6-7 Investigate lockpicking failure noise
+        const ldx = e.lureX - e.x, ldz = e.lureZ - e.z, ld = Math.hypot(ldx, ldz);
+        if (ld > 1.2) { moveDirX = ldx / ld; moveDirZ = ldz / ld; moveSpd = Math.min(MAX_SPEED, 4.2 * speedMul); useBfs = true; bfsGoalX = e.lureX; bfsGoalZ = e.lureZ; }
       } else { e.wanderAng += (Math.random()-0.5)*dt; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.45; }
     }
 
@@ -6183,7 +6565,7 @@ function updateEntities(dt, playerMovedDist) {
 
     let actualMoved = 0;
     let yawRate = 0;
-    if (moveSpd > 0.01 && (e.state === 'retreat' || dist > 0.9 || e.kind === 'snail' || e.kind === 'imagination_diver' || activeBallTarget)) {
+    if (moveSpd > 0.01 && (e.state === 'retreat' || dist > 0.9 || e.kind === 'snail' || e.kind === 'imagination_diver' || activeBallTarget || e.lureTimer > 0)) {
       const prevX = e.x, prevZ = e.z;
       const nx = e.x + moveDirX * moveSpd * dt, nz = e.z + moveDirZ * moveSpd * dt;
       let allow = (e.kind === 'snail' || e.kind === 'imagination_diver') || !isInsideManilaRoom(nx, nz);
@@ -6194,7 +6576,6 @@ function updateEntities(dt, playerMovedDist) {
         const canZ = (e.kind === 'snail' || e.kind === 'imagination_diver' || !pointCollides(nearCols, e.x, nz, 0.34, 0));
         if (canX) e.x = nx;
         if (canZ) e.z = nz;
-        // Fallback perpendicular wall-slide if blocked on both axes
         if (!canX && !canZ) {
           const sx1 = e.x - moveDirZ * moveSpd * dt * 0.7, sz1 = e.z + moveDirX * moveSpd * dt * 0.7;
           if (!pointCollides(nearCols, sx1, sz1, 0.34, 0)) { e.x = sx1; e.z = sz1; }
@@ -6207,7 +6588,6 @@ function updateEntities(dt, playerMovedDist) {
           yawRate = diffYaw / Math.max(0.016, dt);
           e.mesh.rotation.y += diffYaw * Math.min(1, dt * 10);
         }
-        // V7.2 §1 Spawn-first-1s movement-vs-forward auto-flip safety net
         if (!e.yawChecked && e.spawnAge <= 1.0 && actualMoved > 0.03 && e.mesh.userData && e.mesh.userData.isGlb) {
           e.yawChecked = true;
           const mvx = (e.x - prevX) / actualMoved, mvz = (e.z - prevZ) / actualMoved;
@@ -6223,6 +6603,25 @@ function updateEntities(dt, playerMovedDist) {
         e.phase += dt * (moveSpd * 2.2);
         u.lArm.rotation.x = Math.sin(e.phase)*0.52; u.rArm.rotation.x = -Math.sin(e.phase)*0.52;
         u.lLeg.rotation.x = -Math.sin(e.phase)*0.52; u.rLeg.rotation.x = Math.sin(e.phase)*0.52;
+      }
+      // V9 §6-8 Tell #1 (noSteps): Mimics WITHOUT 'noSteps' emit spatial footsteps like real peers; Mimics WITH 'noSteps' walk silently!
+      if (e.kind === 'mimic' && actualMoved > 0.005) {
+        e.stepAcc = (e.stepAcc || 0) + actualMoved;
+        const tells = (e.mimicMeta && e.mimicMeta.tells) ? e.mimicMeta.tells : new Set();
+        if (!tells.has('noSteps') && e.stepAcc >= 1.45 && hDist < 16 && e.mesh.visible) {
+          e.stepAcc = 0;
+          sound.playPeerStep(0.12, pan, hDist);
+        }
+      }
+    } else if (e.kind === 'mimic' && e.mesh.userData && e.mesh.userData.lArm) {
+      // V9 §6-8 Tell #3 (idleFreeze): Mimics WITH 'idleFreeze' stand unnaturally rigid; Mimics WITHOUT it breathe/sway subtly like real peers!
+      const tells = (e.mimicMeta && e.mimicMeta.tells) ? e.mimicMeta.tells : new Set();
+      const u = e.mesh.userData;
+      if (tells.has('idleFreeze')) {
+        u.lArm.rotation.x = 0; u.rArm.rotation.x = 0; u.lLeg.rotation.x = 0; u.rLeg.rotation.x = 0;
+      } else {
+        const sway = Math.sin(state.elapsed * 2.1 + e.phase) * 0.06;
+        u.lArm.rotation.x = sway; u.rArm.rotation.x = -sway; u.lLeg.rotation.x = 0; u.rLeg.rotation.x = 0;
       }
     }
 
@@ -6252,15 +6651,12 @@ function updateEntities(dt, playerMovedDist) {
         const bobSin = Math.sin(e.phase);
         const bobAmp = isLow ? 0.045 : (0.03 + spdNorm * 0.035);
         mw.position.y = baseY + Math.abs(bobSin) * bobAmp;
-        // Grounded footstep squash (scale.y = 0.98 at bottom trough!)
         const squashY = Math.abs(bobSin) < 0.22 ? 0.98 : 1.0;
         mw.scale.set(1 / Math.sqrt(squashY), squashY, 1 / Math.sqrt(squashY));
-        // Forward pitch lean (max 8 deg) + turning roll bank (max 6 deg) + tall sway
         mw.rotation.x = spdNorm * maxLean + (isLow ? Math.sin(e.phase) * 0.04 : 0);
         const bank = Math.max(-maxBank, Math.min(maxBank, -yawRate * 0.035));
         mw.rotation.z = bank + (isTall ? Math.sin(e.phase * 0.5) * 0.05 : 0);
       } else {
-        // Stationary slow breathing scale 1.0..1.02
         const breath = 1.01 + Math.sin(t * 1.8) * 0.01;
         mw.scale.set(1, breath, 1);
         mw.position.y += (baseY - mw.position.y) * Math.min(1, dt * 8);
@@ -6268,12 +6664,35 @@ function updateEntities(dt, playerMovedDist) {
       }
     }
 
-    if (e.kind !== 'faceling' && e.kind !== 'imagination_diver' && dist < nearestThreatDist) { nearestThreatDist = dist; nearestThreatPos = { x: e.x, z: e.z }; }
+    if (e.kind !== 'faceling' && e.kind !== 'imagination_diver' && e.mesh.visible && hDist < nearestThreatDist) { nearestThreatDist = hDist; nearestThreatPos = { x: e.x, z: e.z }; }
 
-    if (e.kind !== 'imagination_diver' && (e.kind !== 'faceling' || e.state === 'chase') && (!playerHidden || e.kind === 'snail') && e.state !== 'retreat' && e.state !== 'stakeout' && dist < (e.kind === 'snail' ? 0.95 : 1.32) && e.attackCd <= 0 && (e.kind === 'snail' || e.kind === 'skinstealer' || state.hurtInvuln <= 0)) {
-      if (applyContactDamage(e, dx, dz, dist)) return '';
+    // V9 §1-1 No instant attack after spawn (spawnAge >= 1.5s) & §1-2 Smiler cannot attack during omen phase!
+    const canAttack = e.spawnAge >= 1.5 && (e.kind !== 'smiler' || e.omenDone) && e.kind !== 'imagination_diver' && (e.kind !== 'faceling' || e.state === 'chase') && e.state !== 'retreat' && e.state !== 'stakeout' && e.attackCd <= 0;
+    if (canAttack) {
+      const hitRad = (e.kind === 'snail') ? 0.95 : 1.32;
+      for (const cand of allTargets) {
+        if (cand.hidden && e.kind !== 'snail') continue;
+        if (e.kind === 'mimic' && e.mimicMeta && e.mimicMeta.copyPeerId === cand.id) continue;
+        const cdx = cand.x - e.x, cdz = cand.z - e.z, cdist = Math.hypot(cdx, cdz);
+        if (cdist < hitRad) {
+          if (cand.isHost) {
+            if (e.kind === 'snail' || e.kind === 'skinstealer' || state.hurtInvuln <= 0) {
+              if (applyContactDamage(e, cdx, cdz, cdist)) return '';
+            }
+          } else if (cand.conn && cand.conn.open) {
+            // V9 §6-6 Notify hunted guest of hit + exact attacker direction & species!
+            const isRat = (e.kind === 'deathrat');
+            const instant = (e.kind === 'snail' || e.kind === 'skinstealer');
+            const dmg = isRat ? 8 : (e.kind === 'mannequin' ? 14 : (e.kind === 'partygoer' ? 34 : 24));
+            try { cand.conn.send({ type: 'player_hit', kind: e.kind, ex: +e.x.toFixed(2), ez: +e.z.toFixed(2), dmg, instant }); } catch (err) {}
+            e.attackCd = isRat ? 0.8 : 2.0;
+            if (!isRat) { e.x -= (cdx/(cdist||1))*2.2; e.z -= (cdz/(cdist||1))*2.2; }
+          }
+          break;
+        }
+      }
     }
-    if (e.kind !== 'snail' && e.kind !== 'imagination_diver' && (e.life <= 0 || (e.kind !== 'partygoer' && dist > 40))) {
+    if (e.kind !== 'snail' && e.kind !== 'imagination_diver' && (e.life <= 0 || (e.kind !== 'partygoer' && minAnyPlayerDist > 42))) {
       entityGroup.remove(e.mesh); activeEntities.splice(i, 1);
     }
   }
@@ -6502,6 +6921,13 @@ function enterHideSpot(it) {
   state.pos.x = it.x + d.outX * (d.hideKind === 'car' ? 0.15 : 0.35);
   state.pos.z = it.z + d.outZ * (d.hideKind === 'car' ? 0.15 : 0.35);
   state.floorY = d.floorY || 0;
+  if (carInterior) {
+    if (d.hideKind === 'car') {
+      carInterior.position.set(state.pos.x, state.floorY, state.pos.z);
+      carInterior.rotation.y = lookOutYaw;
+      carInterior.visible = true;
+    } else carInterior.visible = false;
+  }
 
   for (const e of activeEntities) {
     if (e.kind === 'faceling') continue;
@@ -6518,6 +6944,7 @@ function exitHideSpot() {
   if (!state.hide.active) return;
   const it = state.hide.spot, d = it ? it.data : null;
   if (it && it.mesh) it.mesh.visible = true;
+  if (carInterior) carInterior.visible = false;
   state.hide.active = false; state.hide.ducked = false; state.hide.lookOffset = 0;
   const fy = state.hide.returnFloorY || 0;
   let placed = false;
@@ -6642,7 +7069,21 @@ function restoreFloorPower(sourceLabel = '壁面制御盤の電源を復旧！')
   updateObjectiveUI();
 }
 
-// V8 §3 Timing-Based Door Lockpicking Mini-Game
+// V8 §3 + V9 §1-9 Timing-Based Door Lockpicking Mini-Game (Escalating precision, speed variation, gentle depth scaling)
+function calcLockpickParams(stage, depth) {
+  const ds = Math.min(8, Math.max(0, (depth || 1) - 1));
+  const baseWidths = [0.62, 0.44, 0.30, 0.24];
+  const widthScale = [0.020, 0.016, 0.011, 0.008];
+  const baseSpeeds = [2.45, 3.05, 3.55, 3.85];
+  const idx = Math.max(0, Math.min(3, (stage || 1) - 1));
+  const sweetWidth = Math.max(0.18, +(baseWidths[idx] - ds * widthScale[idx]).toFixed(3));
+  const speed = Math.min(4.35, +(baseSpeeds[idx] + ds * 0.065).toFixed(3));
+  const dir = (stage % 2 === 0) ? -1 : 1;
+  const varAmp = stage >= 3 ? 0.26 : (stage === 2 ? 0.18 : 0.0);
+  return { sweetWidth, speed, dir, varAmp };
+}
+window.calcLockpickParams = calcLockpickParams;
+
 function openLockpickModal(exitIt) {
   if (!exitIt || state.lockpick.active) return;
   const etype = exitIt.data && exitIt.data.etype;
@@ -6650,11 +7091,12 @@ function openLockpickModal(exitIt) {
     showToast('この扉はピッキングできない！'); return;
   }
   if ((state.inv[5] || 0) <= 0) { showToast('ピックを所持していない！壁面制御盤で電源を復旧するかピックを探せ'); return; }
-  const total = Math.min(4, Math.max(2, 1 + Math.floor(state.depth / 3)));
+  const total = state.depth >= 7 ? 4 : 3;
+  const p1 = calcLockpickParams(1, state.depth);
   state.lockpick = {
     active: true, target: exitIt, stage: 1, total,
-    angle: 0, speed: 2.35 + Math.min(1.4, state.depth * 0.14),
-    sweetStart: 0.7 + Math.random() * 4.2, sweetWidth: Math.max(0.54, 0.84 - state.depth * 0.03)
+    angle: 0, phase: 0, dir: p1.dir, speed: p1.speed, varAmp: p1.varAmp,
+    sweetStart: 0.7 + Math.random() * 4.2, sweetWidth: p1.sweetWidth
   };
   document.getElementById('lockpick-modal').classList.add('show');
   updateLockpickVisual();
@@ -6681,7 +7123,11 @@ function updateLockpickVisual() {
 function updateLockpick(dt) {
   if (!state.lockpick.active) return;
   const lp = state.lockpick;
-  lp.angle = (lp.angle + lp.speed * dt) % (Math.PI * 2);
+  // V9 §1-9 Later pins modulate speed smoothly so constant-speed timing cannot trivialize lockpicking!
+  lp.phase = (lp.phase || 0) + dt * (lp.stage >= 3 ? 3.1 : 2.2);
+  const mod = lp.varAmp > 0 ? (1 + lp.varAmp * Math.sin(lp.phase) + (lp.stage >= 3 ? 0.10 * Math.cos(lp.phase * 1.8) : 0)) : 1.0;
+  const curSpd = Math.min(4.6, Math.max(1.3, lp.speed * mod));
+  lp.angle = (((lp.angle + (lp.dir || 1) * curSpd * dt) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
   updateLockpickVisual();
 }
 function attemptLockpickTap() {
@@ -6703,19 +7149,20 @@ function attemptLockpickTap() {
       showToast('★ ピッキング開錠成功！扉が開いた！');
     } else {
       lp.stage++;
-      lp.speed += 0.35;
-      lp.sweetStart = norm(lp.angle + 1.4 + Math.random() * 3.0);
+      const np = calcLockpickParams(lp.stage, state.depth);
+      lp.speed = np.speed; lp.sweetWidth = np.sweetWidth; lp.dir = np.dir; lp.varAmp = np.varAmp;
+      lp.sweetStart = norm(lp.angle + 1.5 + Math.random() * 2.8);
       updateLockpickVisual();
     }
   } else {
-    // Miss: pick breaks & loud noise alerts sound-sensitive / nearby entities!
+    // Miss: pick breaks & loud noise alerts sound-sensitive entities (Hound, Partygoer, Bacteria - V9 §6-7!)
     state.inv[5] = Math.max(0, (state.inv[5] || 0) - 1);
     updateInventoryUI();
     sound.playLockFail();
     for (const e of activeEntities) {
       const d = Math.hypot(e.x - state.pos.x, e.z - state.pos.z);
-      if ((e.kind === 'hound' || e.kind === 'partygoer' || e.kind === 'bacteria') && d < 24) {
-        e.lureX = state.pos.x; e.lureZ = state.pos.z; e.lureTimer = 7.0;
+      if ((e.kind === 'hound' || e.kind === 'partygoer' || e.kind === 'bacteria') && d < 28) {
+        e.lureX = state.pos.x; e.lureZ = state.pos.z; e.lureTimer = 7.5;
         if (e.kind === 'hound') { e.state = 'chase'; e.alerted = true; }
       }
     }
@@ -6811,8 +7258,7 @@ function enterLevel(idx, showCurtain = true, routeText = '') {
   state.taskDone = (lv.task.type === 'run');
   state.trackedExitUid = null; state.manilaBanked = false;
   state.happyfileTimer = 0; state.happyfileStillTimer = 0; document.getElementById('happyfile-bar').style.display = 'none';
-  state.coopBreakerLast = null;
-  state.watchSweep = { active: false, warn: false, timer: 16 + Math.random() * 8, dur: 0 };
+  state.watchSweep = { active: false, warn: false, timer: 16 + Math.random() * 8, dur: 0, warnBeepStep: 0 };
   state.inSlimeSlow = 0; state.inWatchSlow = 0;
   state.heavySampleCarried = false; state.heavySampleUid = null;
   state.emergencyActive = false; document.getElementById('emergency-bar').style.display = 'none';
@@ -6876,7 +7322,52 @@ function computeNextLevelByGraph(etype) {
   return { next, depthGain, routeText: `${routeNames[etype] || '出口'} // 深度 +${depthGain}` };
 }
 
+// V9 §6-4 & §6-5 Unified White Door Readiness Check (carried downed peers count as arrived if carrier is within 8.5m!)
+function checkWhiteDoorAllReady(exitX, exitZ) {
+  let missing = 0, unrescuedDowned = 0, disconnectedCnt = 0;
+  // Check host position (self if host)
+  if (mp.role === 'host') {
+    if (state.downed) {
+      const carrier = state.carriedById ? mp.peers.get(state.carriedById) : null;
+      if (!carrier || carrier.downed || carrier.disconnected) unrescuedDowned++;
+      else if (Math.hypot((carrier.tx || 0) - exitX, (carrier.tz || 0) - exitZ) > 8.5) missing++;
+    } else if (Math.hypot(state.pos.x - exitX, state.pos.z - exitZ) > 8.5) {
+      missing++;
+    }
+  }
+  mp.peers.forEach((p, pid) => {
+    if (p.disconnected) { disconnectedCnt++; return; }
+    if (p.downed) {
+      // Carried by host or another living peer?
+      if (state.carryingPeerId === pid) {
+        if (Math.hypot(state.pos.x - exitX, state.pos.z - exitZ) > 8.5) missing++;
+      } else if (p.carriedBy) {
+        const carrier = (p.carriedBy === mp.myId) ? { tx: state.pos.x, tz: state.pos.z, downed: state.downed } : mp.peers.get(p.carriedBy);
+        if (!carrier || carrier.downed || carrier.disconnected) unrescuedDowned++;
+        else if (Math.hypot((carrier.tx || 0) - exitX, (carrier.tz || 0) - exitZ) > 8.5) missing++;
+      } else {
+        unrescuedDowned++;
+      }
+    } else if (Math.hypot((p.tx || 0) - exitX, (p.tz || 0) - exitZ) > 8.5) {
+      missing++;
+    }
+  });
+  return { ok: missing === 0 && unrescuedDowned === 0 && disconnectedCnt === 0, missing, unrescuedDowned, disconnectedCnt };
+}
+window.checkWhiteDoorAllReady = checkWhiteDoorAllReady;
+function countConsciousMembers() {
+  let n = state.downed ? 0 : 1;
+  mp.peers.forEach(p => { if (!p.downed && !p.disconnected) n++; });
+  return Math.max(1, n);
+}
+
 function executeTransition(etype) {
+  // V9 §6-9 Flag abandonedPeer if leaving behind any uncarried downed teammate!
+  if (isMpActive() && etype !== 'white_door') {
+    mp.peers.forEach((p, pid) => {
+      if (p.downed && state.carryingPeerId !== pid && !p.carriedBy) state.abandonedPeer = true;
+    });
+  }
   if (etype === 'white_door') {
     if (state.heavySampleCarried) { state.unconfirmedSamples += 3; state.heavySampleCarried = false; }
     bankSamples('脱出ボーナス(1.5倍)', 1.5);
@@ -6915,16 +7406,14 @@ function triggerExitTransition(it) {
   const etype = it.data.etype || 'door';
   const lv = LEVELS[state.levelIdx];
 
-  // V8 MP §4 All-Survive White Door Rule (requires ZERO downed teammates & ALL living players within 8m!)
+  // V8/V9 §6-4 All-Survive White Door Rule (carried downed peers count as arrived!)
   if (etype === 'white_door' && isMpActive()) {
-    let missing = 0, downedCnt = 0;
-    mp.peers.forEach(p => {
-      if (p.downed) downedCnt++;
-      else if (Math.hypot((p.tx || 0) - it.x, (p.tz || 0) - it.z) > 8.5) missing++;
-    });
-    if (downedCnt > 0 || missing > 0) {
+    const chk = checkWhiteDoorAllReady(it.x, it.z);
+    if (!chk.ok) {
       sound.playSwitch();
-      showToast(downedCnt > 0 ? `白い扉：ダウン中の仲間(${downedCnt}人)を蘇生または搬送せよ！` : `白い扉：全員集合が必要（あと ${missing} 人）`);
+      if (chk.unrescuedDowned > 0) showToast(`白い扉：ダウン中の仲間(${chk.unrescuedDowned}人)を蘇生または搬送せよ！`);
+      else if (chk.disconnectedCnt > 0) showToast(`白い扉：切断中の仲間(${chk.disconnectedCnt}人)の再接続を待機中...`);
+      else showToast(`白い扉：全員集合が必要（あと ${chk.missing} 人）`);
       return;
     }
   }
@@ -6948,16 +7437,29 @@ function triggerExitTransition(it) {
   if (mp.active && mp.peers.size > 0) {
     const myId = mp.myId || 'local';
     if (mp.role === 'guest') {
-      mpSendHost({ type: 'exit_vote', etype });
-      showToast('出口待機中：過半数が集まると全員同時遷移します');
+      mpSendHost({ type: 'exit_vote', etype, ex: +it.x.toFixed(2), ez: +it.z.toFixed(2) });
+      showToast(etype === 'white_door' ? '白い扉待機中：全員が揃うと現実世界へ同時帰還します' : '出口待機中：過半数が集まると全員同時遷移します');
       return;
     } else {
       mpExitWaiters.add(myId);
       const totalMembers = 1 + mp.peers.size;
-      const needed = (etype === 'white_door') ? totalMembers : Math.ceil(totalMembers / 2);
-      if (mpExitWaiters.size < needed) {
-        showToast(`出口待機中 (${mpExitWaiters.size}/${needed}人)... 仲間を待っています`);
-        return;
+      if (etype === 'white_door') {
+        const chk = checkWhiteDoorAllReady(it.x, it.z);
+        const needed = countConsciousMembers();
+        if (!chk.ok) {
+          showToast(chk.unrescuedDowned > 0 ? `白い扉：ダウン中の仲間(${chk.unrescuedDowned}人)を蘇生または搬送せよ！` : (chk.disconnectedCnt > 0 ? `白い扉：通信復帰待ちの仲間(${chk.disconnectedCnt}人)がいます` : `白い扉：全員集合が必要（未到着 ${chk.missing}人）`));
+          return;
+        }
+        if (mpExitWaiters.size < needed) {
+          showToast(`白い扉待機中 (${mpExitWaiters.size}/${needed}人)... 仲間の操作を待っています`);
+          return;
+        }
+      } else {
+        const needed = Math.ceil(totalMembers / 2);
+        if (mpExitWaiters.size < needed) {
+          showToast(`出口待機中 (${mpExitWaiters.size}/${needed}人)... 仲間を待っています`);
+          return;
+        }
       }
     }
   }
@@ -7337,29 +7839,61 @@ function computeRank(p) {
 window.computeRank = computeRank;
 
 // Result / Return Rift / Escape Ending Screen (V7.2 §4 + V8 §6 & §8)
-function showResultScreen(outcome, reason) {
+// V9 §2-1 Phenomenon / Non-Entity Specific Cause-of-Death & Countermeasure Tips
+const NON_ENTITY_DEATH_TIPS = {
+  watch_sweep:     { name: '監視光照射（ネイバーフッド・ウォッチ）', tip: '4.5秒の収束予兆が始まったら即座に家屋・店舗・車内・ロッカーへ逃げ込み、照射が完全に終わるまで外へ出るな。' },
+  watch:           { name: '監視光照射（ネイバーフッド・ウォッチ）', tip: '4.5秒の収束予兆が始まったら即座に家屋・店舗・車内・ロッカーへ逃げ込み、照射が完全に終わるまで外へ出るな。' },
+  fall:            { name: '落下・空間崩落', tip: '暗所の足元と段差・地裂穴の位置を確認してから進め。ライトを点けると足元の裂け目を視認しやすい。' },
+  chasm:           { name: '地裂穴・空間落下', tip: '地裂穴は次階層への近道だがサンプルを取り残す。足元の風音に注意せよ。' },
+  pressure:        { name: '過圧現象（Level !）', tip: '立ち止まると1.5秒後から急激に体力が削られる。止まらず前方へ走り抜けろ。' },
+  electric:        { name: '漏電・高圧火花ハザード', tip: '火花を散らす水たまりや露出ケーブルは大きく迂回せよ。暗闇では火花の発光を頼りに避けよう。' },
+  steam:           { name: '高圧蒸気噴出（ボイラー層等）', tip: '蒸気噴出の周期（約5.5秒噴出／4.2秒停止）を見切って通過するか、壁面制御盤でフロア電源を復旧すると蒸気を完全停止できる。' },
+  mold:            { name: '有毒胞子・カビ汚染', tip: '胞子が舞う区画に長居すると継続ダメージを受ける。素早く通り抜け、アーモンド水[1]や救急キット[3]で回復せよ。' },
+  hunger:          { name: '飢餓', tip: '空腹が0になると体力が削られ続ける。携帯食料[2]やモスゼリー[4]で早めに補給し、不要なダッシュを控えよう。' },
+  sanity:          { name: '精神崩壊（暗闇侵食）', tip: '暗闇にいると正気が削れる。懐中電灯[F]や壁面制御盤の電源復旧で明かりを確保し、マニラルームやアーモンド水[1]で正気を回復せよ。' },
+  downed_timeout:  { name: '蘇生猶予切れ（行動不能）', tip: '仲間と離れすぎず行動し、ダウンした仲間は4秒蘇生またはしゃがみ[E]で担いで安全地帯へ搬送せよ。' },
+  host_disconnect: { name: 'ホスト接続切断（MP）', tip: '確保済みの確定サンプルと記録は保存された。再度ルームを作成・参加するかソロ探索で続けられる。' }
+};
+
+// Result / Return Rift / Escape Ending Screen (V7.2 §4 + V8 §6 & §8 + V9 §2-1 & §6-2)
+function showResultScreen(outcome, reason, remoteRunEnd = null) {
   if (state.hide.active) exitHideSpot();
   if (state.lockpick.active) closeLockpickModal();
   const escaped = (outcome === true);
   const extracted = (outcome === 'extracted');
   const returned = escaped || extracted;
-  const lostSamples = !returned ? state.unconfirmedSamples : 0;
+  const lostSamples = remoteRunEnd ? (remoteRunEnd.lost || 0) : (!returned ? state.unconfirmedSamples : 0);
+  const confirmedForRank = remoteRunEnd ? (remoteRunEnd.confirmed !== undefined ? remoteRunEnd.confirmed : state.confirmedSamples) : state.confirmedSamples;
+  const depthForRank = remoteRunEnd ? (remoteRunEnd.depth || state.depth) : state.depth;
   state.unconfirmedSamples = 0;
   state.playing = false; state.paused = false; state.downed = false;
   document.getElementById('downed-overlay').classList.remove('show');
   document.getElementById('watch-sweep-overlay').style.opacity = '0';
+  document.getElementById('watch-sweep-overlay').classList.remove('omen');
   document.getElementById('watch-sweep-banner').classList.remove('show');
 
-  const isMp = isMpActive();
-  const playerCount = isMp ? (1 + mp.peers.size) : 1;
-  let downedPeers = 0;
-  if (isMp) mp.peers.forEach(p => { if (p.downed) downedPeers++; });
-  const abandoned = isMp && (state.abandonedPeer || downedPeers > 0);
-  const allReturned = returned && !abandoned;
+  const isMp = remoteRunEnd ? !!remoteRunEnd.isMp : isMpActive();
+  const playerCount = remoteRunEnd ? (remoteRunEnd.playerCount || 1) : (isMp ? (1 + mp.peers.size) : 1);
+  let unrescuedDowned = 0;
+  if (isMp && !remoteRunEnd) {
+    mp.peers.forEach((p, pid) => {
+      if (p.downed && state.carryingPeerId !== pid && !p.carriedBy) unrescuedDowned++;
+    });
+  }
+  const abandoned = remoteRunEnd ? !!remoteRunEnd.abandoned : (isMp && (state.abandonedPeer || unrescuedDowned > 0));
+  const allReturned = remoteRunEnd ? !!remoteRunEnd.allReturned : (returned && !abandoned);
   const { rank, nextMissing } = computeRank({
-    returned, depth: state.depth, confirmed: state.confirmedSamples, lost: lostSamples,
+    returned, depth: depthForRank, confirmed: confirmedForRank, lost: lostSamples,
     isMp, playerCount, allReturned, abandoned
   });
+
+  // V9 §6-2 Host notifies all guests of run end (White Door / Return Rift) so everyone sees Team Rank & Result!
+  if (!remoteRunEnd && mp.role === 'host' && mp.active && returned) {
+    mpBroadcast({
+      type: 'run_end', outcome, reason, depth: depthForRank, confirmed: confirmedForRank,
+      lost: lostSamples, isMp: true, playerCount, allReturned, abandoned
+    });
+  }
 
   saveRecords(r => {
     r.totalDistAll = (r.totalDistAll || 0) + Math.floor(state.totalDist);
@@ -7379,9 +7913,13 @@ function showResultScreen(outcome, reason) {
   document.getElementById('res-rank').textContent = isMp ? `TEAM ${rank}` : rank;
   document.getElementById('res-next-rank').textContent = nextMissing;
 
-  // V8 §8 Explicit Cause of Death & Countermeasure Tip
+  // V8 §8 + V9 §2-1 Explicit Cause of Death & Specific Countermeasure Tip (Entity OR Phenomenon!)
   const tipEl = document.getElementById('res-death-tip');
-  if (!returned && state.lastDamageSource && ENTITY_META[state.lastDamageSource]) {
+  if (!returned && state.lastDamageSource && NON_ENTITY_DEATH_TIPS[state.lastDamageSource]) {
+    const nt = NON_ENTITY_DEATH_TIPS[state.lastDamageSource];
+    tipEl.innerHTML = `<b>死因現象：</b>${nt.name}<br><b>次回への対処法：</b>${nt.tip}`;
+    tipEl.style.display = 'block';
+  } else if (!returned && state.lastDamageSource && ENTITY_META[state.lastDamageSource]) {
     const dm = ENTITY_META[state.lastDamageSource];
     tipEl.innerHTML = `<b>死因エンティティ：</b>${dm.name}（感知軸：${dm.axis}）<br><b>次回への対処法：</b>${dm.counter}`;
     tipEl.style.display = 'block';
@@ -7392,11 +7930,11 @@ function showResultScreen(outcome, reason) {
     tipEl.style.display = 'none';
   }
 
-  document.getElementById('res-depth').textContent = state.depth;
+  document.getElementById('res-depth').textContent = depthForRank;
   document.getElementById('res-dist').textContent = Math.floor(state.totalDist) + ' m';
   const mins = String(Math.floor(state.runTime / 60)).padStart(2, '0'), secs = String(Math.floor(state.runTime % 60)).padStart(2, '0');
   document.getElementById('res-time').textContent = `${mins}:${secs}`;
-  document.getElementById('res-samples').textContent = `確定${state.confirmedSamples} / 喪失${lostSamples}`;
+  document.getElementById('res-samples').textContent = `確定${confirmedForRank} / 喪失${lostSamples}`;
   const ents = state.runEntitiesSeen.size ? Array.from(state.runEntitiesSeen).join(' / ') : 'なし';
   const lvls = Array.from(state.runLevelsVisited).join(' → ');
   document.getElementById('res-summary').innerHTML = `<b>踏破ルート：</b>${lvls}<br><b>遭遇エンティティ：</b>${ents}<br><b>副目的：</b>${state.sideObj ? (state.sideObj.done ? '達成 ✓' : '未達成') : '-'}`;
@@ -7615,17 +8153,24 @@ function togglePauseSettings(open) {
 }
 
 /* ============================================================
-   15. LIGHTWEIGHT PEERJS P2P CO-OP MULTIPLAYER (V8 MP EXTENDED, MAX 4 PLAYERS)
+   15. LIGHTWEIGHT PEERJS P2P CO-OP MULTIPLAYER (V9 AUDITED: RECONNECT GRACE, FULL SYNC)
    ============================================================ */
 const peerGroup = new THREE.Group();
 scene.add(peerGroup);
 const mpUsedUids = new Set();
 const mpExitWaiters = new Set();
+function getOrCreatePlayerKey() {
+  try {
+    let k = sessionStorage.getItem('lh_mp_pkey');
+    if (!k) { k = 'pk_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); sessionStorage.setItem('lh_mp_pkey', k); }
+    return k;
+  } catch (e) { return 'pk_' + Math.random().toString(36).slice(2, 10); }
+}
 const mp = {
   active: false, role: 'none', // none | host | guest
-  roomCode: '', myId: '', myName: 'Explorer',
-  peer: null, hostConn: null, peers: new Map(), // id -> { conn, name, skinId, avatar, tx, ty, tz, ry, crouch, flash, hide, downed, walkPhase }
-  syncAcc: 0
+  roomCode: '', myId: '', myName: 'Explorer', playerKey: getOrCreatePlayerKey(),
+  peer: null, hostConn: null, peers: new Map(), // id -> { conn, name, skinId, playerKey, avatar, tx, ty, tz, ry, crouch, flash, hide, downed, carriedBy, disconnected, reconnectTimer, movedDist, walkPhase, stepAcc }
+  syncAcc: 0, reconnecting: false, runEndedByHost: false
 };
 
 function mpSetStatus(msg) { document.getElementById('mp-status').textContent = msg; }
@@ -7635,7 +8180,7 @@ function mpUpdateLobbyPeers() {
     return `<span style="display:inline-flex;align-items:center;gap:4px;margin-right:8px;"><span class="skin-swatch" style="background:${p.suit.hex};width:10px;height:10px;"></span><span class="skin-swatch" style="background:${p.accent.hex};width:10px;height:10px;"></span>${name}${suffix}</span>`;
   };
   const chips = [mkChip(mp.myName, settings.skinId, mp.role === 'host' ? ' (ホスト)' : ' (自分)')];
-  mp.peers.forEach(p => chips.push(mkChip(p.name || 'Guest', p.skinId || 'teal_orange_solid')));
+  mp.peers.forEach(p => chips.push(mkChip(p.name || 'Guest', p.skinId || 'teal_orange_solid', p.disconnected ? ' [再接続待]' : '')));
   const cnt = 1 + mp.peers.size;
   document.getElementById('mp-peer-list').innerHTML = `参加者 (${cnt}/4): ${chips.join('')}`;
   const badge = document.getElementById('mp-hud-badge');
@@ -7649,21 +8194,46 @@ function mpAddRemoteAvatar(id, name, skinId = 'teal_orange_solid') {
   if (existing && existing.avatar) peerGroup.remove(existing.avatar);
   const avatar = PropFactory.createPeerAvatar(name, safeSkin, false, false);
   peerGroup.add(avatar);
-  const entry = Object.assign(existing || {}, { name, skinId: safeSkin, avatar, tx: existing ? (existing.tx || 0) : 0, ty: existing ? (existing.ty || 0) : 0, tz: existing ? (existing.tz || 0) : 0, ry: existing ? (existing.ry || 0) : 0, crouch: false, flash: true, hide: false, downed: false, walkPhase: 0 });
+  const entry = Object.assign(existing || {}, {
+    name, skinId: safeSkin, avatar,
+    tx: existing ? (existing.tx || 0) : 0, ty: existing ? (existing.ty || 0) : 0, tz: existing ? (existing.tz || 0) : 0,
+    ry: existing ? (existing.ry || 0) : 0,
+    crouch: existing ? !!existing.crouch : false, flash: existing ? existing.flash !== false : true,
+    hide: existing ? !!existing.hide : false, downed: existing ? !!existing.downed : false,
+    carriedBy: existing ? (existing.carriedBy || null) : null,
+    disconnected: existing ? !!existing.disconnected : false,
+    reconnectTimer: existing ? (existing.reconnectTimer || 0) : 0,
+    movedDist: 0, walkPhase: existing ? (existing.walkPhase || 0) : 0, stepAcc: 0
+  });
   mp.peers.set(id, entry);
   mpUpdateLobbyPeers();
   return entry;
 }
-function mpRemovePeer(id) {
+function mpMarkPeerDisconnected(id) {
   const p = mp.peers.get(id);
-  if (p && p.avatar) peerGroup.remove(p.avatar);
+  if (!p) return;
+  // In lobby before run starts, remove immediately; during an active run, hold character in place for 30s reconnect grace (V9 §2-4)!
+  if (!state.playing || mp.role !== 'host') { mpRemovePeer(id); return; }
+  if (p.disconnected) return;
+  p.disconnected = true; p.reconnectTimer = 30.0; p.conn = null; p.movedDist = 0;
+  mpExitWaiters.delete(id);
+  showToast(`⚠ ${p.name || '仲間'} が切断しました（30秒間その場で再接続を待機します）`);
+  mpUpdateLobbyPeers();
+}
+function mpRemovePeer(id, timedOut = false) {
+  const p = mp.peers.get(id);
+  if (p) {
+    // V9 §6-9 If a downed teammate disconnects permanently before result, count as abandoned for Team Rank cap B!
+    if (timedOut && p.downed) state.abandonedPeer = true;
+    if (p.avatar) peerGroup.remove(p.avatar);
+  }
   mp.peers.delete(id); mpExitWaiters.delete(id);
   if (state.carryingPeerId === id) state.carryingPeerId = null;
   if (state.carriedById === id) state.carriedById = null;
   mpUpdateLobbyPeers();
 }
 function mpBroadcast(msg, excludeId = null) {
-  mp.peers.forEach((p, id) => { if (id !== excludeId && p.conn && p.conn.open) { try { p.conn.send(msg); } catch (e) {} } });
+  mp.peers.forEach((p, id) => { if (id !== excludeId && !p.disconnected && p.conn && p.conn.open) { try { p.conn.send(msg); } catch (e) {} } });
 }
 function mpSendHost(msg) { if (mp.hostConn && mp.hostConn.open) { try { mp.hostConn.send(msg); } catch (e) {} } }
 function mpBroadcastOrSend(msg) { if (mp.role === 'host') mpBroadcast(msg); else if (mp.role === 'guest') mpSendHost(msg); }
@@ -7674,6 +8244,7 @@ function mpCleanup(returnToTitle = false, notice = '') {
   try { mp.hostConn && mp.hostConn.close(); } catch (e) {}
   try { mp.peer && mp.peer.destroy(); } catch (e) {}
   mp.active = false; mp.role = 'none'; mp.peer = null; mp.hostConn = null; mp.roomCode = '';
+  mp.reconnecting = false; mp.runEndedByHost = false;
   state.carryingPeerId = null; state.carriedById = null;
   document.getElementById('mp-setup-pane').style.display = 'block';
   document.getElementById('mp-lobby-pane').style.display = 'none';
@@ -7688,11 +8259,21 @@ function mpCleanup(returnToTitle = false, notice = '') {
   if (notice) { mpSetStatus(notice); showToast(notice); }
 }
 
+// V9 §6-3 Unified remote task progress counter (MP breaker/control_panel counts required panels just like local!)
 function mpApplyRemoteTask(taskKind) {
   if (!taskKind) return;
   const lv = LEVELS[state.levelIdx];
-  if (taskKind === 'control_panel') {
-    restoreFloorPower('仲間が壁面制御盤を復旧！フロア照明点灯＆出口通電');
+  if (taskKind === 'control_panel' || taskKind === 'breaker') {
+    state.blackoutTimer = 0;
+    state.taskProgress++;
+    const need = (lv.task.type === 'breaker') ? lv.task.target : 1;
+    if (state.taskProgress >= need) {
+      restoreFloorPower('仲間が壁面制御盤の電源を復旧！');
+    } else {
+      sound.playSwitch();
+      showToast(`仲間が壁面配電制御盤を復旧 (${state.taskProgress}/${need})`);
+      updateObjectiveUI();
+    }
     return;
   } else if (taskKind === 'keycard') {
     state.questKeys++;
@@ -7700,12 +8281,9 @@ function mpApplyRemoteTask(taskKind) {
     else showToast('仲間がキーカードを回収した');
   } else if (taskKind === 'fuse') {
     state.questFuses++;
-    if (lv.task.type === 'fuse' && state.questFuses >= lv.task.target) { state.taskDone = true; showToast('★ 仲間がヒューズを回収！出口が通電した！'); }
-    else showToast(`仲間がヒューズを回収 (${state.questFuses}/${lv.task.target})`);
-  } else if (taskKind === 'breaker') {
-    state.blackoutTimer = 0; state.taskProgress++;
-    if (lv.task.type === 'breaker' && state.taskProgress >= lv.task.target) { state.taskDone = true; showToast('★ 仲間がブレーカーを復旧！出口が開錠された！'); }
-    else showToast('仲間がブレーカーを復旧した');
+    if (lv.task.type === 'fuse' && state.questFuses >= lv.task.target) {
+      restoreFloorPower('仲間がヒューズを全て回収し電源が復旧した！');
+    } else showToast(`仲間がヒューズを回収 (${state.questFuses}/${lv.task.target})`);
   }
   updateObjectiveUI();
 }
@@ -7714,8 +8292,29 @@ function mpHandleMessage(fromId, msg) {
   if (!msg || typeof msg !== 'object') return;
   if (mp.role === 'host') {
     if (msg.type === 'hello') {
+      // V9 §2-4 Check if this guest is reconnecting within the 30s grace window!
+      let resumedFrom = null;
+      if (state.playing) {
+        for (const [oldId, oldP] of mp.peers.entries()) {
+          if (oldP.disconnected && ((msg.playerKey && oldP.playerKey === msg.playerKey) || (oldP.name && oldP.name === msg.name))) {
+            resumedFrom = { oldId, tx: oldP.tx || 0, ty: oldP.ty || 0, tz: oldP.tz || 0, downed: !!oldP.downed, carriedBy: oldP.carriedBy || null };
+            if (oldP.avatar) peerGroup.remove(oldP.avatar);
+            mp.peers.delete(oldId);
+            if (state.carryingPeerId === oldId) state.carryingPeerId = fromId;
+            break;
+          }
+        }
+      }
       const p = mpAddRemoteAvatar(fromId, msg.name || 'Guest', msg.skinId || 'teal_orange_solid');
-      // Send authoritative world state to newly joined guest!
+      p.playerKey = msg.playerKey || '';
+      p.disconnected = false; p.reconnectTimer = 0;
+      if (resumedFrom) {
+        p.tx = resumedFrom.tx; p.ty = resumedFrom.ty; p.tz = resumedFrom.tz;
+        p.downed = resumedFrom.downed; p.carriedBy = resumedFrom.carriedBy;
+        if (p.avatar) p.avatar.position.set(p.tx, p.ty, p.tz);
+        showToast(`★ ${p.name} が再接続して探索に復帰した！`);
+      }
+      // Send authoritative world state to newly joined / reconnected guest!
       p.conn && p.conn.send({
         type: 'init', seed: state.seed, levelIdx: state.levelIdx, depth: state.depth,
         horrorMode: state.horrorMode, seedCollapse: settings.seedCollapse,
@@ -7723,28 +8322,35 @@ function mpHandleMessage(fromId, msg) {
         usedUids: Array.from(mpUsedUids), started: state.playing,
         taskProgress: state.taskProgress, questKeys: state.questKeys, questFuses: state.questFuses,
         taskDone: state.taskDone, powerRestored: state.powerRestored,
-        hostName: mp.myName, hostId: mp.myId, hostSkin: settings.skinId
+        hostName: mp.myName, hostId: mp.myId, hostSkin: settings.skinId,
+        reconnected: !!resumedFrom, resumeState: resumedFrom
       });
     } else if (msg.type === 'p_state') {
       let p = mp.peers.get(fromId);
       if (p && msg.skin && p.skinId !== msg.skin) p = mpAddRemoteAvatar(fromId, p.name || msg.name || 'Guest', msg.skin);
-      if (p) { p.tx = msg.x; p.ty = msg.y; p.tz = msg.z; p.ry = msg.ry; p.crouch = msg.c; p.flash = msg.f; p.hide = msg.h; p.downed = !!msg.d; }
+      if (p) {
+        const prevTx = p.tx || msg.x, prevTz = p.tz || msg.z;
+        p.movedDist = Math.hypot(msg.x - prevTx, msg.z - prevTz);
+        p.tx = msg.x; p.ty = msg.y; p.tz = msg.z; p.ry = msg.ry; p.crouch = msg.c; p.flash = msg.f; p.hide = msg.h; p.downed = !!msg.d;
+        p.disconnected = false;
+      }
     } else if (msg.type === 'use_obj') {
       if (!mpUsedUids.has(msg.uid)) {
         mpUsedUids.add(msg.uid);
-        chunks.forEach(ch => ch.interactables.forEach(it => { if (it.uid === msg.uid) { it.used = true; if (!msg.keepVisible) it.mesh.visible = false; } }));
+        chunks.forEach(ch => ch.interactables.forEach(it => {
+          if (it.uid === msg.uid) {
+            it.used = true;
+            if (!msg.keepVisible) it.mesh.visible = false;
+            if (it.mesh && it.mesh.userData && it.mesh.userData.ledMat) {
+              it.mesh.userData.ledMat.color.setHex(0x44ff88); it.mesh.userData.ledMat.emissive.setHex(0x22ee66);
+            }
+          }
+        }));
         mpApplyRemoteTask(msg.taskKind);
         mpBroadcast(msg, fromId);
       }
     } else if (msg.type === 'pin') {
       spawnWorldPin(msg.id, msg.name, msg.x, msg.y, msg.z);
-      mpBroadcast(msg, fromId);
-    } else if (msg.type === 'coop_breaker_press') {
-      state.coopBreakerLast = { by: msg.by, x: msg.x, z: msg.z, t: performance.now() };
-      showToast('仲間がブレーカーを操作！5秒以内に別のブレーカーを押せ！');
-      mpBroadcast(msg, fromId);
-    } else if (msg.type === 'coop_breaker_done') {
-      restoreFloorPower('同時ブレーカー復旧成功！出口が開錠された！');
       mpBroadcast(msg, fromId);
     } else if (msg.type === 'branch_panel') {
       if (msg.wing === 'A') state.branchPanelATimer = 6.0;
@@ -7759,29 +8365,46 @@ function mpHandleMessage(fromId, msg) {
       openBranchCentralDoor();
       mpBroadcast(msg, fromId);
     } else if (msg.type === 'carry_peer') {
+      const tp = mp.peers.get(msg.targetId);
+      if (tp) tp.carriedBy = fromId;
       if (msg.targetId === mp.myId) {
         state.carriedById = fromId;
         showToast('仲間に担がれて搬送されている！');
       } else mpBroadcast(msg, fromId);
     } else if (msg.type === 'drop_peer') {
+      const tp = mp.peers.get(msg.targetId);
+      if (tp) tp.carriedBy = null;
       if (msg.targetId === mp.myId) {
         state.carriedById = null;
         if (typeof msg.x === 'number' && typeof msg.z === 'number') { state.pos.x = msg.x; state.pos.z = msg.z; }
         showToast('仲間があなたを下ろした');
       } else mpBroadcast(msg, fromId);
     } else if (msg.type === 'revive') {
+      const tp = mp.peers.get(msg.targetId);
+      if (tp) { tp.downed = false; tp.carriedBy = null; }
       if (msg.targetId === mp.myId) {
         state.downed = false; state.carriedById = null; state.hp = 40; document.getElementById('downed-overlay').classList.remove('show');
         showToast('仲間に蘇生された！(HP 40)');
       } else mpBroadcast(msg, fromId);
     } else if (msg.type === 'exit_vote') {
+      // V9 §6-5 Host verifies White Door requires ALL members + proximity/carried-downed readiness!
+      const etype = msg.etype || 'door';
       mpExitWaiters.add(fromId);
-      const needed = Math.ceil((1 + mp.peers.size) / 2);
-      if (mpExitWaiters.size >= needed) executeTransition(msg.etype || 'door');
-      else showToast(`仲間が出口で待機中 (${mpExitWaiters.size}/${needed})`);
+      const totalMembers = 1 + mp.peers.size;
+      const needed = (etype === 'white_door') ? countConsciousMembers() : Math.ceil(totalMembers / 2);
+      if (etype === 'white_door') {
+        const chk = checkWhiteDoorAllReady(typeof msg.ex === 'number' ? msg.ex : state.pos.x, typeof msg.ez === 'number' ? msg.ez : state.pos.z);
+        if (!chk.ok) {
+          showToast(chk.unrescuedDowned > 0 ? `白い扉：ダウン中の仲間(${chk.unrescuedDowned}人)を蘇生または搬送せよ！` : (chk.disconnectedCnt > 0 ? `白い扉：通信復帰待ちの仲間(${chk.disconnectedCnt}人)がいます` : `白い扉：全員集合が必要（未到着 ${chk.missing}人）`));
+          return;
+        }
+      }
+      if (mpExitWaiters.size >= needed) executeTransition(etype);
+      else showToast(`${etype === 'white_door' ? '白い扉' : '出口'}で仲間が待機中 (${mpExitWaiters.size}/${needed})`);
     }
   } else if (mp.role === 'guest') {
     if (msg.type === 'init') {
+      mp.reconnecting = false; mp.runEndedByHost = false;
       state.seed = msg.seed; state.horrorMode = msg.horrorMode; settings.seedCollapse = msg.seedCollapse;
       settings.entitySpeed = msg.entitySpeed; settings.entityFreq = msg.entityFreq;
       mpUsedUids.clear(); (msg.usedUids || []).forEach(u => mpUsedUids.add(u));
@@ -7792,25 +8415,56 @@ function mpHandleMessage(fromId, msg) {
       document.getElementById('mp-start-coop-btn').style.display = 'none';
       if (msg.started) {
         document.getElementById('mp-modal').classList.remove('show'); state.mpModalOpen = false;
-        startGame(false, msg.levelIdx, true, msg.depth || 1);
+        if (msg.reconnected && state.playing && msg.resumeState) {
+          // V9 §2-4 Seamless reconnect: keep local inventory/samples/HP & restore exact position!
+          state.pos.x = msg.resumeState.tx; state.pos.z = msg.resumeState.tz; state.floorY = msg.resumeState.ty || 0;
+          if (msg.resumeState.downed && !state.downed) enterDownedState('復帰時ダウン継続');
+          showToast('★ ホストへ再接続し、元の状態のまま探索を再開した！');
+        } else {
+          startGame(false, msg.levelIdx, true, msg.depth || 1);
+          if (msg.reconnected && msg.resumeState) {
+            state.pos.x = msg.resumeState.tx; state.pos.z = msg.resumeState.tz; state.floorY = msg.resumeState.ty || 0;
+          }
+        }
         state.taskProgress = msg.taskProgress || 0; state.questKeys = msg.questKeys || 0;
         state.questFuses = msg.questFuses || 0; state.taskDone = !!msg.taskDone;
-        if (msg.powerRestored) restoreFloorPower('フロア電源はすでに復旧済み');
+        if (msg.powerRestored && !state.powerRestored) restoreFloorPower('フロア電源はすでに復旧済み');
         updateObjectiveUI(); updateHUDText();
       }
     } else if (msg.type === 'start') {
+      mp.runEndedByHost = false;
       state.seed = msg.seed; state.horrorMode = msg.horrorMode; settings.seedCollapse = msg.seedCollapse;
       document.getElementById('mp-modal').classList.remove('show'); state.mpModalOpen = false;
       startGame(false, msg.levelIdx, true, msg.depth || 1);
     } else if (msg.type === 'level') {
       state.depth = msg.depth; enterLevel(msg.levelIdx, true, msg.routeText || '');
+    } else if (msg.type === 'run_end') {
+      // V9 §6-2 Synchronized run end & Team Rank result screen on guest!
+      mp.runEndedByHost = true;
+      showResultScreen(msg.outcome, msg.reason, msg);
+    } else if (msg.type === 'player_hit') {
+      // V9 §6-6 Receive authoritative entity hit on guest with direction & cause of death!
+      if (!state.playing || state.downed) return;
+      const metaKey = (msg.kind === 'horde') ? 'bacteria' : (msg.kind || 'bacteria');
+      const meta = ENTITY_META[metaKey] || ENTITY_META.bacteria;
+      state.lastDamageSource = metaKey;
+      pulseHitEdge(msg.ex || state.pos.x, msg.ez || state.pos.z);
+      const { pan } = getRelativePanAndSide(msg.ex || state.pos.x, msg.ez || state.pos.z);
+      const hDist = Math.hypot((msg.ex || state.pos.x) - state.pos.x, (msg.ez || state.pos.z) - state.pos.z);
+      if (msg.instant) {
+        state.hp = 0; state.runTookDamage = true; sound.playHurt();
+        enterDownedState(msg.kind === 'snail' ? '黄色いカタツムリに触れた' : 'カワハギに皮を剥がれた');
+      } else if (state.hurtInvuln <= 0) {
+        state.hp = Math.max(0, state.hp - (msg.dmg || 24));
+        state.runTookDamage = true;
+        state.sanity = Math.max(0, state.sanity - 10);
+        state.hurtFlash = 0.9; state.hurtInvuln = 1.25;
+        state.glitchAmount = Math.max(state.glitchAmount, 0.85);
+        sound.playHurt(); sound.playEntityAlert(msg.kind, pan, hDist);
+        showToast(`${meta.name} に襲われた！対処法を意識して離脱せよ！`);
+      }
     } else if (msg.type === 'pin') {
       spawnWorldPin(msg.id, msg.name, msg.x, msg.y, msg.z);
-    } else if (msg.type === 'coop_breaker_press') {
-      state.coopBreakerLast = { by: msg.by, x: msg.x, z: msg.z, t: performance.now() };
-      showToast('仲間がブレーカーを操作！5秒以内に別のブレーカーを押せ！');
-    } else if (msg.type === 'coop_breaker_done') {
-      restoreFloorPower('同時ブレーカー復旧成功！出口が開錠された！');
     } else if (msg.type === 'branch_panel') {
       if (msg.wing === 'A') state.branchPanelATimer = 6.0;
       else state.branchPanelBTimer = 6.0;
@@ -7818,17 +8472,23 @@ function mpHandleMessage(fromId, msg) {
     } else if (msg.type === 'branch_door_open') {
       openBranchCentralDoor();
     } else if (msg.type === 'carry_peer') {
+      const tp = mp.peers.get(msg.targetId);
+      if (tp) tp.carriedBy = msg.by || fromId;
       if (msg.targetId === mp.myId) {
         state.carriedById = msg.by || fromId;
         showToast('仲間に担がれて搬送されている！');
       }
     } else if (msg.type === 'drop_peer') {
+      const tp = mp.peers.get(msg.targetId);
+      if (tp) tp.carriedBy = null;
       if (msg.targetId === mp.myId) {
         state.carriedById = null;
         if (typeof msg.x === 'number' && typeof msg.z === 'number') { state.pos.x = msg.x; state.pos.z = msg.z; }
         showToast('仲間があなたを下ろした');
       }
     } else if (msg.type === 'revive') {
+      const tp = mp.peers.get(msg.targetId);
+      if (tp) { tp.downed = false; tp.carriedBy = null; }
       if (msg.targetId === mp.myId) {
         state.downed = false; state.carriedById = null; state.hp = 40; document.getElementById('downed-overlay').classList.remove('show');
         showToast('仲間に蘇生された！(HP 40)');
@@ -7836,7 +8496,15 @@ function mpHandleMessage(fromId, msg) {
     } else if (msg.type === 'use_obj') {
       if (!mpUsedUids.has(msg.uid)) {
         mpUsedUids.add(msg.uid);
-        chunks.forEach(ch => ch.interactables.forEach(it => { if (it.uid === msg.uid) { it.used = true; if (!msg.keepVisible) it.mesh.visible = false; } }));
+        chunks.forEach(ch => ch.interactables.forEach(it => {
+          if (it.uid === msg.uid) {
+            it.used = true;
+            if (!msg.keepVisible) it.mesh.visible = false;
+            if (it.mesh && it.mesh.userData && it.mesh.userData.ledMat) {
+              it.mesh.userData.ledMat.color.setHex(0x44ff88); it.mesh.userData.ledMat.emissive.setHex(0x22ee66);
+            }
+          }
+        }));
         mpApplyRemoteTask(msg.taskKind);
       }
     } else if (msg.type === 'world_snap') {
@@ -7845,7 +8513,8 @@ function mpHandleMessage(fromId, msg) {
         if (ps.id === mp.myId) continue;
         seenPeers.add(ps.id);
         const p = mpAddRemoteAvatar(ps.id, ps.name, ps.skin || 'teal_orange_solid');
-        p.tx = ps.x; p.ty = ps.y; p.tz = ps.z; p.ry = ps.ry; p.crouch = ps.c; p.flash = ps.f; p.hide = ps.h; p.downed = !!ps.d;
+        p.tx = ps.x; p.ty = ps.y; p.tz = ps.z; p.ry = ps.ry; p.crouch = ps.c; p.flash = ps.f; p.hide = ps.h;
+        p.downed = !!ps.d; p.carriedBy = ps.cb || null; p.disconnected = !!ps.dc;
       }
       for (const id of Array.from(mp.peers.keys())) if (!seenPeers.has(id)) mpRemovePeer(id);
       const seenE = new Set();
@@ -7853,15 +8522,28 @@ function mpHandleMessage(fromId, msg) {
         seenE.add(es.eid);
         let ent = activeEntities.find(x => x.eid === es.eid);
         if (!ent) {
-          const mimicOpts = es.kind === 'mimic' ? { name: es.mName || 'Explorer', skinId: es.mSkin || 'teal_orange_solid', offTagColor: !!es.mOffTag } : null;
-          const mesh = PropFactory.createEntityModel(es.kind, es.ch, mimicOpts);
+          // V9 §6-1 & §6-8 Reconstruct full mimicMeta (copyPeerId, name, skinId, tells, offTagColor) on guest!
+          const tellsArr = Array.isArray(es.mTells) ? es.mTells : [];
+          const mimicMeta = es.kind === 'mimic' ? {
+            copyPeerId: es.mCopyId || null,
+            name: es.mName || 'Explorer',
+            skinId: es.mSkin || 'teal_orange_solid',
+            tells: new Set(tellsArr),
+            offTagColor: tellsArr.includes('offTagColor') || !!es.mOffTag
+          } : null;
+          const mesh = PropFactory.createEntityModel(es.kind, es.ch, mimicMeta);
           mesh.position.set(es.x, 0, es.z); entityGroup.add(mesh);
-          ent = { eid: es.eid, kind: es.kind, mesh, x: es.x, z: es.z, tx: es.x, tz: es.z, ry: es.ry, mimicCopyPeerId: es.mCopyId || null };
+          ent = {
+            eid: es.eid, kind: es.kind, mesh, x: es.x, z: es.z, tx: es.x, tz: es.z, ry: es.ry,
+            spawnAge: 0, phase: 0, stepAcc: 0,
+            mimicMeta, mimicCopyPeerId: es.mCopyId || null
+          };
           activeEntities.push(ent);
         }
         ent.tx = es.x; ent.tz = es.z; ent.ry = es.ry;
-        // V8 MP Mimic Rule: The player being copied NEVER sees their own Mimic!
-        if (ent.kind === 'mimic' && ent.mimicCopyPeerId && ent.mimicCopyPeerId === mp.myId) {
+        // V9 §6-1 Mimic Rule: The player being copied NEVER sees their own Mimic!
+        const copyId = ent.mimicMeta ? ent.mimicMeta.copyPeerId : ent.mimicCopyPeerId;
+        if (ent.kind === 'mimic' && copyId && copyId === mp.myId) {
           ent.mesh.visible = false;
         }
       }
@@ -7914,14 +8596,64 @@ function mpCreateRoom() {
       mpSetStatus('ルーム作成完了！QRまたは6桁コードを共有してください');
     });
     mp.peer.on('connection', (conn) => {
-      if (mp.peers.size >= 3) { try { conn.close(); } catch (e) {} return; }
-      conn.on('open', () => { mp.peers.set(conn.peer, { conn, name: 'Joining...', skinId: 'teal_orange_solid' }); mpUpdateLobbyPeers(); });
+      const connectedCount = Array.from(mp.peers.values()).filter(p => !p.disconnected).length;
+      if (connectedCount >= 3) { try { conn.close(); } catch (e) {} return; }
+      conn.on('open', () => { mp.peers.set(conn.peer, { conn, name: 'Joining...', skinId: 'teal_orange_solid', disconnected: false, reconnectTimer: 0 }); mpUpdateLobbyPeers(); });
       conn.on('data', (d) => mpHandleMessage(conn.peer, d));
-      conn.on('close', () => mpRemovePeer(conn.peer));
-      conn.on('error', () => mpRemovePeer(conn.peer));
+      conn.on('close', () => mpMarkPeerDisconnected(conn.peer));
+      conn.on('error', () => mpMarkPeerDisconnected(conn.peer));
     });
     mp.peer.on('error', () => mpCleanup(false, 'P2P接続エラーが発生しました（NAT環境等の可能性があります）。ソロプレイへ戻れます。'));
   } catch (e) { mpCleanup(false, 'マルチプレイ初期化に失敗しました。ソロでお楽しみください。'); }
+}
+
+function mpAttemptGuestReconnect(code) {
+  if (!mp.active || mp.role !== 'guest' || !state.playing || mp.runEndedByHost) return;
+  if (!mp.peer || mp.peer.destroyed) {
+    state.lastDamageSource = 'host_disconnect';
+    mpCleanup(false);
+    showResultScreen(false, 'ホストとの接続が切断されたため探索を終了した。（確保済みサンプルは記録に保存された）');
+    return;
+  }
+  mp.reconnecting = true;
+  showToast('接続が不安定です — 再接続を試行しています...');
+  try {
+    const conn = mp.peer.connect('brldv6-' + code, { reliable: true });
+    let settled = false;
+    const timeoutId = setTimeout(() => {
+      if (!settled && mp.reconnecting && state.playing) {
+        settled = true;
+        state.lastDamageSource = 'host_disconnect';
+        mpCleanup(false);
+        showResultScreen(false, 'ホストとの接続が切断されたため探索を終了した。（確保済みサンプルは記録に保存された）');
+      }
+    }, 6000);
+    conn.on('open', () => {
+      settled = true; clearTimeout(timeoutId);
+      mp.hostConn = conn;
+      conn.send({ type: 'hello', name: mp.myName, skinId: settings.skinId, playerKey: mp.playerKey });
+      conn.on('data', (d) => mpHandleMessage('host', d));
+      conn.on('close', () => {
+        if (state.playing && !mp.runEndedByHost) {
+          state.lastDamageSource = 'host_disconnect';
+          mpCleanup(false);
+          showResultScreen(false, 'ホストとの接続が切断されたため探索を終了した。（確保済みサンプルは記録に保存された）');
+        }
+      });
+    });
+    conn.on('error', () => {
+      if (!settled && state.playing) {
+        settled = true; clearTimeout(timeoutId);
+        state.lastDamageSource = 'host_disconnect';
+        mpCleanup(false);
+        showResultScreen(false, 'ホストとの接続が切断されたため探索を終了した。（確保済みサンプルは記録に保存された）');
+      }
+    });
+  } catch (e) {
+    state.lastDamageSource = 'host_disconnect';
+    mpCleanup(false);
+    showResultScreen(false, 'ホストとの接続が切断されたため探索を終了した。（確保済みサンプルは記録に保存された）');
+  }
 }
 
 function mpJoinRoom(codeRaw) {
@@ -7930,7 +8662,7 @@ function mpJoinRoom(codeRaw) {
   if (code.length !== 6) { mpSetStatus('6桁の数字コードを入力してください'); return; }
   mpCleanup(false);
   mp.myName = (document.getElementById('mp-name-input').value || 'Guest').trim().slice(0, 14);
-  mp.roomCode = code; mp.role = 'guest'; mp.active = true;
+  mp.roomCode = code; mp.role = 'guest'; mp.active = true; mp.runEndedByHost = false;
   mpSetStatus(`ルーム ${code} に接続中...`);
   try {
     mp.peer = new window.Peer();
@@ -7938,13 +8670,13 @@ function mpJoinRoom(codeRaw) {
       mp.myId = id;
       const conn = mp.peer.connect('brldv6-' + code, { reliable: true });
       mp.hostConn = conn;
-      conn.on('open', () => { conn.send({ type: 'hello', name: mp.myName, skinId: settings.skinId }); });
+      conn.on('open', () => { conn.send({ type: 'hello', name: mp.myName, skinId: settings.skinId, playerKey: mp.playerKey }); });
       conn.on('data', (d) => mpHandleMessage('host', d));
       conn.on('close', () => {
+        if (mp.runEndedByHost) { mpCleanup(false); return; }
         if (state.playing) {
-          // V8 §8 Graceful Host Disconnect: preserve run records & display result cleanly!
-          mpCleanup(false);
-          showResultScreen(false, 'ホストとの接続が切断されたため探索を終了した。（確保済みサンプルは記録に保存された）');
+          // V9 §2-4 Attempt automatic reconnect first before falling back to graceful Host Disconnect result screen!
+          setTimeout(() => mpAttemptGuestReconnect(code), 1500);
         } else {
           mpCleanup(false, 'ホストが切断しました。');
         }
@@ -7957,10 +8689,24 @@ function mpJoinRoom(codeRaw) {
 
 function updateMultiplayerSync(dt) {
   if (!mp.active || !state.playing) return;
-  // Interpolate remote player avatars & animate limbs
+  // V9 §2-4 Host ticks 30s reconnect grace timers for disconnected peers (character remains in place!)
+  if (mp.role === 'host') {
+    for (const [id, p] of Array.from(mp.peers.entries())) {
+      if (p.disconnected) {
+        p.reconnectTimer -= dt;
+        if (p.reconnectTimer <= 0) {
+          showToast(`${p.name || '仲間'} の再接続猶予が切れたため離脱扱いになった${p.downed ? '（ダウン中離脱）' : ''}`);
+          mpRemovePeer(id, true);
+        }
+      }
+    }
+  }
+  // Interpolate remote player avatars, animate limbs, subtle idle sway & spatial footsteps (baseline for Mimic tells!)
   mp.peers.forEach(p => {
     if (!p.avatar) return;
     p.avatar.visible = !p.hide;
+    if (p.disconnected) { p.avatar.scale.set(1, 0.96, 1); return; }
+    p.avatar.scale.set(1, 1, 1);
     const prevX = p.avatar.position.x, prevZ = p.avatar.position.z;
     p.avatar.position.x += (p.tx - p.avatar.position.x) * Math.min(1, dt * 12);
     p.avatar.position.y += (p.ty - p.avatar.position.y) * Math.min(1, dt * 12);
@@ -7969,7 +8715,22 @@ function updateMultiplayerSync(dt) {
     const moved = Math.hypot(p.avatar.position.x - prevX, p.avatar.position.z - prevZ);
     const u = p.avatar.userData;
     if (u) {
-      if (moved > 0.004) { p.walkPhase += moved * 5.2; const sw = Math.sin(p.walkPhase)*0.5; u.lLeg.rotation.x = sw; u.rLeg.rotation.x = -sw; u.lArm.rotation.x = -sw*0.7; u.rArm.rotation.x = sw*0.7; }
+      if (moved > 0.004) {
+        p.walkPhase += moved * 5.2;
+        const sw = Math.sin(p.walkPhase)*0.5;
+        u.lLeg.rotation.x = sw; u.rLeg.rotation.x = -sw; u.lArm.rotation.x = -sw*0.7; u.rArm.rotation.x = sw*0.7;
+        // Real peers emit spatial footsteps (so Mimic 'noSteps' tell is genuinely distinguishable!)
+        p.stepAcc = (p.stepAcc || 0) + moved;
+        const pDist = Math.hypot(p.avatar.position.x - state.pos.x, p.avatar.position.z - state.pos.z);
+        if (p.stepAcc >= 1.45 && pDist < 16 && !p.crouch) {
+          p.stepAcc = 0;
+          const { pan } = getRelativePanAndSide(p.avatar.position.x, p.avatar.position.z);
+          sound.playPeerStep(0.11, pan, pDist);
+        }
+      } else {
+        const sway = Math.sin(state.elapsed * 2.1 + (p.walkPhase || 0)) * 0.06;
+        u.lArm.rotation.x = sway; u.rArm.rotation.x = -sway; u.lLeg.rotation.x = 0; u.rLeg.rotation.x = 0;
+      }
       if (u.beam) u.beam.visible = !!p.flash;
     }
   });
@@ -7977,14 +8738,25 @@ function updateMultiplayerSync(dt) {
   mp.syncAcc += dt;
   if (mp.syncAcc < 0.1) return;
   mp.syncAcc = 0;
-  const mySnap = { id: mp.myId, name: mp.myName, skin: settings.skinId, x: +state.pos.x.toFixed(2), y: +state.floorY.toFixed(2), z: +state.pos.z.toFixed(2), ry: +state.yaw.toFixed(2), c: state.crouching, f: state.flashlightOn, h: state.hide.active, d: !!state.downed };
+  const mySnap = { id: mp.myId, name: mp.myName, skin: settings.skinId, x: +state.pos.x.toFixed(2), y: +state.floorY.toFixed(2), z: +state.pos.z.toFixed(2), ry: +state.yaw.toFixed(2), c: state.crouching, f: state.flashlightOn, h: state.hide.active, d: !!state.downed, cb: state.carriedById || null, dc: false };
   if (mp.role === 'host') {
     const players = [mySnap];
-    mp.peers.forEach((p, id) => players.push({ id, name: p.name, skin: p.skinId || 'teal_orange_solid', x: p.tx||0, y: p.ty||0, z: p.tz||0, ry: p.ry||0, c: !!p.crouch, f: !!p.flash, h: !!p.hide, d: !!p.downed }));
+    mp.peers.forEach((p, id) => players.push({
+      id, name: p.name, skin: p.skinId || 'teal_orange_solid',
+      x: p.tx||0, y: p.ty||0, z: p.tz||0, ry: p.ry||0,
+      c: !!p.crouch, f: !!p.flash, h: !!p.hide, d: !!p.downed,
+      cb: (state.carryingPeerId === id ? mp.myId : (p.carriedBy || null)),
+      dc: !!p.disconnected
+    }));
+    // V9 §6-1 & §6-8 Transmit authoritative mimicMeta (copyPeerId, name, skinId, tells, offTagColor) to all guests!
     const entities = activeEntities.map(e => ({
       eid: e.eid, kind: e.kind, ch: !!e.isChild,
       x: +e.x.toFixed(2), z: +e.z.toFixed(2), ry: +e.mesh.rotation.y.toFixed(2),
-      mCopyId: e.mimicCopyPeerId || null, mName: e.mimicName || null, mSkin: e.mimicSkinId || null, mOffTag: !!e.mimicOffTag
+      mCopyId: e.mimicMeta ? e.mimicMeta.copyPeerId : null,
+      mName: e.mimicMeta ? e.mimicMeta.name : null,
+      mSkin: e.mimicMeta ? e.mimicMeta.skinId : null,
+      mTells: e.mimicMeta && e.mimicMeta.tells ? Array.from(e.mimicMeta.tells) : [],
+      mOffTag: !!(e.mimicMeta && e.mimicMeta.offTagColor)
     }));
     mpBroadcast({ type: 'world_snap', players, entities });
   } else if (mp.role === 'guest') {
@@ -8175,9 +8947,13 @@ if (dashBtn) {
 
 const peekBtn = document.getElementById('m-peek');
 if (peekBtn) {
-  peekBtn.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); sound.init(); sound.playUiClick(); peekTouchId = e.changedTouches[0].identifier; state.peekBack = true; peekBtn.classList.add('pressed', 'peeking'); }, { passive: false });
-  const endPeek = (e) => { for (const t of e.changedTouches) if (t.identifier === peekTouchId) { peekTouchId = null; state.peekBack = false; peekBtn.classList.remove('pressed', 'peeking'); } };
+  const startPeek = () => { sound.init(); sound.playUiClick(); state.peekBack = true; peekBtn.classList.add('pressed', 'peeking'); };
+  const stopPeek = () => { peekTouchId = null; state.peekBack = false; peekBtn.classList.remove('pressed', 'peeking'); };
+  peekBtn.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); peekTouchId = e.changedTouches[0].identifier; startPeek(); }, { passive: false });
+  const endPeek = (e) => { for (const t of e.changedTouches) if (t.identifier === peekTouchId) stopPeek(); };
   peekBtn.addEventListener('touchend', endPeek, { passive: false }); peekBtn.addEventListener('touchcancel', endPeek, { passive: false });
+  peekBtn.addEventListener('mousedown', (e) => { e.stopPropagation(); startPeek(); });
+  window.addEventListener('mouseup', () => { if (peekBtn.classList.contains('peeking') && peekTouchId === null) stopPeek(); });
 }
 
 function bindTouchBtn(id, fn) {
@@ -8204,7 +8980,7 @@ bindTouchBtn('m-use', triggerInteract);
   el.addEventListener('click', (e) => { e.stopPropagation(); if (touched) { touched = false; return; } sound.init(); toggleFlashlight(); });
 })();
 
-// V7.2 §6.7 Mobile #m-crouch: short tap = toggle crouch, long press (>=380ms) = hold rear-view peek!
+// V7.2 §6.7 Mobile #m-crouch: short tap = toggle crouch, long press (>=380ms) = hold rear-view peek (coexists with restored #m-peek!)
 (() => {
   const el = document.getElementById('m-crouch'); if (!el) return;
   let ct = null, peeking = false, touched = false;
@@ -8237,14 +9013,52 @@ bindTouchBtn('m-use', triggerInteract);
 })();
 for (let i = 0; i < 7; i++) bindTouchBtn('slot-' + i, () => useInventorySlot(i));
 
-// V7.2 §6.7 Narrow-screen vitals collapse toggle & V8 Lockpick modal buttons
+// V9 §1-7 Dynamic non-overlapping layout for vitals panel vs objective text on narrow screens (e.g. 512px)
+function syncVitalsLayout() {
+  const hud = document.getElementById('hud');
+  const tl = document.querySelector('.hud-top-left');
+  const vb = document.getElementById('hud-vitals-box');
+  if (!hud || !tl || !vb) return;
+  const expanded = !vb.classList.contains('collapsed');
+  hud.classList.toggle('vitals-expanded', expanded);
+  // Reset inline overrides on desktop widths
+  if (window.innerWidth > 860) {
+    vb.style.top = ''; vb.style.bottom = ''; vb.style.left = ''; vb.style.right = '';
+    return;
+  }
+  if (!expanded) {
+    vb.style.top = ''; vb.style.bottom = ''; vb.style.left = ''; vb.style.right = '';
+    return;
+  }
+  // Ensure expanded vitals panel NEVER overlaps .hud-top-left (#obj-panel)
+  const tlRect = tl.getBoundingClientRect();
+  const vbH = vb.offsetHeight || 128;
+  const safeTop = Math.ceil(tlRect.bottom + 6);
+  const pulseClearance = (isTouchDevice || settings.forceTouchUI) ? 235 : 24;
+  if (safeTop + vbH < window.innerHeight - pulseClearance) {
+    vb.style.top = safeTop + 'px';
+    vb.style.bottom = 'auto';
+    vb.style.left = '10px';
+    vb.style.right = 'auto';
+  } else {
+    // Low viewport height fallback: dock expanded vitals panel neatly on right below inventory so left objective text stays 100% clear!
+    vb.style.top = '106px';
+    vb.style.bottom = 'auto';
+    vb.style.left = 'auto';
+    vb.style.right = '10px';
+  }
+}
+
+// V7.2 §6.7 + V9 §1-7 Narrow-screen vitals collapse toggle & V8/V9 Lockpick modal buttons
 (() => {
   const vt = document.getElementById('btn-vitals-toggle'), vb = document.getElementById('hud-vitals-box');
   if (vt && vb) {
+    if (window.innerWidth <= 600) { vb.classList.add('collapsed'); vt.textContent = 'ステータス ▸'; }
     vt.addEventListener('click', (e) => {
       e.stopPropagation();
       const collapsed = vb.classList.toggle('collapsed');
       vt.textContent = collapsed ? 'ステータス ▸' : 'ステータス ▾';
+      syncVitalsLayout();
     });
   }
   const ltBtn = document.getElementById('lockpick-tap-btn'), lcBtn = document.getElementById('lockpick-cancel-btn');
@@ -8253,7 +9067,7 @@ for (let i = 0; i < 7; i++) bindTouchBtn('slot-' + i, () => useInventorySlot(i))
 })();
 
 /* ============================================================
-   17. HUD, PHYSICS (CORNER ASSIST + EASING) & MAIN LOOP
+   17. HUD, PHYSICS (CORNER ASSIST + WALL-EMBED PROTECTION) & MAIN LOOP
    ============================================================ */
 function updateHUDText() {
   const lv = LEVELS[state.levelIdx];
@@ -8266,6 +9080,20 @@ function updateHUDText() {
   const soloDisc = Array.from(state.discovered).filter(id => id < SOLO_LEVEL_COUNT).length;
   document.getElementById('hud-disc').textContent = `発見: ${soloDisc}/${SOLO_LEVEL_COUNT}`;
   document.getElementById('hud-samples').textContent = `サンプル ×${state.confirmedSamples}（未確定 ×${state.unconfirmedSamples}）`;
+  // V9 §2-3 Constant HUD indicator of unconfirmed sample carry risk (confirmed/banked samples carry zero risk!)
+  const riskEl = document.getElementById('hud-sample-risk');
+  if (riskEl) {
+    if (state.unconfirmedSamples > 0) {
+      const noisePct = Math.min(48, state.unconfirmedSamples * 8);
+      const speedPct = Math.min(15, state.unconfirmedSamples * 2.5).toFixed(1);
+      riskEl.textContent = `⚠ 携行リスク：聴覚感知 +${noisePct}% / 移動 -${speedPct}%`;
+      riskEl.style.display = 'block';
+    } else {
+      riskEl.textContent = '';
+      riskEl.style.display = 'none';
+    }
+  }
+  syncVitalsLayout();
 }
 const INV_REAL_NAMES = ['アーモンド水', '携帯食料', '救急キット', 'モスゼリー', '乾電池', 'ピック', 'ボール'];
 const INV_GARBLED = ['ｱｰﾓﾝﾄﾞ#ERR', '食料?0x4F', '救%急K!T', 'ﾓｽ_NULL', '電#池_666', 'ﾋﾟｯｸ_ERR', 'ﾎﾞｰﾙ_NULL'];
@@ -8337,17 +9165,51 @@ function getWalkSurfaceY(x, z, curY) {
   chunks.forEach(ch => { for (const s of ch.walkSurfaces) if (x >= s.minX && x <= s.maxX && z >= s.minZ && z <= s.maxZ && s.y <= curY+0.65 && s.y > bestY) bestY = s.y; });
   return bestY;
 }
-// §5-2 Collision with Corner Assist nudge so players glide around corners smoothly!
+// V9 §1-8 Expanded Wall-Escape Rescue (searches up to 6.0m in 16 directions + chunk center fallback)
+function rescuePlayerFromWall(px, pz, fy = 0, force = false) {
+  const near = getNearbyColliders(px, pz);
+  if (!force && !pointCollides(near, px, pz, PLAYER_R, fy)) return { x: px, z: pz, rescued: false };
+  const radii = [0.45, 0.85, 1.35, 2.0, 2.8, 3.8, 4.9, 6.0];
+  for (const rad of radii) {
+    for (let a = 0; a < 16; a++) {
+      const ang = (a * Math.PI * 2) / 16;
+      const tx = px + Math.cos(ang) * rad, tz = pz + Math.sin(ang) * rad;
+      const cNear = rad > 3.0 ? getNearbyColliders(tx, tz) : near;
+      if (!pointCollides(cNear, tx, tz, PLAYER_R + 0.04, fy)) return { x: tx, z: tz, rescued: true };
+    }
+  }
+  // Last-resort chunk center fallback
+  const cx = Math.round(px / CHUNK_SIZE) * CHUNK_SIZE, cz = Math.round(pz / CHUNK_SIZE) * CHUNK_SIZE;
+  const cCols = getNearbyColliders(cx, cz);
+  if (!pointCollides(cCols, cx, cz, PLAYER_R + 0.04, fy)) return { x: cx, z: cz, rescued: true };
+  return { x: px, z: pz, rescued: false };
+}
+window.rescuePlayerFromWall = rescuePlayerFromWall;
+
+// §5-2 + V9 §1-8 Collision with Corner Assist AND strict final overlap guard so corner nudges can NEVER embed the player into walls!
 function resolveMove(nx, nz) {
-  let x = state.pos.x, z = state.pos.z;
+  const origX = state.pos.x, origZ = state.pos.z;
+  let x = origX, z = origZ;
   const near = getNearbyColliders(nx, nz);
   if (!pointCollides(near, nx, z, PLAYER_R, state.floorY)) x = nx;
   else {
-    for (const nudge of [0.16, -0.16]) if (!pointCollides(near, nx, z + nudge, PLAYER_R, state.floorY)) { x = nx; z += nudge * 0.35; break; }
+    for (const nudge of [0.16, -0.16]) {
+      const candZ = z + nudge * 0.35;
+      if (!pointCollides(near, nx, z + nudge, PLAYER_R, state.floorY) && !pointCollides(near, nx, candZ, PLAYER_R, state.floorY)) { x = nx; z = candZ; break; }
+    }
   }
   if (!pointCollides(near, x, nz, PLAYER_R, state.floorY)) z = nz;
   else {
-    for (const nudge of [0.16, -0.16]) if (!pointCollides(near, x + nudge, nz, PLAYER_R, state.floorY)) { z = nz; x += nudge * 0.35; break; }
+    for (const nudge of [0.16, -0.16]) {
+      const candX = x + nudge * 0.35;
+      if (!pointCollides(near, x + nudge, nz, PLAYER_R, state.floorY) && !pointCollides(near, candX, nz, PLAYER_R, state.floorY)) { z = nz; x = candX; break; }
+    }
+  }
+  // Strict post-check: never accept a destination that overlaps any collider!
+  if (pointCollides(near, x, z, PLAYER_R, state.floorY)) {
+    if (!pointCollides(near, nx, origZ, PLAYER_R, state.floorY)) return { x: nx, z: origZ };
+    if (!pointCollides(near, origX, nz, PLAYER_R, state.floorY)) return { x: origX, z: nz };
+    return { x: origX, z: origZ };
   }
   return { x, z };
 }
@@ -8521,22 +9383,21 @@ function animate(now) {
   }
   state.landDip *= Math.max(0, 1 - dt * 10);
 
-  // §2-8 Stuck Rescue: if movement input held for 1.2s with near-zero movement, nudge to nearest clear point!
-  if (!lockedByModal && !carryingHeavy && len > 0.3 && stepDist < 0.008) {
+  // V9 §1-8 Immediate Wall-Embed Rescue + Strengthened Stuck Rescue (works even while carrying heavy sample!)
+  if (!state.hide.active && pointCollides(getNearbyColliders(state.pos.x, state.pos.z), state.pos.x, state.pos.z, PLAYER_R * 0.85, state.floorY)) {
+    const freed = rescuePlayerFromWall(state.pos.x, state.pos.z, state.floorY, true);
+    if (freed && freed.rescued) { state.pos.x = freed.x; state.pos.z = freed.z; state.stuckTimer = 0; }
+  }
+  if (!lockedByModal && !state.hide.active && len > 0.3 && stepDist < 0.008) {
     state.stuckTimer = (state.stuckTimer || 0) + dt;
     if (state.stuckTimer >= 1.2) {
       state.stuckTimer = 0;
-      const near = getNearbyColliders(state.pos.x, state.pos.z);
-      let freed = false;
-      for (const rad of [0.6, 1.1, 1.6]) {
-        for (let a = 0; a < 8; a++) {
-          const tx = state.pos.x + Math.cos(a*Math.PI/4)*rad, tz = state.pos.z + Math.sin(a*Math.PI/4)*rad;
-          if (!pointCollides(near, tx, tz, PLAYER_R, state.floorY)) { state.pos.x = tx; state.pos.z = tz; freed = true; break; }
-        }
-        if (freed) break;
-      }
+      const freed = rescuePlayerFromWall(state.pos.x, state.pos.z, state.floorY, true);
+      if (freed && freed.rescued) { state.pos.x = freed.x; state.pos.z = freed.z; }
     }
-  } else state.stuckTimer = 0;
+  } else {
+    state.stuckTimer = Math.max(0, (state.stuckTimer || 0) - dt * 0.45);
+  }
 
   // §2-4 Real-time Flashlight Battery Drain (100% -> 0% in 600s = 10 min, FPS-independent!)
   if (settings.batteryEnabled && state.flashlightOn) {
@@ -8641,7 +9502,7 @@ function animate(now) {
   if (nearExitDist < 16 && state._exitHumCd <= 0) {
     const ang = Math.atan2(-(nearExitX - state.pos.x), -(nearExitZ - state.pos.z));
     const diff = Math.atan2(Math.sin(ang - getActiveViewYaw()), Math.cos(ang - getActiveViewYaw()));
-    sound.playExitHum((1 - nearExitDist / 16) * 0.14, Math.max(-1, Math.min(1, -Math.sin(diff))));
+    sound.playExitHum((1 - nearExitDist / 16) * 0.14, Math.max(-1, Math.min(1, -Math.sin(diff))), nearExitDist);
     state._exitHumCd = 1.65;
   }
   if (nearChasmDist < 10 && state._chasmWindCd <= 0) {
@@ -8661,7 +9522,7 @@ function animate(now) {
   if (state.downed) {
     state.downedTimer -= dt;
     document.getElementById('downed-timer').textContent = `猶予 ${Math.max(0, Math.ceil(state.downedTimer))}s — ${state.carriedById ? '仲間に搬送中！' : '仲間の蘇生を待機中'}`;
-    if (state.downedTimer <= 0) { showResultScreen(false, '蘇生猶予が尽き、空間へ呑まれた。'); return; }
+    if (state.downedTimer <= 0) { state.lastDamageSource = 'downed_timeout'; showResultScreen(false, '蘇生猶予が尽き、空間へ呑まれた。'); return; }
   } else if (state.hp <= 0) {
     if (isMpActive()) {
       enterDownedState();
@@ -8696,7 +9557,7 @@ function animate(now) {
   camera.rotation.z = Math.sin(state.bobPhase*0.5) * (curSpd > 0.2 ? (canSprint ? 0.016 : 0.008) : 0);
 
   if (playerBody && playerShadow) {
-    playerBody.visible = !state.hide.active; playerShadow.visible = !state.hide.active;
+    playerBody.visible = !state.hide.active; playerShadow.visible = !state.hide.active && !settings.lowPerf;
     playerBody.position.set(state.pos.x, state.floorY + (state.crouching ? -0.35 : 0), state.pos.z);
     playerBody.rotation.y = state.yaw;
     const swing = curSpd > 0.2 ? Math.sin(state.bobPhase)*(canSprint ? 0.65 : 0.42) : 0;
@@ -8957,7 +9818,7 @@ document.getElementById('res-title-btn').addEventListener('click', () => {
   refreshTitleRecords();
 });
 
-window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); applyPerfSettings(); });
+window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); applyPerfSettings(); syncVitalsLayout(); });
 
 // Boot
 initSharedGeos();
