@@ -1,0 +1,63 @@
+name: Fetch GLB library props
+
+# Downloads the Everyday GLB Library prop models (from the public tanuki276/glb
+# repo) into props/ so the game stays fully self-contained (no external CDNs).
+# Runs when this workflow changes, or on manual dispatch.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fetch-props.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-props:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download prop GLBs
+        run: |
+          mkdir -p props/furniture props/props props/signs props/street
+          curl -fL --retry 3 -o "props/furniture/armchair.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/armchair.glb"
+          curl -fL --retry 3 -o "props/furniture/bed.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/bed.glb"
+          curl -fL --retry 3 -o "props/furniture/bookshelf.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/bookshelf.glb"
+          curl -fL --retry 3 -o "props/furniture/chair.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/chair.glb"
+          curl -fL --retry 3 -o "props/furniture/desk.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/desk.glb"
+          curl -fL --retry 3 -o "props/furniture/dining_table.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/dining_table.glb"
+          curl -fL --retry 3 -o "props/furniture/floor_lamp.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/floor_lamp.glb"
+          curl -fL --retry 3 -o "props/furniture/refrigerator.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/refrigerator.glb"
+          curl -fL --retry 3 -o "props/furniture/sofa.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/sofa.glb"
+          curl -fL --retry 3 -o "props/furniture/tv_stand.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/tv_stand.glb"
+          curl -fL --retry 3 -o "props/furniture/wardrobe.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/wardrobe.glb"
+          curl -fL --retry 3 -o "props/furniture/washing_machine.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/furniture/washing_machine.glb"
+          curl -fL --retry 3 -o "props/props/barrel.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/props/barrel.glb"
+          curl -fL --retry 3 -o "props/props/book_stack.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/props/book_stack.glb"
+          curl -fL --retry 3 -o "props/props/bucket.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/props/bucket.glb"
+          curl -fL --retry 3 -o "props/props/cardboard_box.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/props/cardboard_box.glb"
+          curl -fL --retry 3 -o "props/props/flower_pot.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/props/flower_pot.glb"
+          curl -fL --retry 3 -o "props/props/ladder.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/props/ladder.glb"
+          curl -fL --retry 3 -o "props/props/potted_plant.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/props/potted_plant.glb"
+          curl -fL --retry 3 -o "props/props/suitcase.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/props/suitcase.glb"
+          curl -fL --retry 3 -o "props/props/wood_crate.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/props/wood_crate.glb"
+          curl -fL --retry 3 -o "props/signs/exit.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/signs/exit.glb"
+          curl -fL --retry 3 -o "props/signs/notice_board.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/signs/notice_board.glb"
+          curl -fL --retry 3 -o "props/street/bench.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/street/bench.glb"
+          curl -fL --retry 3 -o "props/street/post_box.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/street/post_box.glb"
+          curl -fL --retry 3 -o "props/street/street_lamp.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/street/street_lamp.glb"
+          curl -fL --retry 3 -o "props/street/traffic_cone.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/street/traffic_cone.glb"
+          curl -fL --retry 3 -o "props/street/trash_bin.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/street/trash_bin.glb"
+          curl -fL --retry 3 -o "props/street/vending_machine.glb" "https://raw.githubusercontent.com/tanuki276/glb/main/assets/street/vending_machine.glb"
+      - name: Commit props if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add props
+          if git diff --cached --quiet; then
+            echo "props already up to date"
+          else
+            git commit -m "Add Everyday GLB Library props (fetched by workflow)"
+            git push
+          fi
