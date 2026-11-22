@@ -1253,7 +1253,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V9.0.0';
+const VERSION = 'V9.1.0';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -3868,6 +3868,70 @@ const PropFactory = {
       );
     }
   },
+  // V9.1 Everyday GLB Library props (tanuki276/glb, real-world meter scale, CDN-loaded)
+  propBase: './props/',
+  propSpecs: {
+    chair:           { path: 'furniture/chair.glb',           col: 0.25 },
+    desk:            { path: 'furniture/desk.glb',            col: 0.65 },
+    dining_table:    { path: 'furniture/dining_table.glb',    col: 0.75 },
+    sofa:            { path: 'furniture/sofa.glb',            col: 0.95 },
+    armchair:        { path: 'furniture/armchair.glb',        col: 0.52 },
+    bookshelf:       { path: 'furniture/bookshelf.glb',       col: 0.64 },
+    wardrobe:        { path: 'furniture/wardrobe.glb',        col: 0.64 },
+    bed:             { path: 'furniture/bed.glb',             col: 1.00 },
+    floor_lamp:      { path: 'furniture/floor_lamp.glb',      col: 0.35 },
+    refrigerator:    { path: 'furniture/refrigerator.glb',    col: 0.37 },
+    washing_machine: { path: 'furniture/washing_machine.glb', col: 0.33 },
+    tv_stand:        { path: 'furniture/tv_stand.glb',        col: 0.70 },
+    cardboard_box:   { path: 'props/cardboard_box.glb',       col: 0.30 },
+    wood_crate:      { path: 'props/wood_crate.glb',          col: 0.32 },
+    barrel:          { path: 'props/barrel.glb',              col: 0.35 },
+    bucket:          { path: 'props/bucket.glb',              col: 0.22 },
+    book_stack:      { path: 'props/book_stack.glb',          col: 0 },
+    suitcase:        { path: 'props/suitcase.glb',            col: 0.25 },
+    ladder:          { path: 'props/ladder.glb',              col: 0.28 },
+    potted_plant:    { path: 'props/potted_plant.glb',        col: 0.44 },
+    flower_pot:      { path: 'props/flower_pot.glb',          col: 0.34 },
+    vending_machine: { path: 'street/vending_machine.glb',    col: 0.45 },
+    bench:           { path: 'street/bench.glb',              col: 0.90 },
+    trash_bin:       { path: 'street/trash_bin.glb',          col: 0.34 },
+    traffic_cone:    { path: 'street/traffic_cone.glb',       col: 0.21 },
+    street_lamp:     { path: 'street/street_lamp.glb',        col: 0.20 },
+    post_box:        { path: 'street/post_box.glb',           col: 0.28 },
+    exit_sign:       { path: 'signs/exit.glb',                col: 0.30 },
+    notice_board:    { path: 'signs/notice_board.glb',        col: 0.90 }
+  },
+  propCache: {},
+  propFailed: {},
+  preloadPropModels() {
+    if (typeof THREE === 'undefined' || typeof THREE.GLTFLoader !== 'function') return;
+    const loader = new THREE.GLTFLoader();
+    for (const id of Object.keys(this.propSpecs)) {
+      loader.load(
+        this.propBase + this.propSpecs[id].path,
+        (gltf) => { this.propCache[id] = gltf.scene; },
+        undefined,
+        () => { this.propFailed[id] = true; }
+      );
+    }
+  },
+  buildProp(id) {
+    const tmpl = this.propCache[id];
+    if (!tmpl || this.propFailed[id]) return null;
+    const clone = tmpl.clone(true);
+    clone.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(clone);
+    if (!box.isEmpty()) {
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      clone.position.x -= center.x;
+      clone.position.z -= center.z;
+      clone.position.y -= box.min.y;
+    }
+    const wrap = new THREE.Group();
+    wrap.add(clone);
+    return wrap;
+  },
   // V7.2 §3 Material clone + tint multiply (preserves vertexColors, ZERO white overwrite!)
   applyGlbTint(rootObj, tintHex) {
     if (!tintHex) return;
@@ -4686,6 +4750,46 @@ function tryPlaceRandomProp(chunk, rng, wx, wz, spreadX, spreadZ, clearanceR, co
   }
   return null;
 }
+// V9.1 Everyday GLB Library scatter: real-scale props from tanuki276/glb, per-archetype pools.
+// Runs at the end of buildChunk (after exits/panels), so every collider already exists and
+// tryPlaceRandomProp keeps props out of walls, doors and the exit. Unloaded models are skipped.
+const LIB_PROP_POOLS = {
+  office_maze:     ['desk', 'chair', 'bookshelf', 'floor_lamp', 'cardboard_box', 'wood_crate', 'suitcase'],
+  glass_office:    ['desk', 'chair', 'bookshelf', 'floor_lamp', 'cardboard_box', 'wood_crate', 'suitcase'],
+  warehouse_halls: ['barrel', 'wood_crate', 'cardboard_box', 'bucket', 'ladder', 'trash_bin'],
+  boiler_layer:    ['barrel', 'wood_crate', 'cardboard_box', 'bucket', 'ladder', 'trash_bin'],
+  brick_station:   ['barrel', 'wood_crate', 'cardboard_box', 'bucket', 'ladder', 'trash_bin'],
+  pipe_corridor:   ['barrel', 'wood_crate', 'cardboard_box', 'bucket', 'ladder'],
+  hotel_corridor:  ['bookshelf', 'armchair', 'floor_lamp', 'book_stack', 'suitcase', 'wardrobe', 'bench'],
+  end_library:     ['bookshelf', 'armchair', 'floor_lamp', 'book_stack', 'suitcase', 'wardrobe', 'bench'],
+  library_layer:   ['bookshelf', 'armchair', 'floor_lamp', 'book_stack', 'suitcase', 'wardrobe', 'bench'],
+  infinite_mall:   ['vending_machine', 'bench', 'notice_board', 'exit_sign', 'trash_bin', 'potted_plant', 'flower_pot'],
+  neon_arcade:     ['vending_machine', 'bench', 'notice_board', 'exit_sign', 'trash_bin', 'potted_plant', 'flower_pot'],
+  parking_garage:  ['traffic_cone', 'barrel', 'wood_crate', 'cardboard_box', 'ladder', 'trash_bin'],
+  parking_layer:   ['traffic_cone', 'barrel', 'wood_crate', 'cardboard_box', 'ladder', 'trash_bin'],
+  pool_arches:     ['bench', 'traffic_cone', 'trash_bin', 'flower_pot', 'street_lamp'],
+  pool_layer:      ['bench', 'traffic_cone', 'trash_bin', 'flower_pot', 'street_lamp'],
+  suburbs_outdoor: ['bench', 'street_lamp', 'post_box', 'trash_bin', 'traffic_cone', 'potted_plant', 'flower_pot'],
+  motion_suburbs:  ['bench', 'street_lamp', 'post_box', 'trash_bin', 'traffic_cone', 'potted_plant', 'flower_pot'],
+  courtyard_188:   ['bench', 'street_lamp', 'post_box', 'trash_bin', 'traffic_cone', 'potted_plant', 'flower_pot'],
+  endless_city:    ['bench', 'street_lamp', 'post_box', 'trash_bin', 'traffic_cone', 'potted_plant', 'flower_pot'],
+  red_hospital:    ['bed', 'wardrobe', 'floor_lamp', 'trash_bin', 'bucket', 'chair'],
+  default:         ['desk', 'chair', 'sofa', 'bookshelf', 'floor_lamp', 'cardboard_box', 'wood_crate', 'book_stack', 'suitcase']
+};
+function scatterLibraryProps(chunk, rng, wx, wz, lv) {
+  if (chunk.hasExit) return;
+  if (rng() < 0.15) return;
+  const poolIds = LIB_PROP_POOLS[lv.arch] || LIB_PROP_POOLS.default;
+  const avail = poolIds.filter(id => PropFactory.propCache[id] && !PropFactory.propFailed[id]);
+  if (!avail.length) return;
+  const n = 2 + Math.floor(rng() * 3);
+  for (let i = 0; i < n; i++) {
+    const id = avail[Math.floor(rng() * avail.length)];
+    const spec = PropFactory.propSpecs[id];
+    tryPlaceRandomProp(chunk, rng, wx, wz, 12.5, 12.5, Math.max(0.5, spec.col + 0.2), spec.col, spec.col,
+      () => PropFactory.buildProp(id), { cardinal: true });
+  }
+}
 function addCeilingFixture(chunk, x, y, z, lv, isRed = false, rng = Math.random) {
   const M = PropFactory.mats, g = new THREE.Group();
   addPart(g, Geo.box1, M.darkMetal, 1.38, 0.08, 0.46, 0, 0, 0);
@@ -5387,6 +5491,7 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
     }
   }
 
+  scatterLibraryProps(chunk, rng, wx, wz, lv);
   worldGroup.add(chunk.group);
   chunks.set(key, chunk);
 }
@@ -9825,6 +9930,7 @@ initSharedGeos();
 createBackroomsTextures();
 PropFactory.init();
 PropFactory.preloadGlbModels();
+PropFactory.preloadPropModels();
 initPlayerBody();
 refreshTitleRecords();
 syncSettingsUI();
