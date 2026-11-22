@@ -168,12 +168,12 @@
     background: radial-gradient(circle at 35% 35%, rgba(250,232,162,0.94), rgba(186,154,74,0.8));
     border: 2px solid rgba(255,255,255,0.48); box-shadow: 0 4px 14px rgba(0,0,0,0.55);
   }
-  /* §V9 §1-4 Mobile Bottom-Right: Spacious buttons including restored visible #m-peek + left-edge sonar/pin */
+  /* V9.2.0 B-1/B-3 Mobile Bottom-Right: Spacious 5-button layout with restored #m-dash + left-edge #m-bag & #m-pulse */
   #mobile-arc {
     position: absolute; z-index: 5;
-    right: max(16px, calc(env(safe-area-inset-right) + 10px));
-    bottom: max(20px, calc(env(safe-area-inset-bottom) + 14px));
-    width: 186px; height: 176px; pointer-events: none;
+    right: max(12px, calc(env(safe-area-inset-right) + 8px));
+    bottom: max(16px, calc(env(safe-area-inset-bottom) + 12px));
+    width: 224px; height: 214px; pointer-events: none;
   }
   .m-round-btn {
     position: absolute; border-radius: 50%;
@@ -188,20 +188,86 @@
   .m-round-btn.pressed { transform: scale(0.9); background: rgba(224,199,121,0.92); color: #111; border-color: #fff2aa; }
   .m-round-btn.toggled { background: rgba(224,199,121,0.34); border-color: var(--accent); color: #fff4c2; }
   .m-btn-sub { font-size: 8px; opacity: 0.82; font-family: monospace; margin-top: 1px; }
-  #m-use { right: 4px; bottom: 4px; width: 74px; height: 74px; font-size: 12.5px; border-color: rgba(255,235,150,0.65); }
+  #m-use { right: 4px; bottom: 4px; width: 72px; height: 72px; font-size: 12px; border-color: rgba(255,235,150,0.65); }
   #m-use.can-interact { background: rgba(226,200,108,0.94); color: #121008; border-color: #fff7c4; box-shadow: 0 0 18px rgba(240,212,112,0.68); animation: pulseInteract 0.75s infinite alternate; }
   @keyframes pulseInteract { from { transform: scale(1); } to { transform: scale(1.06); } }
-  #m-light  { right: 92px; bottom: 8px; width: 58px; height: 58px; font-size: 10.5px; }
-  #m-crouch { right: 8px; bottom: 92px; width: 58px; height: 58px; font-size: 10.5px; }
+  #m-dash {
+    right: 84px; bottom: 6px; width: 64px; height: 64px; font-size: 11px;
+    border-color: rgba(255,229,127,0.62); overflow: visible;
+  }
+  #m-dash.sprinting { background: rgba(245,212,92,0.9); color: #141008; border-color: #fff7c2; box-shadow: 0 0 18px rgba(255,229,127,0.62); }
+  #dash-ring { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); transform: rotate(-90deg); pointer-events: none; }
+  #m-crouch { right: 6px; bottom: 86px; width: 58px; height: 58px; font-size: 10px; }
   #m-crouch.peeking { background: rgba(105,190,255,0.88); color: #09131c; border-color: #dff4ff; }
-  #m-peek { right: 82px; bottom: 80px; width: 56px; height: 56px; font-size: 10px; border-color: rgba(110,190,255,0.56); }
+  #m-light  { right: 156px; bottom: 12px; width: 56px; height: 56px; font-size: 10px; }
+  #m-peek { right: 78px; bottom: 82px; width: 56px; height: 56px; font-size: 10px; border-color: rgba(110,190,255,0.56); }
   #m-peek.peeking { background: rgba(105,190,255,0.9); color: #09131c; border-color: #dff4ff; box-shadow: 0 0 16px rgba(105,190,255,0.62); }
   #m-pulse  {
     position: fixed; z-index: 16; left: max(18px, env(safe-area-inset-left));
     bottom: max(172px, calc(env(safe-area-inset-bottom) + 166px));
     width: 58px; height: 58px; font-size: 10px; border-color: rgba(110,235,165,0.52);
   }
-  #m-dash { display: none; } /* Consolidated into 92% auto-dash stick; #m-peek restored visible in V9 §1-4 */
+  #m-bag {
+    position: fixed; z-index: 16; left: max(84px, calc(env(safe-area-inset-left) + 74px));
+    bottom: max(172px, calc(env(safe-area-inset-bottom) + 166px));
+    width: 58px; height: 58px; font-size: 10px; border-color: rgba(240,210,120,0.62);
+  }
+  #m-bag .m-bag-cnt {
+    position: absolute; top: -3px; right: -3px; min-width: 18px; height: 18px; padding: 0 4px;
+    border-radius: 999px; background: var(--accent); color: #121008;
+    font-family: monospace; font-size: 10px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* V9.2.0 B-2 Ground Item Pickup Pill Chip */
+  #pickup-chip {
+    position: absolute; top: calc(50% + 22px); left: 50%; transform: translateX(-50%);
+    display: none; align-items: center; gap: 8px;
+    background: rgba(14, 18, 24, 0.94); border: 1.5px solid rgba(242, 214, 118, 0.85);
+    color: #fff; font-size: 13px; font-weight: 800;
+    padding: 8px 16px 8px 12px; border-radius: 999px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.62), 0 0 14px rgba(242, 214, 118, 0.25);
+    pointer-events: auto; cursor: pointer; touch-action: manipulation;
+    white-space: nowrap; max-width: 88vw; z-index: 20;
+    transition: transform 0.08s, background 0.12s;
+  }
+  #pickup-chip:active { transform: translateX(-50%) scale(0.94); background: rgba(235, 206, 112, 0.94); color: #121008; }
+  #pickup-chip-ico { font-size: 18px; line-height: 1; }
+  #pickup-chip-name { overflow: hidden; text-overflow: ellipsis; }
+  #pickup-chip-act {
+    font-family: monospace; font-size: 10.5px; font-weight: 900;
+    background: rgba(242, 214, 118, 0.22); color: #ffe999;
+    padding: 2px 7px; border-radius: 999px; border: 1px solid rgba(242, 214, 118, 0.45);
+  }
+
+  /* V9.2.0 B-3 Large Bag Inventory Modal */
+  #bag-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 9px; margin-top: 8px; }
+  .bag-item-card {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 10px; padding: 10px 11px;
+  }
+  .bag-item-card.has-qty { border-color: rgba(224,199,121,0.58); background: rgba(224,199,121,0.07); }
+  .bag-item-card.zero-qty { opacity: 0.48; }
+  .bag-item-ico { font-size: 26px; width: 34px; text-align: center; flex-shrink: 0; }
+  .bag-item-info { flex: 1; min-width: 0; }
+  .bag-item-head { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
+  .bag-item-name { font-size: 13px; font-weight: 800; color: #fff; }
+  .bag-item-qty { font-family: monospace; font-size: 12.5px; font-weight: 900; color: var(--accent); }
+  .bag-item-desc { font-size: 10.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+  .bag-use-btn {
+    flex-shrink: 0; padding: 9px 14px; border-radius: 8px; border: none;
+    background: var(--accent); color: #14120a; font-weight: 900; font-size: 12px;
+    cursor: pointer; touch-action: manipulation;
+  }
+  .bag-use-btn:disabled { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.38); cursor: not-allowed; }
+  #bag-pause-badge {
+    font-family: monospace; font-size: 10.5px; padding: 3px 8px; border-radius: 4px;
+    background: rgba(110,235,165,0.16); border: 1px solid rgba(110,235,165,0.45); color: #9effc2;
+  }
+  #bag-pause-badge.mp-live {
+    background: rgba(255,130,110,0.16); border-color: rgba(255,130,110,0.5); color: #ffb3a6;
+  }
 
   /* ===== HUD (z-index: 18) ===== */
   #hud { position: fixed; inset: 0; z-index: 18; pointer-events: none; display: none; }
@@ -792,6 +858,7 @@
     </button>
   </div>
   <button class="m-round-btn" id="m-pulse">探知<span class="m-btn-sub">長押しPIN</span></button>
+  <button class="m-round-btn" id="m-bag">🎒<span class="m-btn-sub">バッグ</span><span class="m-bag-cnt" id="m-bag-cnt">0</span></button>
 </div>
 
 <!-- HUD (z-index: 18) -->
@@ -824,6 +891,7 @@
 
   <div class="hud-top-right">
     <div class="hud-actions-row">
+      <button class="hud-icon-btn" id="btn-bag-hud" title="バッグ (I)">🎒</button>
       <button class="hud-icon-btn" id="btn-audio-toggle" title="ミュート">🔊</button>
       <button class="hud-icon-btn" id="btn-codex-hud" title="図鑑・記録">📖</button>
       <button class="hud-icon-btn" id="btn-pause" title="メニュー・設定">☰</button>
@@ -848,6 +916,11 @@
     <div id="use-progress-bar"><div id="use-progress-fill"></div></div>
   </div>
   <div id="interact-prompt">[E] インタラクト</div>
+  <div id="pickup-chip" role="button" tabindex="0">
+    <span id="pickup-chip-ico">💧</span>
+    <span id="pickup-chip-name">アイテム</span>
+    <span id="pickup-chip-act">拾う</span>
+  </div>
   <div id="hide-hint">隠れ中：[E] 出る</div>
   <div id="toast"></div>
 
@@ -888,7 +961,7 @@
 
   <div id="controls-hint">
     <b>WASD</b> 移動 / <b>Shift</b> ダッシュ / <b>C</b> しゃがみ・伏せ<br>
-    <b>R</b> 後ろチラ見 / <b>E</b> 調べる・隠れる / <b>P</b> ピッキング / <b>B</b> ボール投擲<br>
+    <b>R</b> 後ろチラ見 / <b>E</b> 調べる・長押し復旧 / <b>I</b> バッグ / <b>P</b> ピッキング / <b>B</b> ボール投擲<br>
     <b>F</b> ライト(長押し囮) / <b>Q</b> 探知 / <b>G</b> ピン / <b>1-5</b> 携帯品 / <b>ESC</b> 設定
   </div>
 </div>
@@ -908,6 +981,20 @@
   </div>
   <button class="secondary" id="lockpick-cancel-btn">中断</button>
   <button class="primary" id="lockpick-tap-btn">止める！</button>
+</div>
+
+<!-- V9.2.0 B-3 Large Bag Inventory Modal (Pauses time in Solo, Live in MP!) -->
+<div id="bag-modal" class="modal-backdrop">
+  <div class="panel-card">
+    <h2>
+      <span>🎒 BAG // 所持品バッグ</span>
+      <span id="bag-pause-badge">⏸ ソロ一時停止中</span>
+    </h2>
+    <div id="bag-grid"></div>
+    <div style="margin-top:14px;">
+      <button class="primary" id="bag-close-btn" style="width:100%;">バッグを閉じる</button>
+    </div>
+  </div>
 </div>
 
 <!-- Note Modal -->
@@ -1053,9 +1140,9 @@
         <span class="set-val" id="val-sens">1.1</span>
       </div>
     </div>
-    <div class="set-row">
-      <span>全方向92%スティック自動ダッシュ</span>
-      <input type="checkbox" id="set-autorun" checked>
+    <div class="set-row" style="display:none;">
+      <span>スティック自動ダッシュ（V9.2.0でダッシュボタン長押しへ統一）</span>
+      <input type="checkbox" id="set-autorun">
     </div>
     <div class="set-row">
       <span>タッチ UI を常に表示</span>
@@ -1076,7 +1163,7 @@
 <!-- Codex / Phenomena / M.E.G. Logs / Achievements Modal (§6, §12) -->
 <div id="codex-modal" class="modal-backdrop">
   <div class="panel-card">
-    <h2>M.E.G. ARCHIVE // 図鑑・記録・実績 <span id="codex-progress" style="font-family:monospace;font-size:11.5px;color:var(--muted);">0 / 18</span></h2>
+    <h2>M.E.G. ARCHIVE // 図鑑・記録・実績 <span id="codex-progress" style="font-family:monospace;font-size:11.5px;color:var(--muted);">0 / 19</span></h2>
     <div class="tab-bar">
       <button class="tab-btn active" data-tab="entities">エンティティ</button>
       <button class="tab-btn" data-tab="phenomena">現象</button>
@@ -1155,13 +1242,13 @@
 <div id="title-screen">
   <div class="card">
     <div class="tag">
-      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V9.0.0</span>
+      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V9.2.0</span>
       <span class="escape-badge" id="title-escape-badge">★ 現実へ脱出済み</span>
     </div>
     <h1>Like Homes</h1>
     <p class="desc">
       全20階層（+マルチ専用「分岐層」）を潜り、制御盤の電源復旧やピッキングで扉を解錠し、サンプル回収と「現実への脱出（深度10+白い扉）」を目指す一人称サバイバルホラー。
-      光・音・視線・接近の4軸で異なる18種エンティティの対処法を学び生き延びろ。
+      光・音・視線・接近の4軸で異なる19種エンティティの対処法を学び生き延びろ。
     </p>
 
     <div id="url-join-banner">
@@ -1202,7 +1289,7 @@
       <div class="rec-box"><div class="rec-val col" id="best-collapse">0</div><div class="rec-lbl">崩壊 最高深度</div></div>
       <div class="rec-box"><div class="rec-val day" id="best-daily">0</div><div class="rec-lbl">本日シード深度</div></div>
       <div class="rec-box"><div class="rec-val" id="best-levels">0 / 20</div><div class="rec-lbl">解放レベル</div></div>
-      <div class="rec-box"><div class="rec-val" id="best-codex">0 / 18</div><div class="rec-lbl">エンティティ図鑑</div></div>
+      <div class="rec-box"><div class="rec-val" id="best-codex">0 / 19</div><div class="rec-lbl">エンティティ図鑑</div></div>
       <div class="rec-box"><div class="rec-val" id="best-logs">0 / 16</div><div class="rec-lbl">M.E.G.記録</div></div>
       <div class="rec-box"><div class="rec-val" id="best-samples">0</div><div class="rec-lbl">確定サンプル累計</div></div>
       <div class="rec-box"><div class="rec-val" id="best-ach">0 / 10</div><div class="rec-lbl">実績達成</div></div>
@@ -1211,7 +1298,7 @@
     <div id="model-load-status" style="font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;min-height:14px;"></div>
 
     <div class="credits-bar">
-      <span id="credits-ver">Like Homes // V9.0.0</span>
+      <span id="credits-ver">Like Homes // V9.2.0</span>
       <span>CREDITS: LIKE HOMES PROJECT (THREE.JS / PEERJS)</span>
     </div>
   </div>
@@ -1253,7 +1340,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V9.1.0';
+const VERSION = 'V9.2.0';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -1516,13 +1603,55 @@ const ENTITY_META = {
     id: 'straggler', name: 'はぐれ狙い（MP専用）', danger: '危険 / 孤立標的型(MP)', color: '#2c384a', axis: '接近', mpOnly: true,
     desc: 'マルチプレイ専用の細長い暗色人型。その瞬間に仲間から最も離れて孤立しているプレイヤー1人だけを執拗に狙う。',
     counter: '仲間と合流して距離を縮めれば標的から外れる。分岐層や重量サンプル運搬時の孤立に警戒せよ。'
+  },
+  amicus: {
+    id: 'amicus', name: 'アミークス・フェイクヒューマン', danger: '友好的 / 案内・囮型', color: '#78e6b8', axis: 'なし',
+    desc: '人型を模した極めて珍しい友好的な存在。感知軸も攻撃力も持たず、近づくと物資を1つ手渡した後に寄り添って出口付近まで案内してくれる。敵対存在に追われている際は自ら囮となって注意を引き付け、役目を終えると霧散して消える。',
+    counter: '攻撃は一切してこない。安心して近づいて贈り物を受け取り、案内に従うか危機時の身代わりを活かして脱出せよ。'
   }
 };
 const ENTITY_ORDER = [
   'bacteria','mycelium','smiler','mannequin','hound','partygoer',
   'skinstealer','deathmoth','faceling','clump','watch','imagination_diver',
-  'scarecrow','deathrat','tvhead','snail','mimic','straggler'
+  'scarecrow','deathrat','tvhead','snail','mimic','straggler','amicus'
 ];
+
+// V9.2.0 C-2 Weighted Entity Spawn Probabilities (White Model lower per lore; adjustable per floor!)
+const ENTITY_WEIGHTS = {
+  bacteria: 1.0,
+  hound: 1.0,
+  faceling: 0.95,
+  deathmoth: 0.90,
+  clump: 0.90,
+  smiler: 0.85,
+  deathrat: 0.85,
+  skinstealer: 0.78,
+  tvhead: 0.75,
+  mycelium: 0.72,
+  scarecrow: 0.65,
+  mannequin: 0.42,
+  mimic: 0.70,
+  straggler: 0.75
+};
+function pickWeightedEntity(pool, levelWeights = null, rngFn = Math.random) {
+  if (!pool || pool.length === 0) return null;
+  let total = 0;
+  const weights = pool.map(k => {
+    const w = (levelWeights && typeof levelWeights[k] === 'number')
+      ? levelWeights[k]
+      : (typeof ENTITY_WEIGHTS[k] === 'number' ? ENTITY_WEIGHTS[k] : 1.0);
+    const safeW = Math.max(0.01, w);
+    total += safeW;
+    return safeW;
+  });
+  let r = rngFn() * total;
+  for (let i = 0; i < pool.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return pool[i];
+  }
+  return pool[pool.length - 1];
+}
+window.pickWeightedEntity = pickWeightedEntity;
 
 // V8 MP Design §7: Player Skin Customization (FORBIDDEN: pure black / pure white / pure skin-tone!)
 const SKIN_SUITS = [
@@ -1852,14 +1981,19 @@ class SoundEngine {
   playNoclipFall() { this.playTone(240, 0.9, 'sawtooth', 0.22, 34); this.playStaticBurst(0.45, 0.2); }
   playAch() { this.playTone(523, 0.14, 'triangle', 0.14); setTimeout(() => this.playTone(659, 0.16, 'triangle', 0.14), 100); setTimeout(() => this.playTone(784, 0.28, 'sine', 0.15), 210); }
   playHurt() { this.playTone(135, 0.24, 'sawtooth', 0.28, 48); this.playStaticBurst(0.18, 0.2); }
-  playCeramicScrape(vol = 0.11) {
+  playCeramicScrape(vol = 0.14, pan = 0, dist = 0) {
     if (!this.ctx || !this.noiseBuf) return;
     const t = this.ctx.currentTime, s = this.ctx.createBufferSource(); s.buffer = this.noiseBuf;
     const f = this.ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(2200, t);
     f.frequency.linearRampToValueAtTime(3400, t + 0.18); f.Q.value = 7.5;
+    const lp = this.ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(this.getDistanceCutoff(dist), t);
+    const atten = dist > 2.0 ? Math.max(0.18, 1 - (dist - 2.0) / 24) : 1.0;
     const g = this.ctx.createGain(); g.gain.setValueAtTime(0.001, t);
-    g.gain.linearRampToValueAtTime(vol, t + 0.03); g.gain.exponentialRampToValueAtTime(0.001, t + 0.24);
-    s.connect(f); f.connect(g); g.connect(this.master); s.start(t, Math.random(), 0.28);
+    g.gain.linearRampToValueAtTime(vol * atten, t + 0.03); g.gain.exponentialRampToValueAtTime(0.001, t + 0.24);
+    const p = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+    if (p) { p.pan.value = Math.max(-1, Math.min(1, pan)); s.connect(f); f.connect(lp); lp.connect(g); g.connect(p); p.connect(this.master); }
+    else { s.connect(f); f.connect(lp); lp.connect(g); g.connect(this.master); }
+    s.start(t, Math.random(), 0.28);
   }
   playClumpCreak(vol = 0.14) { this.playTone(68 + Math.random()*18, 0.38, 'sawtooth', vol*0.6, 42); this.playTone(112, 0.28, 'triangle', vol*0.45, 72); }
   playStakeoutBreath(vol = 0.14) {
@@ -1884,23 +2018,23 @@ class SoundEngine {
     const g = this.ctx.createGain(); g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(vol, t + 0.04);
     g.gain.exponentialRampToValueAtTime(0.001, t + 0.32); s.connect(f); f.connect(g); g.connect(this.master); s.start(t, Math.random(), 0.36);
   }
-  // V9 §2-2 Distance-based lowpass cutoff (near: crisp 14kHz, far: muffled 520Hz)
+  // V9.2.0 C-1 Distance-based lowpass cutoff: 2m = full open (16000Hz), 18m = ~800Hz, clamped >= 420Hz
   getDistanceCutoff(dist = 0) {
-    if (!dist || dist <= 2.2) return 14000;
-    const t = Math.max(0, Math.min(1, (dist - 2.2) / 26));
-    return Math.round(14000 * Math.pow(520 / 14000, t));
+    if (!dist || dist <= 2.0) return 16000;
+    const t = Math.max(0, (dist - 2.0) / 16.0);
+    return Math.max(420, Math.round(16000 * Math.pow(800 / 16000, t)));
   }
   playTonePan(freq, dur, type = 'sine', vol = 0.14, freqEnd = null, pan = 0, dist = 0) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime, o = this.ctx.createOscillator(), g = this.ctx.createGain();
     o.type = type; o.frequency.setValueAtTime(freq, t);
     if (freqEnd) o.frequency.exponentialRampToValueAtTime(Math.max(20, freqEnd), t + dur);
-    const atten = dist > 2.2 ? Math.max(0.22, 1 - (dist - 2.2) / 34) : 1.0;
+    const atten = dist > 2.0 ? Math.max(0.20, 1 - (dist - 2.0) / 30) : 1.0;
     const finalVol = Math.max(0.002, vol * atten);
     g.gain.setValueAtTime(0.001, t); g.gain.linearRampToValueAtTime(finalVol, t + Math.min(0.02, dur*0.25));
     g.gain.exponentialRampToValueAtTime(0.001, t + dur);
     let node = o;
-    if (dist > 2.2) {
+    if (dist > 2.0) {
       const lp = this.ctx.createBiquadFilter(); lp.type = 'lowpass';
       lp.frequency.setValueAtTime(this.getDistanceCutoff(dist), t);
       node.connect(lp); node = lp;
@@ -1933,6 +2067,31 @@ class SoundEngine {
   playSnailBell(pan = 0, vol = 0.12, dist = 0) {
     this.playTonePan(1480, 0.55, 'sine', vol, 1460, pan, dist);
     this.playTonePan(2960, 0.32, 'triangle', vol*0.45, 2940, pan, dist);
+  }
+  // V9.2.0 C-5 Wet squelchy crawling proximity sound for Yellow Snail (scales with distance + lowpass)
+  playSnailSlime(vol = 0.16, pan = 0, dist = 6) {
+    if (!this.ctx || !this.noiseBuf) return;
+    const t = this.ctx.currentTime, s = this.ctx.createBufferSource(); s.buffer = this.noiseBuf;
+    const bp = this.ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 4.2;
+    bp.frequency.setValueAtTime(340, t);
+    bp.frequency.linearRampToValueAtTime(920, t + 0.16);
+    bp.frequency.linearRampToValueAtTime(280, t + 0.38);
+    const lp = this.ctx.createBiquadFilter(); lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(this.getDistanceCutoff(dist), t);
+    const g = this.ctx.createGain();
+    g.gain.setValueAtTime(0.001, t);
+    g.gain.linearRampToValueAtTime(Math.max(0.003, vol), t + 0.08);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.42);
+    const p = this.ctx.createStereoPanner ? this.ctx.createStereoPanner() : null;
+    if (p) { p.pan.value = Math.max(-1, Math.min(1, pan)); s.connect(bp); bp.connect(lp); lp.connect(g); g.connect(p); p.connect(this.master); }
+    else { s.connect(bp); bp.connect(lp); lp.connect(g); g.connect(this.master); }
+    s.start(t, Math.random(), 0.44);
+    this.playTonePan(210 + Math.random() * 70, 0.22, 'sine', vol * 0.42, 420, pan, dist);
+  }
+  // V9.2.0 E-2 Control panel noisy electrical recovery channel pulse
+  playChannelHum(progress = 0.5) {
+    this.playTone(130 + progress * 240, 0.24, 'sawtooth', 0.14, 155 + progress * 290);
+    this.playSpark(0.11);
   }
   playTvLock(progress = 0.5, pan = 0, dist = 0) {
     this.playTonePan(340 + progress * 980, 0.12, 'sawtooth', 0.06 + progress * 0.09, 360 + progress * 1040, pan, dist);
@@ -2651,7 +2810,7 @@ const LEVELS = [
     sound: 'pipes', surface: 'concrete', hazard: 'steam', entities: ['smiler', 'bacteria', 'mycelium', 'clump', 'deathrat'],
     wallTex: 'concrete', floorTex: 'concrete_floor', ceilTex: 'concrete',
     edges: { noclip: 3, door: [3, 19], stairs: [3, 10, 19], elevator: [4, 5, 16] },
-    task: { type: 'fuse', target: 2, label: 'ヒューズ2個回収または制御盤復旧で出口電源を入れろ' }
+    task: { type: 'fuse', target: 2, label: 'ヒューズ2個を回収して出口電源を入れろ（制御盤代替不可）' }
   },
   {
     id: 3, code: 'LEVEL 3', name: 'Electrical Station', sub: 'レンガ壁と高圧変電設備の工業区画',
@@ -2661,7 +2820,7 @@ const LEVELS = [
     sound: 'electric', surface: 'metal', hazard: 'electric', entities: ['smiler', 'bacteria', 'mycelium', 'clump', 'deathmoth'],
     wallTex: 'brick', floorTex: 'concrete_floor', ceilTex: 'concrete',
     edges: { noclip: 4, door: [4, 5, 19], stairs: [5, 8, 18], elevator: [4, 13, 17] },
-    task: { type: 'breaker', target: 2, label: '壁面配電盤2箇所を復旧し出口ロックを解除せよ' }
+    task: { type: 'breaker', target: 2, label: '壁面配電盤2箇所を長押し復旧し出口ロックを解除せよ' }
   },
   {
     id: 4, code: 'LEVEL 4', name: 'Abandoned Office', sub: '終わらない灰色の雨が降る無人オフィス',
@@ -2671,7 +2830,7 @@ const LEVELS = [
     sound: 'rain', surface: 'carpet', hazard: 'none', entities: ['mannequin', 'faceling', 'skinstealer'],
     wallTex: 'l4_wall', floorTex: 'concrete_floor', ceilTex: 'ceil_tile',
     edges: { noclip: 5, door: [5, 6, 17], stairs: [5, 11, 16], elevator: [12, 13, 18] },
-    task: { type: 'power', target: 1, label: 'オフィス壁面制御盤でセキュリティ電源を復旧せよ' }
+    task: { type: 'breaker', target: 2, label: 'オフィス壁面配電盤2箇所を復旧しセキュリティ電源を入れろ' }
   },
   {
     id: 5, code: 'LEVEL 5', name: 'Terror Hotel', sub: '1930年代風の無限アンティークホテル',
@@ -2681,7 +2840,7 @@ const LEVELS = [
     sound: 'hotel', surface: 'carpet', hazard: 'sanity', entities: ['mannequin', 'deathmoth', 'skinstealer', 'smiler'],
     wallTex: 'hotel_wall', floorTex: 'hotel_carpet', ceilTex: 'wood_panel',
     edges: { noclip: 6, door: [6, 7, 17], stairs: [7, 11, 16], elevator: [9, 13, 19] },
-    task: { type: 'power', target: 1, label: '壁面制御盤で非常電源を復旧し出口を解錠せよ' }
+    task: { type: 'fuse', target: 2, label: 'ホテル内の電源ヒューズ2個を回収して非常出口を解錠せよ' }
   },
   {
     id: 6, code: 'LEVEL 37', name: 'Sublimity (Poolrooms)', sub: '反響する白タイルの無限水没プール空間（休息領域）',
@@ -2691,7 +2850,7 @@ const LEVELS = [
     sound: 'pool', surface: 'water', hazard: 'none', entities: ['mannequin'],
     wallTex: 'pool_tile', wallBump: 'pool_tile_bump', floorTex: 'pool_tile', ceilTex: 'pool_tile',
     edges: { noclip: 16, door: [4, 11, 16], stairs: [12, 13, 17], elevator: [14, 15, 18] },
-    task: { type: 'power', target: 1, label: '壁面ポンプ制御盤を復旧し排水口の出口を解錠せよ' }
+    task: { type: 'power', target: 1, label: '離れた壁面ポンプ制御盤を長押し復旧し出口を解錠せよ' }
   },
   {
     id: 7, code: 'LEVEL 9', name: 'The Suburbs', sub: '街灯だけが灯る永遠の深夜住宅街（入れる家・隠れ車あり）',
@@ -2701,7 +2860,7 @@ const LEVELS = [
     sound: 'night', surface: 'concrete', hazard: 'sanity', entities: ['hound', 'smiler', 'skinstealer', 'mannequin', 'watch'],
     wallTex: 'siding_0', floorTex: 'asphalt', ceilTex: null,
     edges: { noclip: 12, door: [12, 15, 18], stairs: [12, 8, 17], elevator: [10, 14, 19] },
-    task: { type: 'power', target: 1, label: '監視光に隠れつつ出口付近の壁面制御盤を復旧せよ' }
+    task: { type: 'breaker', target: 2, label: '監視光に隠れつつ壁面配電盤2箇所を復旧せよ' }
   },
   {
     id: 8, code: 'LEVEL 22', name: 'Infinite Parking Garage', sub: '誰も乗らない車が並ぶ薄暗い地下駐車場',
@@ -2711,7 +2870,7 @@ const LEVELS = [
     sound: 'garage', surface: 'concrete', hazard: 'none', entities: ['smiler', 'hound', 'clump', 'bacteria'],
     wallTex: 'concrete', floorTex: 'parking_floor', ceilTex: 'concrete',
     edges: { noclip: 18, door: [7, 12, 18], stairs: [13, 10, 19], elevator: [12, 14, 16] },
-    task: { type: 'fuse', target: 2, label: 'ヒューズ2個または制御盤復旧で駐車場出口を解錠せよ' }
+    task: { type: 'fuse', target: 2, label: '駐車場の電源ヒューズ2個を回収して出口を解錠せよ' }
   },
   {
     id: 9, code: 'THE END', name: 'The End Library', sub: '無限の本棚と古い端末が並ぶ静寂の図書館',
@@ -2721,7 +2880,7 @@ const LEVELS = [
     sound: 'library', surface: 'wood', hazard: 'sanity', entities: ['mannequin', 'faceling'],
     wallTex: 'wood_panel', floorTex: 'hotel_carpet', ceilTex: 'wood_panel',
     edges: { noclip: 17, door: [14, 11, 17], stairs: [15, 10, 16], elevator: [14, 12, 18] },
-    task: { type: 'breaker', target: 1, label: '壁面端末制御盤を起動し出口を解錠せよ' }
+    task: { type: 'breaker', target: 2, label: '図書館の壁面配電盤2箇所を復旧し出口を解錠せよ' }
   },
   {
     id: 10, code: 'LEVEL !', name: 'Run For Your Life', sub: '赤い非常警報とクロカビ群が迫る病院回廊（止まるな！）',
@@ -2741,17 +2900,17 @@ const LEVELS = [
     sound: 'warehouse', surface: 'tile', hazard: 'none', entities: ['mannequin', 'deathmoth', 'faceling'],
     wallTex: 'facade_188', floorTex: 'hosp_floor', ceilTex: null,
     edges: { noclip: 13, door: [13, 15, 16], stairs: [12, 9, 17], elevator: [14, 15, 18] },
-    task: { type: 'power', target: 1, label: '中庭の壁面制御盤で出口シャッター電源を復旧せよ' }
+    task: { type: 'fuse', target: 2, label: '中庭で電源ヒューズ2個を回収してシャッターを解錠せよ' }
   },
   {
     id: 12, code: 'LEVEL 11', name: '無限都市 (The Endless City)', sub: '夜の市街地 — コンビニと書店の中に入れる',
     arch: 'endless_city', ceilH: 14.0, hasCeil: false, waterY: null,
     fogColor: 0x070b14, fogDensity: 0.038, ambColor: 0x242e42, ambInt: 0.18,
     lightColor: 0xffe4aa, lightInt: 2.4, lightDist: 21,
-    sound: 'city', surface: 'concrete', hazard: 'none', entities: ['hound', 'faceling', 'skinstealer', 'bacteria', 'watch', 'scarecrow'],
+    sound: 'city', surface: 'concrete', hazard: 'none', entities: ['hound', 'faceling', 'skinstealer', 'watch', 'scarecrow'],
     wallTex: 'city_tower', floorTex: 'asphalt', ceilTex: null,
     edges: { noclip: 13, door: [13, 14, 18], stairs: [15, 9, 17], elevator: [14, 11, 19] },
-    task: { type: 'power', target: 1, label: '店舗や車に隠れつつ壁面制御盤で出口を解錠せよ' }
+    task: { type: 'breaker', target: 2, label: '店舗や車に隠れつつ壁面配電盤2箇所を復旧せよ' }
   },
   {
     id: 13, code: 'LEVEL 33', name: '無限モール (The Infinite Mall)', sub: 'シャッター街・フードコート・パーティ会場あり',
@@ -2761,7 +2920,7 @@ const LEVELS = [
     sound: 'mall', surface: 'tile', hazard: 'none', entities: ['deathmoth', 'faceling', 'mannequin', 'tvhead'],
     wallTex: 'mall_wall', floorTex: 'mall_tile', ceilTex: 'ceil_tile',
     edges: { noclip: 14, door: [14, 12, 16], stairs: [15, 10, 18], elevator: [14, 9, 19] },
-    task: { type: 'breaker', target: 2, label: 'モール壁面制御盤2箇所を復旧し出口を解錠せよ' }
+    task: { type: 'breaker', target: 2, label: 'モール壁面配電盤2箇所を復旧し出口を解錠せよ' }
   },
   {
     id: 14, code: 'LEVEL 3999', name: 'ネオンパラダイス (Neon Paradise)', sub: '筐体の列とネオン管が明滅する無限アーケード',
@@ -2771,7 +2930,7 @@ const LEVELS = [
     sound: 'arcade', surface: 'carpet', hazard: 'none', entities: ['deathmoth', 'faceling', 'smiler', 'tvhead'],
     wallTex: 'arcade_wall', floorTex: 'arcade_carpet', ceilTex: 'concrete',
     edges: { noclip: 15, door: [12, 15, 17], stairs: [9, 6, 16], elevator: [11, 13, 18] },
-    task: { type: 'fuse', target: 2, label: '筐体ヒューズ2個または制御盤復旧で脱出口を起動せよ' }
+    task: { type: 'fuse', target: 2, label: '筐体ヒューズ2個を回収して脱出口を起動せよ' }
   },
   {
     id: 15, code: 'LEVEL 94', name: 'モーション (Motion)', sub: '昼の郊外住宅地 — 同じ形の家と動くカーテンの影',
@@ -2781,7 +2940,7 @@ const LEVELS = [
     sound: 'motion', surface: 'concrete', hazard: 'none', entities: ['mannequin', 'faceling', 'hound', 'skinstealer', 'scarecrow'],
     wallTex: 'siding_4', floorTex: 'asphalt', ceilTex: null,
     edges: { noclip: 9, door: [12, 9, 17], stairs: [14, 10, 18], elevator: [6, 11, 19] },
-    task: { type: 'power', target: 1, label: '住宅街の壁面制御盤を復旧し出口を解錠せよ' }
+    task: { type: 'fuse', target: 2, label: '住宅街で電源ヒューズ2個を回収して出口を解錠せよ' }
   },
   // V8 §5 Four New Archetypes (IDs 16..19)
   {
@@ -2789,10 +2948,10 @@ const LEVELS = [
     arch: 'pool_layer', ceilH: 5.0, hasCeil: true, waterY: 0.28,
     fogColor: 0x456b78, fogDensity: 0.042, ambColor: 0x82b4c2, ambInt: 0.34,
     lightColor: 0xdffbff, lightInt: 1.8, lightDist: 18,
-    sound: 'pool', surface: 'water', hazard: 'none', entities: ['imagination_diver', 'hound', 'clump', 'mannequin'],
+    sound: 'pool', surface: 'water', hazard: 'none', entities: ['hound', 'clump', 'mannequin'],
     wallTex: 'pool_tile', wallBump: 'pool_tile_bump', floorTex: 'pool_tile', ceilTex: 'pool_tile',
     edges: { noclip: 17, door: [6, 17, 13], stairs: [18, 19, 12], elevator: [14, 15, 11] },
-    task: { type: 'power', target: 1, label: '水場を進み壁面ポンプ制御盤を復旧して出口を開けろ' }
+    task: { type: 'breaker', target: 2, label: '水場を進み壁面ポンプ配電盤2箇所を復旧して出口を開けろ' }
   },
   {
     id: 17, code: 'LEVEL 906', name: '図書層 (Silent Stacks)', sub: '静粛の書架迷宮 — 物音が増幅される。しゃがみ移動と静止で進め',
@@ -2802,7 +2961,7 @@ const LEVELS = [
     sound: 'library', surface: 'wood', hazard: 'sanity', entities: ['hound', 'clump', 'faceling', 'mannequin'],
     wallTex: 'wood_panel', floorTex: 'hotel_carpet', ceilTex: 'wood_panel',
     edges: { noclip: 18, door: [9, 18, 4], stairs: [19, 16, 12], elevator: [13, 14, 15] },
-    task: { type: 'power', target: 1, label: '静粛を保ち壁面制御盤を復旧して出口を解錠せよ' }
+    task: { type: 'fuse', target: 2, label: '静粛を保ち電源ヒューズ2個を回収して出口を解錠せよ' }
   },
   {
     id: 18, code: 'LEVEL 22-B', name: '駐車層 (Open Deck)', sub: '暗く開けた巨大駐車デッキ — 柱と車両で監視光と視線を遮れ',
@@ -2812,7 +2971,7 @@ const LEVELS = [
     sound: 'garage', surface: 'concrete', hazard: 'none', entities: ['watch', 'mannequin', 'scarecrow', 'smiler'],
     wallTex: 'concrete', floorTex: 'parking_floor', ceilTex: 'concrete',
     edges: { noclip: 19, door: [8, 19, 12], stairs: [16, 17, 13], elevator: [14, 15, 7] },
-    task: { type: 'power', target: 1, label: '柱と車両で視線を切りつつ壁面制御盤を復旧せよ' }
+    task: { type: 'breaker', target: 2, label: '柱と車両で視線を切りつつ壁面配電盤2箇所を復旧せよ' }
   },
   {
     id: 19, code: 'LEVEL 2-B', name: 'ボイラー層 (Steam Works)', sub: '配管と間欠蒸気 — 複数の壁面制御盤を復旧すれば蒸気が止まる',
@@ -3806,13 +3965,14 @@ const PropFactory = {
     scarecrow:   { file: 'スケアクロウ.glb', scale: 1.95, radius: 0.48 },
     deathrat:    { file: 'デスラット.glb', scale: 0.48, radius: 0.52 },
     tvhead:      { file: 'TVヘッド.glb', scale: 1.85, radius: 0.45 },
-    snail:       { file: '黄色いカタツムリ.glb', scale: 0.55, radius: 0.42 }
+    snail:       { file: '黄色いカタツムリ.glb', scale: 0.55, radius: 0.42 },
+    amicus:      { file: 'アミークス・フェイクヒューマン GLB.glb', scale: 1.85, radius: 0.45 }
   },
   // V7.2 §1 Centralized per-entity YAW correction: default +90 degrees!
   MODEL_YAW: {
     bacteria: 90, smiler: 90, mannequin: 90, hound: 90, deathmoth: 90,
     skinstealer: 90, faceling: 90, partygoer: 90, clump: 90, watch: 90,
-    scarecrow: 90, deathrat: 90, tvhead: 90, snail: 90
+    scarecrow: 90, deathrat: 90, tvhead: 90, snail: 90, amicus: 90
   },
   // V7.2 §3 Official Tint Table (applied ONLY via cloned material.color.multiply, keeping vertexColors!)
   MODEL_TINT: {
@@ -3832,7 +3992,8 @@ const PropFactory = {
     deathrat:    '#5a5a5a',
     tvhead:      '#7a7a85',
     snail:       '#e8d84a',
-    straggler:   '#2c384a'
+    straggler:   '#2c384a',
+    amicus:      '#ece6dc'
   },
   glbCache: {},
   glbFailed: {},
@@ -3867,70 +4028,6 @@ const PropFactory = {
         }
       );
     }
-  },
-  // V9.1 Everyday GLB Library props (tanuki276/glb, real-world meter scale, CDN-loaded)
-  propBase: './props/',
-  propSpecs: {
-    chair:           { path: 'furniture/chair.glb',           col: 0.25 },
-    desk:            { path: 'furniture/desk.glb',            col: 0.65 },
-    dining_table:    { path: 'furniture/dining_table.glb',    col: 0.75 },
-    sofa:            { path: 'furniture/sofa.glb',            col: 0.95 },
-    armchair:        { path: 'furniture/armchair.glb',        col: 0.52 },
-    bookshelf:       { path: 'furniture/bookshelf.glb',       col: 0.64 },
-    wardrobe:        { path: 'furniture/wardrobe.glb',        col: 0.64 },
-    bed:             { path: 'furniture/bed.glb',             col: 1.00 },
-    floor_lamp:      { path: 'furniture/floor_lamp.glb',      col: 0.35 },
-    refrigerator:    { path: 'furniture/refrigerator.glb',    col: 0.37 },
-    washing_machine: { path: 'furniture/washing_machine.glb', col: 0.33 },
-    tv_stand:        { path: 'furniture/tv_stand.glb',        col: 0.70 },
-    cardboard_box:   { path: 'props/cardboard_box.glb',       col: 0.30 },
-    wood_crate:      { path: 'props/wood_crate.glb',          col: 0.32 },
-    barrel:          { path: 'props/barrel.glb',              col: 0.35 },
-    bucket:          { path: 'props/bucket.glb',              col: 0.22 },
-    book_stack:      { path: 'props/book_stack.glb',          col: 0 },
-    suitcase:        { path: 'props/suitcase.glb',            col: 0.25 },
-    ladder:          { path: 'props/ladder.glb',              col: 0.28 },
-    potted_plant:    { path: 'props/potted_plant.glb',        col: 0.44 },
-    flower_pot:      { path: 'props/flower_pot.glb',          col: 0.34 },
-    vending_machine: { path: 'street/vending_machine.glb',    col: 0.45 },
-    bench:           { path: 'street/bench.glb',              col: 0.90 },
-    trash_bin:       { path: 'street/trash_bin.glb',          col: 0.34 },
-    traffic_cone:    { path: 'street/traffic_cone.glb',       col: 0.21 },
-    street_lamp:     { path: 'street/street_lamp.glb',        col: 0.20 },
-    post_box:        { path: 'street/post_box.glb',           col: 0.28 },
-    exit_sign:       { path: 'signs/exit.glb',                col: 0.30 },
-    notice_board:    { path: 'signs/notice_board.glb',        col: 0.90 }
-  },
-  propCache: {},
-  propFailed: {},
-  preloadPropModels() {
-    if (typeof THREE === 'undefined' || typeof THREE.GLTFLoader !== 'function') return;
-    const loader = new THREE.GLTFLoader();
-    for (const id of Object.keys(this.propSpecs)) {
-      loader.load(
-        this.propBase + this.propSpecs[id].path,
-        (gltf) => { this.propCache[id] = gltf.scene; },
-        undefined,
-        () => { this.propFailed[id] = true; }
-      );
-    }
-  },
-  buildProp(id) {
-    const tmpl = this.propCache[id];
-    if (!tmpl || this.propFailed[id]) return null;
-    const clone = tmpl.clone(true);
-    clone.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(clone);
-    if (!box.isEmpty()) {
-      const center = new THREE.Vector3();
-      box.getCenter(center);
-      clone.position.x -= center.x;
-      clone.position.z -= center.z;
-      clone.position.y -= box.min.y;
-    }
-    const wrap = new THREE.Group();
-    wrap.add(clone);
-    return wrap;
   },
   // V7.2 §3 Material clone + tint multiply (preserves vertexColors, ZERO white overwrite!)
   applyGlbTint(rootObj, tintHex) {
@@ -4277,6 +4374,19 @@ const PropFactory = {
       addPart(g, Geo.cyl8, bodyMat, 0.024, 0.22, 0.024, -0.07, 0.24, 0.32, 0.35, 0, 0.2);
       addPart(g, Geo.cyl8, bodyMat, 0.024, 0.22, 0.024, 0.07, 0.24, 0.32, 0.35, 0, -0.2);
       g.userData = {};
+    } else if (kind === 'amicus') {
+      // V9.2.0 H-1 Procedural fallback for Amicus Fake Human (friendly pale humanoid with warm mint aura)
+      const coatMat = getMat('ent_amicus_coat', { color: 0xe6dfd2, roughness: 0.78 });
+      const trimMat = getMat('ent_amicus_trim', { color: 0x62d8a8, emissive: 0x2e9c74, emissiveIntensity: 0.65, roughness: 0.45 });
+      const headMat = getMat('ent_amicus_head', { color: 0xf2ece2, roughness: 0.62 });
+      addPart(g, Geo.box1, coatMat, 0.42, 0.72, 0.24, 0, 1.18, 0);
+      addPart(g, Geo.box1, trimMat, 0.45, 0.11, 0.27, 0, 1.48, 0);
+      addPart(g, Geo.sphere, headMat, 0.17, 0.21, 0.17, 0, 1.72, 0);
+      const lArm = this.buildJointedLimb(coatMat, 0.065, 0.62, 0.065); lArm.position.set(-0.26, 1.46, 0); g.add(lArm);
+      const rArm = this.buildJointedLimb(coatMat, 0.065, 0.62, 0.065); rArm.position.set( 0.26, 1.46, 0); g.add(rArm);
+      const lLeg = this.buildJointedLimb(coatMat, 0.075, 0.80, 0.075); lLeg.position.set(-0.12, 0.82, 0); g.add(lLeg);
+      const rLeg = this.buildJointedLimb(coatMat, 0.075, 0.80, 0.075); rLeg.position.set( 0.12, 0.82, 0); g.add(rLeg);
+      g.userData = { lArm, rArm, lLeg, rLeg };
     } else {
       // Clump (テアシ): purple writhing limb mass
       const mat = getMat('ent_clump_v8', { color: 0x6a5a8a, roughness: 0.94 });
@@ -4385,22 +4495,19 @@ function applyPerfSettings() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   // V9 §2-5 Toggle shadows & reflections in lightweight graphics mode (fog & gameplay visibility stay identical!)
   renderer.shadowMap.enabled = !low;
-  // NOTE: on the initial call below, flashlight/scene/playerShadow/dustPoints are still
-  // uninitialized consts (TDZ) — typeof guards throw on those, so guard with try/catch.
-  // Later calls (settings change) run after full init and apply everything.
   try {
-    flashlight.castShadow = false; // keep lightweight shadow map clean
-    if (playerShadow) playerShadow.visible = !low && !state.hide.active;
-    if (dustPoints) dustPoints.visible = !low;
-    if (typeof MatCache !== 'undefined') {
-      for (const k in MatCache) applyMaterialPerf(MatCache[k], low);
-    }
-    if (scene) {
-      scene.traverse((obj) => {
-        if (obj.isMesh && obj.material) applyMaterialPerf(obj.material, low);
-      });
-    }
-  } catch (_) { /* not yet initialized on first call; re-applied on settings change */ }
+  if (typeof flashlight !== 'undefined') flashlight.castShadow = false; // keep lightweight shadow map clean
+  if (typeof playerShadow !== 'undefined' && playerShadow) playerShadow.visible = !low && !state.hide.active;
+  if (typeof dustPoints !== 'undefined' && dustPoints) dustPoints.visible = !low;
+  if (typeof MatCache !== 'undefined') {
+    for (const k in MatCache) applyMaterialPerf(MatCache[k], low);
+  }
+  if (typeof scene !== 'undefined' && scene) {
+    scene.traverse((obj) => {
+      if (obj.isMesh && obj.material) applyMaterialPerf(obj.material, low);
+    });
+  }
+  } catch (e) { /* TDZ guard: flashlight/scene not yet initialized on first call */ }
 }
 applyPerfSettings();
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -4484,7 +4591,8 @@ const CHUNK_SIZE = 16, RENDER_RADIUS = 2, STAND_EYE = 1.66, CROUCH_EYE = 1.04, P
 const LOCKPICK_MAX = 5;
 
 const state = {
-  playing: false, paused: false, noteOpen: false, settingsOpen: false, codexOpen: false, mpModalOpen: false,
+  playing: false, paused: false, noteOpen: false, settingsOpen: false, codexOpen: false, bagOpen: false, mpModalOpen: false,
+  channelAction: null, amicusDecoyUsed: false,
   horrorMode: true, isDailyRun: false, infiniteAfterEscape: false,
   seed: 123456, levelIdx: 0, depth: 1,
   pos: new THREE.Vector3(0, STAND_EYE, 0),
@@ -4750,46 +4858,6 @@ function tryPlaceRandomProp(chunk, rng, wx, wz, spreadX, spreadZ, clearanceR, co
   }
   return null;
 }
-// V9.1 Everyday GLB Library scatter: real-scale props from tanuki276/glb, per-archetype pools.
-// Runs at the end of buildChunk (after exits/panels), so every collider already exists and
-// tryPlaceRandomProp keeps props out of walls, doors and the exit. Unloaded models are skipped.
-const LIB_PROP_POOLS = {
-  office_maze:     ['desk', 'chair', 'bookshelf', 'floor_lamp', 'cardboard_box', 'wood_crate', 'suitcase'],
-  glass_office:    ['desk', 'chair', 'bookshelf', 'floor_lamp', 'cardboard_box', 'wood_crate', 'suitcase'],
-  warehouse_halls: ['barrel', 'wood_crate', 'cardboard_box', 'bucket', 'ladder', 'trash_bin'],
-  boiler_layer:    ['barrel', 'wood_crate', 'cardboard_box', 'bucket', 'ladder', 'trash_bin'],
-  brick_station:   ['barrel', 'wood_crate', 'cardboard_box', 'bucket', 'ladder', 'trash_bin'],
-  pipe_corridor:   ['barrel', 'wood_crate', 'cardboard_box', 'bucket', 'ladder'],
-  hotel_corridor:  ['bookshelf', 'armchair', 'floor_lamp', 'book_stack', 'suitcase', 'wardrobe', 'bench'],
-  end_library:     ['bookshelf', 'armchair', 'floor_lamp', 'book_stack', 'suitcase', 'wardrobe', 'bench'],
-  library_layer:   ['bookshelf', 'armchair', 'floor_lamp', 'book_stack', 'suitcase', 'wardrobe', 'bench'],
-  infinite_mall:   ['vending_machine', 'bench', 'notice_board', 'exit_sign', 'trash_bin', 'potted_plant', 'flower_pot'],
-  neon_arcade:     ['vending_machine', 'bench', 'notice_board', 'exit_sign', 'trash_bin', 'potted_plant', 'flower_pot'],
-  parking_garage:  ['traffic_cone', 'barrel', 'wood_crate', 'cardboard_box', 'ladder', 'trash_bin'],
-  parking_layer:   ['traffic_cone', 'barrel', 'wood_crate', 'cardboard_box', 'ladder', 'trash_bin'],
-  pool_arches:     ['bench', 'traffic_cone', 'trash_bin', 'flower_pot', 'street_lamp'],
-  pool_layer:      ['bench', 'traffic_cone', 'trash_bin', 'flower_pot', 'street_lamp'],
-  suburbs_outdoor: ['bench', 'street_lamp', 'post_box', 'trash_bin', 'traffic_cone', 'potted_plant', 'flower_pot'],
-  motion_suburbs:  ['bench', 'street_lamp', 'post_box', 'trash_bin', 'traffic_cone', 'potted_plant', 'flower_pot'],
-  courtyard_188:   ['bench', 'street_lamp', 'post_box', 'trash_bin', 'traffic_cone', 'potted_plant', 'flower_pot'],
-  endless_city:    ['bench', 'street_lamp', 'post_box', 'trash_bin', 'traffic_cone', 'potted_plant', 'flower_pot'],
-  red_hospital:    ['bed', 'wardrobe', 'floor_lamp', 'trash_bin', 'bucket', 'chair'],
-  default:         ['desk', 'chair', 'sofa', 'bookshelf', 'floor_lamp', 'cardboard_box', 'wood_crate', 'book_stack', 'suitcase']
-};
-function scatterLibraryProps(chunk, rng, wx, wz, lv) {
-  if (chunk.hasExit) return;
-  if (rng() < 0.15) return;
-  const poolIds = LIB_PROP_POOLS[lv.arch] || LIB_PROP_POOLS.default;
-  const avail = poolIds.filter(id => PropFactory.propCache[id] && !PropFactory.propFailed[id]);
-  if (!avail.length) return;
-  const n = 2 + Math.floor(rng() * 3);
-  for (let i = 0; i < n; i++) {
-    const id = avail[Math.floor(rng() * avail.length)];
-    const spec = PropFactory.propSpecs[id];
-    tryPlaceRandomProp(chunk, rng, wx, wz, 12.5, 12.5, Math.max(0.5, spec.col + 0.2), spec.col, spec.col,
-      () => PropFactory.buildProp(id), { cardinal: true });
-  }
-}
 function addCeilingFixture(chunk, x, y, z, lv, isRed = false, rng = Math.random) {
   const M = PropFactory.mats, g = new THREE.Group();
   addPart(g, Geo.box1, M.darkMetal, 1.38, 0.08, 0.46, 0, 0, 0);
@@ -4827,8 +4895,9 @@ function buildEnterableHouse(chunk, wx, wz, rng, isDay) {
   const f1 = new THREE.Mesh(Geo.plane, floorW); f1.rotation.x = -Math.PI/2; f1.scale.set(W, D, 1); f1.position.set(wx, 0.05, wz); chunk.group.add(f1);
   createWallBox(chunk, floorW, wx - 1.4, H1 - 0.08, wz, W - 2.8, 0.16, D - 0.2, false);
   chunk.walkSurfaces.push({ minX: wx-W/2, maxX: wx+W/2-2.8, minZ: wz-D/2, maxZ: wz+D/2, y: H1 });
-  createWallBox(chunk, floorW, wx + W/2 - 1.4, H1 - 0.08, wz - D/2 + 1.4, 2.8, 0.16, 2.8, false);
-  chunk.walkSurfaces.push({ minX: wx+W/2-2.8, maxX: wx+W/2, minZ: wz-D/2, maxZ: wz-D/2+2.8, y: H1 });
+  // V9.2.0 G-1 Landing depth extended 2.8 -> 3.2 so it seamlessly meets the top stair (z = wz - 2.2) with zero fall gap!
+  createWallBox(chunk, floorW, wx + W/2 - 1.4, H1 - 0.08, wz - D/2 + 1.6, 2.8, 0.16, 3.2, false);
+  chunk.walkSurfaces.push({ minX: wx+W/2-2.8, maxX: wx+W/2, minZ: wz-D/2, maxZ: wz-D/2+3.2, y: H1 });
   const roofBaseY = H1+H2, ridgeH = 2.5, halfD = D/2+0.6, slopeLen = Math.hypot(halfD, ridgeH), slopeAng = Math.atan2(ridgeH, halfD);
   addPart(chunk.group, Geo.box1, M.shingleMat, W+1.2, 0.2, slopeLen+0.2, wx, roofBaseY+ridgeH/2, wz+halfD/2, slopeAng, 0, 0);
   addPart(chunk.group, Geo.box1, M.shingleMat, W+1.2, 0.2, slopeLen+0.2, wx, roofBaseY+ridgeH/2, wz-halfD/2, -slopeAng, 0, 0);
@@ -5375,23 +5444,57 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
     }
   }
 
-  // V8 §1 Task Items (Fuses + Wall-Mounted Control Panels for multi-breaker floors; NO floating breakers!)
+  // V9.2.0 E-1 Determine exit chunk up front so mandatory control panels NEVER spawn in exit chunks on floor 2+!
+  const distFromOrigin = Math.hypot(cx, cz);
+  let spawnExit = forceExit;
+  if (!spawnExit) {
+    if (lv.arch === 'red_hospital') { if (cx === 0 && (cz === -5 || cz === 5)) spawnExit = true; }
+    else if (lv.arch === 'branch_layer') { if (cx === 0 && cz === -2) spawnExit = true; }
+    else if (cx === 1 && cz === 1) spawnExit = true; // Guaranteed discoverable exit ~22m from spawn on ALL floors!
+    else if (distFromOrigin >= 2 && rng() < 0.16) spawnExit = true;
+  }
+
+  // V9.2.0 E-1 & E-3 Task Items (Fuses + Separated Wall-Mounted Control Panels; ZERO panel shortcut on fuse floors!)
   const taskType = lv.task.type;
-  if (!isSpawn && taskType === 'fuse' && rng() < 0.38) {
-    const fx = wx+(rng()-0.5)*9, fz = wz+(rng()-0.5)*9;
-    if (!pointCollides(chunk.colliders, fx, fz, 0.6)) {
-      addInteractable(chunk, PropFactory.fuseItem(), fx, (lv.waterY||0)+0.05, fz, 'fuse', '[E] 電源ヒューズを回収する');
-      chunk.lights.push({ x: fx, y: 0.7, z: fz, color: 0xffb24a });
+  const isFirstFloorL0 = (state.depth <= 1 && lv.id === 0);
+  if (taskType === 'fuse' && lv.arch !== 'red_hospital' && lv.arch !== 'branch_layer') {
+    const guaranteedFuse = ((cx === -1 && cz === 0) || (cx === 0 && cz === -1));
+    if (guaranteedFuse || (!isSpawn && rng() < 0.38)) {
+      let fx = wx + (rng()-0.5)*8, fz = wz + (rng()-0.5)*8;
+      if (pointCollides(chunk.colliders, fx, fz, 0.6)) { fx = wx; fz = wz; }
+      if (guaranteedFuse || !pointCollides(chunk.colliders, fx, fz, 0.6)) {
+        addInteractable(chunk, PropFactory.fuseItem(), fx, (lv.waterY||0)+0.05, fz, 'fuse', '[E] 電源ヒューズを回収する');
+        chunk.lights.push({ x: fx, y: 0.7, z: fz, color: 0xffb24a });
+      }
     }
   }
-  if (!isSpawn && taskType === 'breaker' && rng() < 0.42) {
-    const px = wx + (rng() < 0.5 ? -4.5 : 4.5), pz = wz + (rng()-0.5)*4;
-    if (!pointCollides(chunk.colliders, px, pz, 0.9)) {
-      // Mount control panel directly onto a grounded wall pillar (NEVER floating!)
-      createWallBox(chunk, wallMat, px, Math.min(H, 3.2)/2, pz - 0.35, 1.3, Math.min(H, 3.2), 0.5);
-      const panel = PropFactory.wallControlPanel('BREAKER');
-      addInteractable(chunk, panel, px, 0, pz + 0.02, 'control_panel', '[E] 壁面配電制御盤を復旧する', {}, 2.9);
-      chunk.lights.push({ x: px, y: 1.8, z: pz + 0.4, color: 0xff9a44 });
+  if (taskType === 'breaker' && !isSpawn && !spawnExit && lv.arch !== 'red_hospital' && lv.arch !== 'branch_layer') {
+    const guaranteedBreaker = ((cx === -1 && cz === 1) || (cx === 1 && cz === -1));
+    if (guaranteedBreaker || rng() < 0.42) {
+      let px = wx + (rng() < 0.5 ? -4.5 : 4.5), pz = wz + (rng()-0.5)*4;
+      if (pointCollides(chunk.colliders, px, pz, 0.9)) { px = wx; pz = wz; }
+      if (guaranteedBreaker || !pointCollides(chunk.colliders, px, pz, 0.9)) {
+        createWallBox(chunk, wallMat, px, Math.min(H, 3.2)/2, pz - 0.35, 1.3, Math.min(H, 3.2), 0.5);
+        const panel = PropFactory.wallControlPanel('BREAKER');
+        addInteractable(chunk, panel, px, 0, pz + 0.02, 'control_panel', '[E長押し 4秒] 壁面配電盤を復旧する（騒音注意）', {}, 2.9);
+        chunk.lights.push({ x: px, y: 1.8, z: pz + 0.4, color: 0xff9a44 });
+      }
+    }
+  }
+  if (taskType === 'power' && !isFirstFloorL0 && !isSpawn && !spawnExit && lv.arch !== 'red_hospital' && lv.arch !== 'branch_layer') {
+    // V9.2.0 E-1 Mandatory power panel placed >= 1 chunk (>=16m, CHUNK_SIZE=24m) away from exit chunk (1,1)!
+    const pSlots = [[-1, 1], [1, -1], [-1, -1], [0, -1]];
+    const pPick = pSlots[Math.abs(hashChunk(state.seed, lv.id, state.depth, 909)) % pSlots.length];
+    const guaranteedPower = (cx === pPick[0] && cz === pPick[1]);
+    if (guaranteedPower || rng() < 0.24) {
+      let px = wx + (rng() < 0.5 ? -4.2 : 4.2), pz = wz + (rng()-0.5)*4;
+      if (pointCollides(chunk.colliders, px, pz, 0.9)) { px = wx; pz = wz; }
+      if (guaranteedPower || !pointCollides(chunk.colliders, px, pz, 0.9)) {
+        createWallBox(chunk, wallMat, px, Math.min(H, 3.2)/2, pz - 0.35, 1.35, Math.min(H, 3.2), 0.48);
+        const panel = PropFactory.wallControlPanel('POWER');
+        addInteractable(chunk, panel, px, 0, pz + 0.04, 'control_panel', '[E長押し 4秒] 壁面制御盤で電源復旧（騒音注意）', {}, 2.9);
+        chunk.lights.push({ x: px, y: 1.75, z: pz + 0.45, color: 0xff6244 });
+      }
     }
   }
 
@@ -5441,15 +5544,7 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
     chunk.group.add(arrow);
   }
 
-  // V8 §1 Guaranteed Exit on EVERY floor + Wall-Mounted Control Panel beside it!
-  const distFromOrigin = Math.hypot(cx, cz);
-  let spawnExit = forceExit;
-  if (!spawnExit) {
-    if (lv.arch === 'red_hospital') { if (cx === 0 && (cz === -5 || cz === 5)) spawnExit = true; }
-    else if (lv.arch === 'branch_layer') { if (cx === 0 && cz === -2) spawnExit = true; }
-    else if (cx === 1 && cz === 1) spawnExit = true; // Guaranteed discoverable exit ~22m from spawn on ALL floors!
-    else if (distFromOrigin >= 2 && rng() < 0.16) spawnExit = true;
-  }
+  // V8 §1 Guaranteed Exit on EVERY floor (+ beside-exit panel ONLY on LEVEL 0 initial floor per V9.2.0 E-1!)
   if (spawnExit) {
     const ex = (lv.arch==='red_hospital'||lv.arch==='pipe_corridor'||lv.arch==='boiler_layer'||lv.arch==='branch_layer') ? wx : (cx===1 && cz===1 ? wx - 1.2 : wx+(rng()-0.5)*4), ez = wz;
     const rec = loadRecords();
@@ -5479,19 +5574,16 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
     chunk.hasExit = true;
     if (etype === 'noclip') chunk.noclipSpot = { x: ex, z: ez, it };
 
-    // V8 §1 Wall-Mounted Control Panel right beside regular exits (mounted on sturdy concrete wall, NEVER floating!)
-    if (etype === 'door' || etype === 'stairs' || etype === 'elevator') {
-      if (lv.arch !== 'red_hospital' && lv.arch !== 'branch_layer') {
-        const wallX = ex + 2.35, wallZ = ez - 0.1;
-        createWallBox(chunk, wallMat, wallX, Math.min(H, 3.2)/2, wallZ - 0.32, 1.35, Math.min(H, 3.2), 0.48);
-        const panel = PropFactory.wallControlPanel('POWER');
-        addInteractable(chunk, panel, wallX, 0, wallZ + 0.04, 'control_panel', '[E] 壁面制御盤で電源復旧（出口解錠＋照明復旧）', {}, 2.9);
-        chunk.lights.push({ x: wallX, y: 1.75, z: wallZ + 0.45, color: 0xff6244 });
-      }
+    // V9.2.0 E-1 Beside-exit panel kept ONLY on LEVEL 0 initial floor (depth 1); floor 2+ panels are separated >=1 chunk away!
+    if (isFirstFloorL0 && taskType === 'power' && (etype === 'door' || etype === 'stairs' || etype === 'elevator')) {
+      const wallX = ex + 2.35, wallZ = ez - 0.1;
+      createWallBox(chunk, wallMat, wallX, Math.min(H, 3.2)/2, wallZ - 0.32, 1.35, Math.min(H, 3.2), 0.48);
+      const panel = PropFactory.wallControlPanel('POWER');
+      addInteractable(chunk, panel, wallX, 0, wallZ + 0.04, 'control_panel', '[E長押し 4秒] 壁面制御盤で電源復旧（騒音注意）', {}, 2.9);
+      chunk.lights.push({ x: wallX, y: 1.75, z: wallZ + 0.45, color: 0xff6244 });
     }
   }
 
-  scatterLibraryProps(chunk, rng, wx, wz, lv);
   worldGroup.add(chunk.group);
   chunks.set(key, chunk);
 }
@@ -5690,20 +5782,44 @@ function pushOutOfWalls(x, z, r = 0.48) {
   return { x, z };
 }
 
-// V7.2 §5 Grid-Based BFS Pathfinding (2.0m cells, cached 0.5s + cell-change recalc, fallback on unreachable)
+// V9.2.0 A-1 Grid-Based BFS Pathfinding (2.0m cells, center + 4 sub-points ±0.5m thin-wall check, expanded limits 260/±18, dynamic stuck-cell blocking!)
 const BFS_CELL = 2.0;
-function computeBfsNextStep(sx, sz, tx, tz, entR = 0.36) {
+const BFS_SUB_OFFSETS = [[0, 0], [0.5, 0], [-0.5, 0], [0, 0.5], [0, -0.5]];
+function getBfsColliders(sx, sz, tx, tz) {
+  const minX = Math.min(sx, tx) - 18, maxX = Math.max(sx, tx) + 18;
+  const minZ = Math.min(sz, tz) - 18, maxZ = Math.max(sz, tz) + 18;
+  const near = [];
+  if (typeof chunks !== 'undefined' && chunks && chunks.forEach) {
+    chunks.forEach(ch => {
+      if (ch.wx < minX - CHUNK_SIZE || ch.wx > maxX + CHUNK_SIZE || ch.wz < minZ - CHUNK_SIZE || ch.wz > maxZ + CHUNK_SIZE) return;
+      for (const c of ch.colliders) {
+        if (!c.disabled && c.maxX >= minX && c.minX <= maxX && c.maxZ >= minZ && c.minZ <= maxZ) near.push(c);
+      }
+    });
+    return near;
+  }
+  return getNearbyColliders((sx + tx) * 0.5, (sz + tz) * 0.5);
+}
+function computeBfsNextStep(sx, sz, tx, tz, entR = 0.36, extraBlocked = null) {
   const scx = Math.round(sx / BFS_CELL), scz = Math.round(sz / BFS_CELL);
   const tcx = Math.round(tx / BFS_CELL), tcz = Math.round(tz / BFS_CELL);
   if (scx === tcx && scz === tcz) return { x: tx, z: tz, found: true };
-  if (Math.hypot(tcx - scx, tcz - scz) > 16) return null;
-  const near = getNearbyColliders((sx + tx) * 0.5, (sz + tz) * 0.5);
+  if (Math.hypot(tcx - scx, tcz - scz) > 22) return null;
+  const near = typeof getBfsColliders === 'function' ? getBfsColliders(sx, sz, tx, tz) : getNearbyColliders((sx + tx) * 0.5, (sz + tz) * 0.5);
   const blockedCache = new Map();
   const isBlocked = (gx, gz) => {
     const k = gx + ',' + gz;
     if (blockedCache.has(k)) return blockedCache.get(k);
+    if (extraBlocked && (extraBlocked instanceof Set ? extraBlocked.has(k) : (extraBlocked instanceof Map ? extraBlocked.has(k) : false))) {
+      blockedCache.set(k, true); return true;
+    }
     const wx = gx * BFS_CELL, wz = gz * BFS_CELL;
-    const b = pointCollides(near, wx, wz, entR, 0) || isInsideManilaRoom(wx, wz);
+    if (isInsideManilaRoom(wx, wz)) { blockedCache.set(k, true); return true; }
+    let b = false;
+    for (let i = 0; i < BFS_SUB_OFFSETS.length; i++) {
+      const [ox, oz] = BFS_SUB_OFFSETS[i];
+      if (pointCollides(near, wx + ox, wz + oz, entR, 0)) { b = true; break; }
+    }
     blockedCache.set(k, b);
     return b;
   };
@@ -5714,7 +5830,7 @@ function computeBfsNextStep(sx, sz, tx, tz, entR = 0.36) {
   parent.set(startKey, null);
   const dirs = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
   let found = false, visited = 0;
-  while (queue.length > 0 && visited < 150) {
+  while (queue.length > 0 && visited < 260) {
     const [cx, cz] = queue.shift();
     visited++;
     if (cx === tcx && cz === tcz) { found = true; break; }
@@ -5722,8 +5838,11 @@ function computeBfsNextStep(sx, sz, tx, tz, entR = 0.36) {
       const nx = cx + dx, nz = cz + dz;
       const nk = nx + ',' + nz;
       if (parent.has(nk)) continue;
-      if (Math.abs(nx - scx) > 14 || Math.abs(nz - scz) > 14) continue;
+      if (Math.abs(nx - scx) > 18 || Math.abs(nz - scz) > 18) continue;
       if (nk !== goalKey && isBlocked(nx, nz)) continue;
+      // Also test midpoint between cells so a thin partition on the cell seam cannot be crossed!
+      const midX = (cx + dx * 0.5) * BFS_CELL, midZ = (cz + dz * 0.5) * BFS_CELL;
+      if (pointCollides(near, midX, midZ, entR * 0.85, 0)) continue;
       if (dx !== 0 && dz !== 0 && (isBlocked(cx + dx, cz) || isBlocked(cx, cz + dz))) continue;
       parent.set(nk, cx + ',' + cz);
       queue.push([nx, nz]);
@@ -5742,6 +5861,7 @@ function computeBfsNextStep(sx, sz, tx, tz, entR = 0.36) {
   const pick = path[Math.min(1, path.length - 1)] || { x: tx, z: tz };
   return { x: pick.x, z: pick.z, found: true };
 }
+window.computeBfsNextStep = computeBfsNextStep;
 
 function isPlayerSheltered() {
   if (state.hide.active) return true;
@@ -5760,14 +5880,58 @@ function isPlayerSheltered() {
 
 function isMpActive() { return !!(typeof mp !== 'undefined' && mp.active && mp.peers.size > 0); }
 
+// V9.2.0 A-4 Fair Spawn Position Picker (18-26m out of player LOS; pushes outward if visible!)
+function findFairSpawnPos(kind, colRad = 0.48) {
+  const fwdX = -Math.sin(state.yaw), fwdZ = -Math.cos(state.yaw), sideX = Math.cos(state.yaw), sideZ = -Math.sin(state.yaw);
+  if (kind === 'amicus') {
+    // V9.2.0 H-2 Amicus spawns at 12-18m in a VISIBLE position in front of the player!
+    for (let attempt = 0; attempt < 12; attempt++) {
+      const dist = 12 + Math.random() * 6;
+      const spread = (attempt === 0 ? 0 : (Math.random() - 0.5) * 6);
+      let cx = state.pos.x + fwdX * dist + sideX * spread;
+      let cz = state.pos.z + fwdZ * dist + sideZ * spread;
+      if (isInsideManilaRoom(cx, cz)) continue;
+      const safe = pushOutOfWalls(cx, cz, colRad + 0.08);
+      if (hasLineOfSight(state.pos.x, state.pos.z, safe.x, safe.z)) return safe;
+    }
+    const fallback = pushOutOfWalls(state.pos.x + fwdX * 14, state.pos.z + fwdZ * 14, colRad + 0.08);
+    return fallback;
+  }
+  if (kind === 'horde') {
+    return pushOutOfWalls(state.pos.x - fwdX * (12 + Math.random() * 4) + (Math.random() - 0.5) * 2, state.pos.z - fwdZ * (12 + Math.random() * 4), colRad + 0.08);
+  }
+  const preferBehind = (kind === 'skinstealer' || kind === 'mannequin');
+  for (let attempt = 0; attempt < 14; attempt++) {
+    const pushOut = attempt >= 8 ? (attempt - 7) * 1.5 : 0;
+    const dist = 18 + Math.random() * 8 + pushOut; // 18-26m (or pushed further if LOS open)
+    const dirSign = (preferBehind || attempt >= 6) ? -1 : (Math.random() < 0.45 ? 1 : -1);
+    const lat = (Math.random() - 0.5) * (preferBehind ? 7 : 12);
+    let cx = state.pos.x + fwdX * dist * dirSign + sideX * lat;
+    let cz = state.pos.z + fwdZ * dist * dirSign + sideZ * lat;
+    if (isInsideManilaRoom(cx, cz)) continue;
+    const safe = pushOutOfWalls(cx, cz, colRad + 0.08);
+    const actualDist = Math.hypot(safe.x - state.pos.x, safe.z - state.pos.z);
+    if (actualDist < 17.5) continue;
+    // A-4: Do NOT spawn in player's line of sight!
+    if (!hasLineOfSight(state.pos.x, state.pos.z, safe.x, safe.z)) return safe;
+    // Also accept behind-the-back spawns beyond 21m where player isn't looking at them
+    const toX = (safe.x - state.pos.x) / (actualDist || 1), toZ = (safe.z - state.pos.z) / (actualDist || 1);
+    const dot = toX * fwdX + toZ * fwdZ;
+    if (dot < -0.25 && actualDist >= 21) return safe;
+  }
+  // Last resort: push far behind player (26m) out of forward view
+  return pushOutOfWalls(state.pos.x - fwdX * 26 + sideX * ((Math.random() - 0.5) * 6), state.pos.z - fwdZ * 26 + sideZ * ((Math.random() - 0.5) * 6), colRad + 0.08);
+}
+
 function spawnEntity(kindOverride = null, posOverride = null, zoneRef = null, extraOpts = null) {
-  if (!state.horrorMode || settings.entityFreq === 'none' || mp.role === 'guest') return;
+  if (mp.role === 'guest') return;
+  if (kindOverride !== 'amicus' && (!state.horrorMode || settings.entityFreq === 'none')) return;
   if (!kindOverride && state.spawnGraceTimer > 0) return;
   const lv = LEVELS[state.levelIdx];
-  // Strictly exclude MP-only species in solo!
+  // Strictly exclude MP-only species in solo, watch (handled as sweep), and imagination_diver (D-1 15% visit roll only!)
   const rawPool = lv.entities || ['bacteria'];
   const pool = rawPool.filter(k => {
-    if (k === 'watch') return false; // Watch runs as invisible stage-wide spotlight sweep!
+    if (k === 'watch' || k === 'imagination_diver' || k === 'amicus') return false;
     if ((k === 'mimic' || k === 'straggler') && !isMpActive()) return false;
     return true;
   });
@@ -5776,27 +5940,28 @@ function spawnEntity(kindOverride = null, posOverride = null, zoneRef = null, ex
   const totalPlayers = mp.active ? (1 + mp.peers.size) : 1;
   const baseMax = state.depth <= 1 ? 1 : (mp.active ? (2 + Math.max(0, totalPlayers - 2)) : (settings.entityFreq === 'high' ? 3 : 2));
   const maxEnt = lv.arch === 'red_hospital' ? 3 : baseMax;
-  const nonSnailCount = activeEntities.filter(e => e.kind !== 'snail' && e.kind !== 'imagination_diver').length;
+  // V9.2.0 H-2 Amicus does NOT consume concurrent entity cap (same as snail & imagination_diver)
+  const nonSnailCount = activeEntities.filter(e => e.kind !== 'snail' && e.kind !== 'imagination_diver' && e.kind !== 'amicus').length;
   if (!kindOverride && nonSnailCount >= maxEnt) return;
 
-  const kind = kindOverride || pool[Math.floor(Math.random() * pool.length)];
+  // V9.2.0 C-2 Weighted entity draw!
+  const kind = kindOverride || pickWeightedEntity(pool, lv.entityWeights);
+  if (!kind) return;
   // Strictly block MP-only species in solo even if explicitly passed
   if ((kind === 'mimic' || kind === 'straggler') && !isMpActive()) return;
-  // Imagination Diver ONLY spawns in Pool Layer!
+  // Imagination Diver ONLY spawns in Pool Layer via D-1 15% roll!
   if (kind === 'imagination_diver' && lv.arch !== 'pool_layer') return;
   if (kind === 'imagination_diver' && activeEntities.some(e => e.kind === 'imagination_diver')) return;
+  if (kind === 'amicus' && (lv.arch === 'red_hospital' || activeEntities.some(e => e.kind === 'amicus'))) return;
 
-  // V8 §2 Mycelium spawns as a 3-body intelligent pincer cluster (reuses bacteria GLB!)
+  // V8 §2 + V9.2.0 A-4 Mycelium spawns as a 3-body cluster at fair 18-26m LOS-blocked spot!
   if (kind === 'mycelium' && !(extraOpts && extraOpts.isClusterMember)) {
     const clusterId = Math.floor(Math.random() * 1e9);
-    const fwdX = -Math.sin(state.yaw), fwdZ = -Math.cos(state.yaw);
-    const baseDist = 15 + Math.random() * 5;
-    const cx = posOverride ? posOverride.x : state.pos.x + fwdX * baseDist;
-    const cz = posOverride ? posOverride.z : state.pos.z + fwdZ * baseDist;
+    const basePos = posOverride || findFairSpawnPos('mycelium', 0.48);
     const offsets = [[0, 0], [1.8, 1.4], [-1.8, 1.4]];
     const flankAngles = [0, 1.22, -1.22];
     offsets.forEach(([ox, oz], idx) => {
-      spawnEntity('mycelium', { x: cx + ox, z: cz + oz }, zoneRef, { isClusterMember: true, clusterId, flankAngle: flankAngles[idx], memberIdx: idx });
+      spawnEntity('mycelium', { x: basePos.x + ox, z: basePos.z + oz }, zoneRef, { isClusterMember: true, clusterId, flankAngle: flankAngles[idx], memberIdx: idx });
     });
     return;
   }
@@ -5818,42 +5983,43 @@ function spawnEntity(kindOverride = null, posOverride = null, zoneRef = null, ex
   }
 
   const isChild = (kind === 'faceling' && Math.random() < 0.42);
-  let sx, sz;
-  if (posOverride) { sx = posOverride.x; sz = posOverride.z; }
-  else {
-    const fwdX = -Math.sin(state.yaw), fwdZ = -Math.cos(state.yaw), sideX = Math.cos(state.yaw), sideZ = -Math.sin(state.yaw);
-    if (kind === 'horde') { sx = state.pos.x - fwdX*(10+Math.random()*4) + (Math.random()-0.5)*2; sz = state.pos.z - fwdZ*(10+Math.random()*4); }
-    else if (kind === 'skinstealer' || kind === 'mannequin') { sx = state.pos.x - fwdX*(11+Math.random()*5) + sideX*(Math.random()-0.5)*3; sz = state.pos.z - fwdZ*(11+Math.random()*5) + sideZ*(Math.random()-0.5)*3; }
-    else {
-      const dirSign = Math.random()<0.6 ? 1 : -1, dist = 14 + Math.random()*8, lat = (Math.random()-0.5)*10;
-      sx = state.pos.x + fwdX*dist*dirSign + sideX*lat; sz = state.pos.z + fwdZ*dist*dirSign + sideZ*lat;
-    }
-  }
-  if (kind !== 'snail' && isInsideManilaRoom(sx, sz)) return;
   const colRad = (PropFactory.glbSpecs[kind] && PropFactory.glbSpecs[kind].radius) || 0.45;
-  if (kind !== 'snail' && kind !== 'imagination_diver') {
-    const safe = pushOutOfWalls(sx, sz, colRad + 0.08);
-    sx = safe.x; sz = safe.z;
+  let sx, sz;
+  if (posOverride) {
+    sx = posOverride.x; sz = posOverride.z;
+    if (kind !== 'snail' && kind !== 'imagination_diver') {
+      const safe = pushOutOfWalls(sx, sz, colRad + 0.08);
+      sx = safe.x; sz = safe.z;
+    }
+  } else {
+    const pos = findFairSpawnPos(kind, colRad);
+    sx = pos.x; sz = pos.z;
   }
+  if (kind !== 'snail' && kind !== 'amicus' && isInsideManilaRoom(sx, sz)) return;
 
   const mesh = PropFactory.createEntityModel(kind, isChild, mimicMeta);
   const startY = (kind === 'imagination_diver') ? (lv.waterY || 0.24) : 0;
   mesh.position.set(sx, startY, sz);
   entityGroup.add(mesh);
 
-  if (kind === 'mannequin') sound.playCeramicScrape(0.22); // V8 §2 White Model spawns behind with loud sound!
+  if (kind === 'mannequin') {
+    const { pan } = getRelativePanAndSide(sx, sz);
+    sound.playCeramicScrape(0.22, pan, Math.hypot(sx - state.pos.x, sz - state.pos.z));
+  }
 
   activeEntities.push({
     eid: Math.floor(Math.random()*1e9), kind, isChild, mesh, x: sx, z: sz,
     homeX: sx, homeZ: sz, prevYaw: 0, spawnAge: 0, yawChecked: false,
     bfsTimer: 0, bfsTarget: null, bfsLastPCX: 99999, bfsLastPCZ: 99999,
+    stuckTime: 0, tempBlockedCells: new Map(), noLosTimer: 0, slimeSoundCd: 0.7,
+    amicusGifted: false, amicusMode: 'wait', amicusDecoyTimer: 0, amicusDecoyTarget: null,
     lastSeenX: sx, lastSeenZ: sz, hasLastSeen: false,
     clusterId: extraOpts ? extraOpts.clusterId : 0,
     flankAngle: extraOpts ? (extraOpts.flankAngle || 0) : 0,
     mimicMeta,
     // V9 §1-2 Mandatory Smiler omen phase (1.85s telegraph before attack!)
     omenTimer: 1.85, omenActive: false, omenDone: false, stepAcc: 0,
-    state: 'stalk', life: (kind === 'snail' || kind === 'imagination_diver') ? 999999 : (kind === 'horde' ? 60 : (38 + Math.random()*24)),
+    state: 'stalk', life: (kind === 'snail' || kind === 'imagination_diver' || kind === 'amicus') ? 999999 : (kind === 'horde' ? 60 : (38 + Math.random()*24)),
     alerted: false, codexLogged: false, attackCd: 0, phase: Math.random()*6,
     lostSightTimer: 0, stareAccum: 0, lightBurn: 0, facelingAgitation: 0,
     stunTimer: 0, retreatTimer: 0,
@@ -6145,8 +6311,8 @@ function updateEntities(dt, playerMovedDist) {
         }
       }
       if (!e.codexLogged && dist < 16 && e.kind !== 'horde') { e.codexLogged = true; registerCodexSeen(e.kind); }
-      if (e.kind !== 'faceling' && e.kind !== 'imagination_diver' && dist < nearest) { nearest = dist; nearestEnt = { x: e.x, z: e.z, dist }; }
-      if (e.spawnAge >= 1.5 && e.kind !== 'faceling' && e.kind !== 'imagination_diver' && (!playerHidden || e.kind === 'snail') && dist < 1.32 && state.hurtInvuln <= 0) {
+      if (e.kind !== 'faceling' && e.kind !== 'imagination_diver' && e.kind !== 'amicus' && dist < nearest) { nearest = dist; nearestEnt = { x: e.x, z: e.z, dist }; }
+      if (e.spawnAge >= 1.5 && e.kind !== 'faceling' && e.kind !== 'imagination_diver' && e.kind !== 'amicus' && (!playerHidden || e.kind === 'snail') && dist < 1.32 && state.hurtInvuln <= 0) {
         if (applyContactDamage(e, dx, dz, dist)) return '';
       }
     }
@@ -6161,13 +6327,10 @@ function updateEntities(dt, playerMovedDist) {
     return '';
   }
 
-  if (!state.horrorMode || settings.entityFreq === 'none') { updateThreatEdgeGlow(null); return ''; }
+  const hasFriendlyOnly = activeEntities.some(e => e.kind === 'amicus');
+  if ((!state.horrorMode || settings.entityFreq === 'none') && !hasFriendlyOnly) { updateThreatEdgeGlow(null); return ''; }
   const lv = LEVELS[state.levelIdx];
-
-  // Guarantee Imagination Diver in Pool Layer (V8 §2 & §5)
-  if (lv.arch === 'pool_layer' && !activeEntities.some(e => e.kind === 'imagination_diver')) {
-    spawnEntity('imagination_diver', { x: state.pos.x + 9, z: state.pos.z - 9 });
-  }
+  // V9.2.0 D-1 Imagination Diver is rolled ONCE per Pool Layer visit (15%) inside enterLevel() — NEVER guaranteed per frame!
 
   chunks.forEach(ch => {
     if (ch.partyZone) {
@@ -6208,13 +6371,17 @@ function updateEntities(dt, playerMovedDist) {
   for (let i = activeEntities.length - 1; i >= 0; i--) {
     const e = activeEntities[i];
     e.spawnAge += dt;
-    if (e.kind !== 'snail' && e.kind !== 'imagination_diver') e.life -= dt;
+    if (e.kind !== 'snail' && e.kind !== 'imagination_diver' && e.kind !== 'amicus') e.life -= dt;
     if (e.attackCd > 0) e.attackCd -= dt;
     if (e.stunTimer > 0) e.stunTimer -= dt;
     if (e.soundCd > 0) e.soundCd -= dt;
     if (e.prankCd > 0) e.prankCd -= dt;
     if (e.lureTimer > 0) e.lureTimer -= dt;
     if (e.scatterTimer > 0) e.scatterTimer -= dt;
+    if (e.decoyLockTimer > 0) e.decoyLockTimer -= dt;
+
+    // V9.2.0 A-4 Post-spawn 1.2s detection grace (includes Hound hearing & all sensing axes!)
+    const canDetect = e.spawnAge >= 1.2 && !(e.decoyLockTimer > 0);
 
     // V9 §6-1 Hide Mimic on host screen too if it copied the host!
     if (e.kind === 'mimic' && e.mimicMeta && e.mimicMeta.copyPeerId && e.mimicMeta.copyPeerId === mp.myId) {
@@ -6278,7 +6445,93 @@ function updateEntities(dt, playerMovedDist) {
       }
     }
 
-    if (e.kind === 'imagination_diver') {
+    if (e.kind === 'amicus') {
+      // V9.2.0 H-1..H-5 Amicus Fake Human: Friendly gift-giver, follower, exit guide, and one-time heroic decoy!
+      if (!e.amicusGifted && hDist <= 3.0) {
+        e.amicusGifted = true;
+        const giftPool = [
+          { slot: 0, name: 'アーモンドウォーター', ico: '💧' },
+          { slot: 4, name: '乾電池', ico: '🔋' },
+          { slot: 1, name: '携帯食料', ico: '🥫' },
+          { slot: 3, name: 'モスゼリー', ico: '🍯' }
+        ];
+        if ((state.inv[5] || 0) < LOCKPICK_MAX) giftPool.push({ slot: 5, name: 'ピック', ico: '🧷' });
+        const picked = giftPool[Math.floor(Math.random() * giftPool.length)];
+        state.inv[picked.slot] = (state.inv[picked.slot] || 0) + 1;
+        updateInventoryUI();
+        sound.playCounterSuccess(pan);
+        showToast(`🤝 アミークスから ${picked.ico} ${picked.name} を受け取った！（出口まで案内してくれる）`);
+      }
+
+      // H-5 Check if any hostile entity is actively chasing the player!
+      let activeHostile = null, bestHostileDist = 22;
+      for (const other of activeEntities) {
+        if (other === e || other.kind === 'amicus' || other.kind === 'imagination_diver' || other.kind === 'snail') continue;
+        if (other.state === 'chase' || other.alerted) {
+          const hd = Math.hypot(other.x - state.pos.x, other.z - state.pos.z);
+          if (hd < bestHostileDist) { bestHostileDist = hd; activeHostile = other; }
+        }
+      }
+      if (activeHostile) {
+        e.amicusMode = 'decoy';
+        e.amicusDecoyTimer = (e.amicusDecoyTimer || 0) + dt;
+        const tdx = activeHostile.x - e.x, tdz = activeHostile.z - e.z, td = Math.hypot(tdx, tdz);
+        moveDirX = tdx / (td || 1); moveDirZ = tdz / (td || 1);
+        moveSpd = 5.4; useBfs = true; bfsGoalX = activeHostile.x; bfsGoalZ = activeHostile.z;
+        // Lock hostile attention onto Amicus so player can escape safely!
+        activeHostile.lureX = e.x; activeHostile.lureZ = e.z;
+        activeHostile.lureTimer = 7.0; activeHostile.decoyLockTimer = 5.5;
+        activeHostile.state = 'stalk'; activeHostile.alerted = false; activeHostile.lostSightTimer = 9;
+        if (td < 2.3 || e.amicusDecoyTimer >= 2.8) {
+          state.amicusDecoyUsed = true;
+          sound.playMimicDissolve(pan, hDist);
+          showToast('✨ アミークスが敵の注意を引き付けて霧散した！今だ、逃げろ！');
+          entityGroup.remove(e.mesh); activeEntities.splice(i, 1);
+          continue;
+        }
+      } else if (e.amicusGifted) {
+        // H-4 Follow & Guide: within 9m -> guide toward nearest exit (stop 5m short); if player strays > 9m -> return to follow!
+        let nearExit = null, nearExitD = 9999;
+        chunks.forEach(ch => {
+          for (const it of ch.interactables) {
+            if (!it.used && it.type === 'exit') {
+              const ed = Math.hypot(it.x - e.x, it.z - e.z);
+              if (ed < nearExitD) { nearExitD = ed; nearExit = it; }
+            }
+          }
+        });
+        if (nearExit && hDist <= 9.0) {
+          e.amicusMode = 'guide';
+          const exDx = nearExit.x - e.x, exDz = nearExit.z - e.z, exD = Math.hypot(exDx, exDz);
+          if (exD > 5.0) {
+            moveDirX = exDx / (exD || 1); moveDirZ = exDz / (exD || 1);
+            moveSpd = 3.4; useBfs = true; bfsGoalX = nearExit.x; bfsGoalZ = nearExit.z;
+          } else {
+            moveSpd = 0; // Wait 5m short of the exit for the player
+            e.mesh.rotation.y = Math.atan2(hdx, hdz);
+          }
+        } else {
+          e.amicusMode = 'follow';
+          if (hDist > 2.2) {
+            moveDirX = hdx / (hDist || 1); moveDirZ = hdz / (hDist || 1);
+            moveSpd = hDist > 6.5 ? 5.2 : 3.4;
+            useBfs = true; bfsGoalX = state.pos.x; bfsGoalZ = state.pos.z;
+          } else {
+            moveSpd = 0;
+            e.mesh.rotation.y = Math.atan2(hdx, hdz);
+          }
+        }
+      } else {
+        // Before gifting: gently face/step toward player when nearby, stopping 2.4m short
+        if (hDist > 2.4 && hDist < 10) {
+          moveDirX = hdx / (hDist || 1); moveDirZ = hdz / (hDist || 1);
+          moveSpd = 2.0; useBfs = true; bfsGoalX = state.pos.x; bfsGoalZ = state.pos.z;
+        } else {
+          moveSpd = 0;
+          e.mesh.rotation.y = Math.atan2(hdx, hdz);
+        }
+      }
+    } else if (e.kind === 'imagination_diver') {
       // V8 §2 Harmless giant eye on Pool Layer floor (tracks target at normal speed, 0 damage!)
       const targetY = lv.waterY || 0.26;
       e.mesh.position.y = targetY;
@@ -6288,11 +6541,18 @@ function updateEntities(dt, playerMovedDist) {
         e.mesh.userData.pupil.position.z = (dz / (dist || 1)) * 0.24;
       }
     } else if (e.kind === 'snail') {
-      // V8 §2 Yellow Snail: 0.85 m/s relentless tracker, drops yellow slime patches that slow player!
-      e.bellCd -= dt; e.slimeCd -= dt;
+      // V8 §2 + V9.2.0 C-5 Yellow Snail: 0.85 m/s relentless tracker, 10s bell + distance-scaled wet slime crawl sound!
+      e.bellCd -= dt; e.slimeCd -= dt; e.slimeSoundCd = (e.slimeSoundCd || 0) - dt;
       if (e.bellCd <= 0) {
         e.bellCd = 10.0;
         if (hDist < 28) sound.playSnailBell(pan, Math.max(0.03, (1 - hDist/28) * 0.16), hDist);
+      }
+      if (e.slimeSoundCd <= 0) {
+        e.slimeSoundCd = 1.15;
+        if (hDist < 16) {
+          const sVol = Math.pow(Math.max(0, 1 - hDist / 16), 1.35) * 0.24;
+          sound.playSnailSlime(sVol, pan, hDist);
+        }
       }
       if (e.slimeCd <= 0) {
         e.slimeCd = 2.4;
@@ -6310,6 +6570,11 @@ function updateEntities(dt, playerMovedDist) {
       }
       const sdx = tx - e.x, sdz = tz - e.z, sd = Math.hypot(sdx, sdz);
       if (sd > 0.05) { moveDirX = sdx/sd; moveDirZ = sdz/sd; moveSpd = 0.85; }
+    } else if (e.decoyLockTimer > 0 && e.lureTimer > 0) {
+      // V9.2.0 H-5 Hostile entity lured by Amicus decoy!
+      const ldx = e.lureX - e.x, ldz = e.lureZ - e.z, ld = Math.hypot(ldx, ldz);
+      if (ld > 1.2) { moveDirX = ldx / ld; moveDirZ = ldz / ld; moveSpd = Math.min(MAX_SPEED, 4.4 * speedMul); useBfs = true; bfsGoalX = e.lureX; bfsGoalZ = e.lureZ; }
+      else moveSpd = 0;
     } else if (e.state === 'stakeout') {
       e.stakeoutTimer -= dt; e.stakeoutSoundCd -= dt; stakeoutNear = true;
       const sdx = e.stakeoutX - e.x, sdz = e.stakeoutZ - e.z, sd = Math.hypot(sdx, sdz);
@@ -6328,22 +6593,22 @@ function updateEntities(dt, playerMovedDist) {
     } else if (e.kind === 'mannequin') {
       // V8 §2 White Model: freezes when seen, stare 4s makes it tremble & retreat!
       const seenByPlayer = playerLookingNormal || playerLightLock;
-      if (e.stunTimer > 0) moveSpd = 0;
+      if (e.stunTimer > 0 || !canDetect) moveSpd = 0;
       else if (seenByPlayer) {
         moveSpd = 0; e.wasMoving = false; e.stareAccum += dt;
         if (hostLookingNormal || hostLightLock) state.stareProgress = Math.max(state.stareProgress, Math.min(1, e.stareAccum / 4.0));
         if (e.stareAccum > 1.6) e.mesh.position.x = e.x + (Math.random() - 0.5) * 0.05;
         if (!e.alerted && hDist < 15) { e.alerted = true; showAnomalyBadge(`ENTITY: ${meta.name}（4秒見続けると震えて撤退）`); }
-        if (e.stareAccum >= 4.0) { e.state = 'retreat'; e.retreatTimer = 4.2; sound.playCounterSuccess(pan); sound.playCeramicScrape(0.18); showToast('ホワイトモデルが震えて撤退した！'); }
+        if (e.stareAccum >= 4.0) { e.state = 'retreat'; e.retreatTimer = 4.2; sound.playCounterSuccess(pan); sound.playCeramicScrape(0.18, pan, hDist); showToast('ホワイトモデルが震えて撤退した！'); }
       } else if (!tHidden) {
         moveSpd = Math.min(MAX_SPEED, 5.2 * speedMul); useBfs = true;
-        if (!e.wasMoving && hDist < 14 && e.soundCd <= 0) { sound.playCeramicScrape(Math.max(0.05, (1-hDist/14)*0.18)); e.soundCd = 1.6; }
+        if (!e.wasMoving && hDist < 18 && e.soundCd <= 0) { sound.playCeramicScrape(Math.max(0.05, (1-hDist/18)*0.18), pan, hDist); e.soundCd = 1.6; }
         e.wasMoving = true; if (hDist < 15) { chasingCount++; if (!nearestChaser || hDist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist: hDist }; }
       }
     } else if (e.kind === 'scarecrow') {
       // V8 §2 Scarecrow: INVERSE White Model — moves ONLY while looked at, freezes when unseen!
       const seenByPlayer = playerLookingNormal || playerLightLock;
-      if (e.stunTimer > 0 || !seenByPlayer || tHidden) {
+      if (e.stunTimer > 0 || !canDetect || !seenByPlayer || tHidden) {
         moveSpd = 0;
       } else {
         if (!e.alerted && hDist < 18) { e.alerted = true; sound.playEntityAlert('scarecrow', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（見ると動く！視線を外して止めろ）`); }
@@ -6368,7 +6633,7 @@ function updateEntities(dt, playerMovedDist) {
         e.lightBurn = Math.max(0, e.lightBurn - dt * 0.4);
         e.mesh.scale.setScalar(1);
         const inDarkOrBlind = !tFlash || tLookDot < 0.35;
-        if (!tHidden && inDarkOrBlind && dist < 20) {
+        if (canDetect && !tHidden && inDarkOrBlind && dist < 20) {
           if (!e.omenDone) {
             // Mandatory 1.85s Omen Phase: ZERO attack hitbox, audible spatial whisper + visual edge distortion!
             if (!e.omenActive) {
@@ -6396,9 +6661,10 @@ function updateEntities(dt, playerMovedDist) {
         }
       }
     } else if (e.kind === 'hound') {
+      // V9.2.0 A-4 Hound hearing is also gated by canDetect (1.2s post-spawn grace!)
       const noisy = !tHidden && (tgt.sprinting || (tgt.movedDist > 0.01 && !tgt.crouch));
       const hearR = (tgt.sprinting ? 21 : (noisy ? 12 : (tCrouchStealth ? 2.5 : 4.5))) * levelSoundMul;
-      if (!tHidden && noisy && dist < hearR) {
+      if (canDetect && !tHidden && noisy && dist < hearR) {
         if (!e.alerted) { e.alerted = true; sound.playEntityAlert('hound', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（音に反応！しゃがみ静止かボール[B]で回避）`); }
         e.state = 'chase'; e.lostSightTimer = 0; e.lastSeenX = tgt.x; e.lastSeenZ = tgt.z; e.hasLastSeen = true;
       }
@@ -6425,7 +6691,7 @@ function updateEntities(dt, playerMovedDist) {
           e.state = 'stalk';
         } else {
           const litTarget = !tHidden && (tFlash || state.powerRestored);
-          if (litTarget && dist < (state.powerRestored ? 22 : 18) && hasLOS) {
+          if (canDetect && litTarget && dist < (state.powerRestored ? 22 : 18) && hasLOS) {
             if (!e.alerted) { e.alerted = true; sound.playEntityAlert('deathmoth', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（消灯・囮ライト[F長押し]・モスゼリーで回避）`); }
             e.state = 'chase'; e.lostSightTimer = 0; chasingCount++; moveSpd = Math.min(MAX_SPEED, (state.powerRestored ? 4.9 : 4.5) * speedMul); useBfs = true;
             if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
@@ -6441,7 +6707,7 @@ function updateEntities(dt, playerMovedDist) {
       if (playerLookingNormal && dist < 20) {
         e.state = 'retreat'; e.retreatTimer = 5.0; sound.playCounterSuccess(pan);
         showToast('振り返ってカワハギを視界に捉えた！撤退していく！');
-      } else if (!tHidden && dist < 20) {
+      } else if (canDetect && !tHidden && dist < 20) {
         if (!e.alerted) { e.alerted = true; sound.playKawagiStinger(); if (tgt.isHost) showKawagiBanner(); }
         if (e.soundCd <= 0) {
           sound.playHeavyStep(Math.max(0.08, (1 - hDist / 22) * 0.34), pan, hDist);
@@ -6452,7 +6718,7 @@ function updateEntities(dt, playerMovedDist) {
       } else moveSpd = 1.4;
     } else if (e.kind === 'faceling') {
       // V8 §2 Noppera: calm normally, agitated if player stares directly in its face!
-      const staringAtFace = ((lookDot > 0.78 && hDist < 13 && hHasLOS && !hostHidden) || (tLookDot > 0.78 && dist < 13 && hasLOS && !tHidden));
+      const staringAtFace = canDetect && ((lookDot > 0.78 && hDist < 13 && hHasLOS && !hostHidden) || (tLookDot > 0.78 && dist < 13 && hasLOS && !tHidden));
       if (staringAtFace && !e.isChild) {
         e.facelingAgitation += dt;
         if (e.facelingAgitation >= 0.85) {
@@ -6522,7 +6788,7 @@ function updateEntities(dt, playerMovedDist) {
         if (ld > 0.8) { moveDirX = ldx/ld; moveDirZ = ldz/ld; moveSpd = 4.5; }
       } else {
         const detectR = tgt.sprinting ? 16 : 12;
-        if (!tHidden && dist < detectR && (hasLOS || tgt.movedDist > 0.01)) {
+        if (canDetect && !tHidden && dist < detectR && (hasLOS || tgt.movedDist > 0.01)) {
           if (!e.alerted) { e.alerted = true; sound.playEntityAlert('deathrat', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（光を嫌う！懐中電灯[F]を当てて散らせ）`); }
           e.state = 'chase'; e.lostSightTimer = 0;
         }
@@ -6537,7 +6803,7 @@ function updateEntities(dt, playerMovedDist) {
       // V8 §2 TV Head: staring at screen drains SANITY & pulls player; turning away breaks it!
       const u = e.mesh.userData;
       if (u.scrMat && Math.random() < 0.35) { u.scrMat.map.offset.set(Math.random(), Math.random()); }
-      const staringScreen = !hostHidden && lookDot > 0.62 && hDist < 16 && hHasLOS;
+      const staringScreen = canDetect && !hostHidden && lookDot > 0.62 && hDist < 16 && hHasLOS;
       if (staringScreen) {
         if (!e.alerted) { e.alerted = true; sound.playEntityAlert('tvhead', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（画面を見るな！背を向けて離れろ！）`); }
         state.sanity = Math.max(0, state.sanity - 14 * dt);
@@ -6559,7 +6825,7 @@ function updateEntities(dt, playerMovedDist) {
       // V8 §2 Teashi (Clump): floor vibration sensing -> stand still or slow crouch to slip past!
       const vibrating = !tHidden && tgt.movedDist > 0.012 && !tgt.crouch;
       const vibR = (tgt.sprinting ? 22 : (vibrating ? 14 : 3.2)) * levelSoundMul;
-      if (!tHidden && dist < vibR) {
+      if (canDetect && !tHidden && dist < vibR) {
         if (!e.alerted) { e.alerted = true; showAnomalyBadge(`ENTITY: ${meta.name}（床振動感知！静止かしゃがみ歩きで回避）`); }
         moveSpd = Math.min(MAX_SPEED, 2.2 * speedMul); useBfs = true;
         if (hDist < 12) { chasingCount++; if (!nearestChaser || hDist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist: hDist }; }
@@ -6569,20 +6835,27 @@ function updateEntities(dt, playerMovedDist) {
       if (hDist < 18 && e.soundCd <= 0) { sound.playClumpCreakSpatial(Math.max(0.03, (1-hDist/18)*0.24), pan, hDist); e.soundCd = 1.35; }
       if (e.mesh.userData.limbs) e.mesh.userData.limbs.forEach((lb, idx) => { lb.rotation.x = 0.8 + Math.sin(state.elapsed*4+idx)*0.38; });
     } else if (e.kind === 'mycelium') {
-      // V8 §2 Mycelium (3-body cluster): passive at distance (>11m), smart pincer flanking when close!
-      if (!tHidden && dist < 11.5) {
-        if (!e.alerted) { e.alerted = true; e.state = 'chase'; sound.playEntityAlert('mycelium', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（群れが挟み撃ちを開始！距離を取れ！）`); }
-        e.lostSightTimer = 0;
+      // V8 §2 + V9.2.0 C-3 Mycelium (3-body cluster): breaks chase if hidden/far>=22m (4s) OR LOS broken for 3s!
+      if (canDetect && !tHidden && dist < 11.5) {
+        if (!e.alerted) { e.alerted = true; e.state = 'chase'; sound.playEntityAlert('mycelium', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（群れが挟み撃ちを開始！視線を切って逃げろ！）`); }
+        e.lostSightTimer = 0; e.noLosTimer = 0;
       }
       if (e.state === 'chase') {
-        if (tHidden || dist > 22) { e.lostSightTimer += dt; if (e.lostSightTimer >= 4.0) { e.state = 'stalk'; e.alerted = false; } }
+        if (!hasLOS) e.noLosTimer = (e.noLosTimer || 0) + dt;
+        else e.noLosTimer = 0;
+        if (tHidden || dist > 22) e.lostSightTimer += dt;
         else e.lostSightTimer = 0;
-        const angToP = Math.atan2(dz, dx) + e.flankAngle;
-        const flankDist = Math.min(4.2, Math.max(0, dist - 2.2));
-        bfsGoalX = tgt.x - Math.cos(angToP) * flankDist;
-        bfsGoalZ = tgt.z - Math.sin(angToP) * flankDist;
-        chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.75 * speedMul); useBfs = true;
-        if (hDist < 16 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
+        if (e.lostSightTimer >= 4.0 || e.noLosTimer >= 3.0) {
+          e.state = 'stalk'; e.alerted = false; e.lostSightTimer = 0; e.noLosTimer = 0;
+          sound.playCounterSuccess(pan);
+        } else {
+          const angToP = Math.atan2(dz, dx) + e.flankAngle;
+          const flankDist = Math.min(4.2, Math.max(0, dist - 2.2));
+          bfsGoalX = tgt.x - Math.cos(angToP) * flankDist;
+          bfsGoalZ = tgt.z - Math.sin(angToP) * flankDist;
+          chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.75 * speedMul); useBfs = true;
+          if (hDist < 16 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
+        }
       } else {
         moveSpd = 0.4; e.wanderAng += (Math.random()-0.5)*dt*0.5; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
       }
@@ -6606,7 +6879,7 @@ function updateEntities(dt, playerMovedDist) {
       if (!tells.has('noPinReact') && worldPins.size > 0) {
         worldPins.forEach(pin => { const pd = Math.hypot(pin.x - e.x, pin.z - e.z); if (pd < nearPinD) { nearPinD = pd; nearPin = pin; } });
       }
-      if (dist < 4.5 && !tHidden) {
+      if (canDetect && dist < 4.5 && !tHidden) {
         chasingCount++; moveSpd = Math.min(MAX_SPEED, 4.8 * speedMul); useBfs = true;
         if (hDist < 14 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
       } else if (nearPin && nearPinD > 1.8) {
@@ -6619,7 +6892,7 @@ function updateEntities(dt, playerMovedDist) {
     } else if (e.kind === 'straggler') {
       // V8/V9 §6-6 MP-Only Straggler: targets ONLY the most isolated living player!
       const iso = getMostIsolatedTarget();
-      if (iso.isolationDist !== undefined && iso.isolationDist < 7.0) {
+      if (!canDetect || (iso.isolationDist !== undefined && iso.isolationDist < 7.0)) {
         e.state = 'stalk'; moveSpd = 1.2; e.wanderAng += dt; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
       } else {
         bfsGoalX = iso.x; bfsGoalZ = iso.z;
@@ -6632,14 +6905,20 @@ function updateEntities(dt, playerMovedDist) {
         }
       }
     } else {
-      // V8 §2 + V9 §6-7 Bacteria (クロカビ) & Horde: sight pursuit + investigates lockpick failure noise!
+      // V9.2.0 A-3 & C-4 Bacteria (クロカビ) & Horde: NO look-to-alert; quick official shake-off (1.4s / crouch 0.9s)!
       const detectR = tgt.sprinting ? 17 : (tCrouchStealth ? 5.2 : 12.0);
-      if (!tHidden && (e.kind === 'horde' || (dist < detectR && hasLOS) || (playerLookingNormal && dist < 14))) {
-        if (!e.alerted) { e.alerted = true; e.state = 'chase'; sound.playEntityAlert('bacteria', pan, hDist); showAnomalyBadge(e.kind === 'horde' ? '背後からクロカビ群が迫っている！走れ！' : `ENTITY: ${meta.name}（角を曲がって視線を切れ・ボール[B]有効）`); }
+      if (canDetect && !tHidden && (e.kind === 'horde' || (dist < detectR && hasLOS))) {
+        if (!e.alerted) {
+          e.alerted = true; e.state = 'chase'; sound.playEntityAlert('bacteria', pan, hDist);
+          showAnomalyBadge(e.kind === 'horde' ? '背後からクロカビ群が迫っている！走れ！' : `ENTITY: ${meta.name}（角を曲がって視線を切れ・しゃがみ[C]有効）`);
+          if (e.kind !== 'horde' && state.depth === 1 && state.levelIdx === 0) {
+            showFirstHint('tut_l0_bacteria', 'ヒント：クロカビは角を曲がって視線を切り、しゃがみ[C]で素早く振り切れる');
+          }
+        }
         e.lostSightTimer = 0; e.lastSeenX = tgt.x; e.lastSeenZ = tgt.z; e.hasLastSeen = true;
       }
       if (e.state === 'chase') {
-        const loseLim = tgt.crouch ? 1.6 : 2.6;
+        const loseLim = tgt.crouch ? 0.9 : 1.4;
         if (e.kind !== 'horde' && (!hasLOS || tHidden)) {
           e.lostSightTimer += dt;
           if (e.lostSightTimer >= loseLim) { e.state = 'stalk'; e.alerted = false; sound.playCounterSuccess(pan); }
@@ -6649,31 +6928,44 @@ function updateEntities(dt, playerMovedDist) {
         bfsGoalZ = e.lostSightTimer > 0.2 ? e.lastSeenZ : tgt.z;
         if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
       } else if (e.lureTimer > 0) {
-        // V9 §6-7 Investigate lockpicking failure noise
+        // V9 §6-7 + V9.2.0 E-2 Investigate lockpick failure / control panel recovery noise
         const ldx = e.lureX - e.x, ldz = e.lureZ - e.z, ld = Math.hypot(ldx, ldz);
         if (ld > 1.2) { moveDirX = ldx / ld; moveDirZ = ldz / ld; moveSpd = Math.min(MAX_SPEED, 4.2 * speedMul); useBfs = true; bfsGoalX = e.lureX; bfsGoalZ = e.lureZ; }
       } else { e.wanderAng += (Math.random()-0.5)*dt; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.45; }
     }
 
-    // V7.2 §5 Execute cached BFS Pathfinding when actively pursuing / heading to last-seen point
+    // V9.2.0 A-1 & A-2 Cached BFS Pathfinding with dynamic stuck-cell blocking & NO blind straight-line fallback!
+    if (e.tempBlockedCells && e.tempBlockedCells.size > 0) {
+      e.tempBlockedCells.forEach((exp, k) => { if (state.elapsed > exp) e.tempBlockedCells.delete(k); });
+    }
     if (useBfs && moveSpd > 0.05 && e.kind !== 'snail' && e.kind !== 'imagination_diver') {
+      const gCellX = Math.round(bfsGoalX / BFS_CELL), gCellZ = Math.round(bfsGoalZ / BFS_CELL);
       e.bfsTimer -= dt;
-      if (e.bfsTimer <= 0 || pCellX !== e.bfsLastPCX || pCellZ !== e.bfsLastPCZ) {
-        e.bfsTimer = 0.5; e.bfsLastPCX = pCellX; e.bfsLastPCZ = pCellZ;
-        e.bfsTarget = computeBfsNextStep(e.x, e.z, bfsGoalX, bfsGoalZ, 0.36);
+      if (e.bfsTimer <= 0 || gCellX !== e.bfsLastPCX || gCellZ !== e.bfsLastPCZ) {
+        e.bfsTimer = 0.5; e.bfsLastPCX = gCellX; e.bfsLastPCZ = gCellZ;
+        e.bfsTarget = computeBfsNextStep(e.x, e.z, bfsGoalX, bfsGoalZ, 0.36, e.tempBlockedCells);
       }
       if (e.bfsTarget) {
         const bdx = e.bfsTarget.x - e.x, bdz = e.bfsTarget.z - e.z, bd = Math.hypot(bdx, bdz);
         if (bd > 0.25) { moveDirX = bdx / bd; moveDirZ = bdz / bd; }
+      } else {
+        // V9.2.0 A-2 Abolish blind straight-line wall-hugging fallback when target is NOT in line of sight!
+        const goalHasLOS = hasLineOfSight(e.x, e.z, bfsGoalX, bfsGoalZ);
+        if (!goalHasLOS) {
+          e.wanderAng += (Math.random() - 0.5) * dt * 2.2;
+          moveDirX = Math.cos(e.wanderAng);
+          moveDirZ = Math.sin(e.wanderAng);
+          moveSpd = Math.min(moveSpd, 1.5);
+        }
       }
     }
 
     let actualMoved = 0;
     let yawRate = 0;
-    if (moveSpd > 0.01 && (e.state === 'retreat' || dist > 0.9 || e.kind === 'snail' || e.kind === 'imagination_diver' || activeBallTarget || e.lureTimer > 0)) {
+    if (moveSpd > 0.01 && (e.state === 'retreat' || dist > 0.9 || e.kind === 'snail' || e.kind === 'imagination_diver' || e.kind === 'amicus' || activeBallTarget || e.lureTimer > 0)) {
       const prevX = e.x, prevZ = e.z;
       const nx = e.x + moveDirX * moveSpd * dt, nz = e.z + moveDirZ * moveSpd * dt;
-      let allow = (e.kind === 'snail' || e.kind === 'imagination_diver') || !isInsideManilaRoom(nx, nz);
+      let allow = (e.kind === 'snail' || e.kind === 'imagination_diver' || e.kind === 'amicus') || !isInsideManilaRoom(nx, nz);
       if (e.kind === 'partygoer' && e.zone && !activeBallTarget && Math.hypot(nx - e.zone.x, nz - e.zone.z) > e.zone.r - 0.25) allow = false;
       if (allow) {
         const nearCols = getNearbyColliders(nx, nz);
@@ -6702,6 +6994,22 @@ function updateEntities(dt, playerMovedDist) {
             window._yawCorrectionLog.push({ kind: e.kind, eid: e.eid, t: state.elapsed });
           }
         }
+      }
+      // V9.2.0 A-2 Stuck Detection: speed active but actualMoved ~= 0 for 0.8s -> mark forward cell blocked & recalc BFS!
+      if (e.kind !== 'snail' && e.kind !== 'imagination_diver' && moveSpd > 0.35 && actualMoved < 0.015) {
+        e.stuckTime = (e.stuckTime || 0) + dt;
+        if (e.stuckTime >= 0.8) {
+          e.stuckTime = 0;
+          if (!e.tempBlockedCells) e.tempBlockedCells = new Map();
+          const fcx = Math.round((e.x + moveDirX * BFS_CELL * 0.75) / BFS_CELL);
+          const fcz = Math.round((e.z + moveDirZ * BFS_CELL * 0.75) / BFS_CELL);
+          e.tempBlockedCells.set(fcx + ',' + fcz, state.elapsed + 6.0);
+          e.bfsTimer = 0;
+          e.bfsTarget = useBfs ? computeBfsNextStep(e.x, e.z, bfsGoalX, bfsGoalZ, 0.36, e.tempBlockedCells) : null;
+          e.wanderAng += Math.PI * 0.65;
+        }
+      } else {
+        e.stuckTime = Math.max(0, (e.stuckTime || 0) - dt * 2.0);
       }
       const u = e.mesh.userData;
       if (u && u.lArm && e.kind !== 'mannequin') {
@@ -6769,10 +7077,10 @@ function updateEntities(dt, playerMovedDist) {
       }
     }
 
-    if (e.kind !== 'faceling' && e.kind !== 'imagination_diver' && e.mesh.visible && hDist < nearestThreatDist) { nearestThreatDist = hDist; nearestThreatPos = { x: e.x, z: e.z }; }
+    if (e.kind !== 'faceling' && e.kind !== 'imagination_diver' && e.kind !== 'amicus' && e.mesh.visible && hDist < nearestThreatDist) { nearestThreatDist = hDist; nearestThreatPos = { x: e.x, z: e.z }; }
 
-    // V9 §1-1 No instant attack after spawn (spawnAge >= 1.5s) & §1-2 Smiler cannot attack during omen phase!
-    const canAttack = e.spawnAge >= 1.5 && (e.kind !== 'smiler' || e.omenDone) && e.kind !== 'imagination_diver' && (e.kind !== 'faceling' || e.state === 'chase') && e.state !== 'retreat' && e.state !== 'stakeout' && e.attackCd <= 0;
+    // V9 §1-1 No instant attack after spawn (spawnAge >= 1.5s) & §1-2 Smiler cannot attack during omen & H-1 Amicus damage 0!
+    const canAttack = e.spawnAge >= 1.5 && (e.kind !== 'smiler' || e.omenDone) && e.kind !== 'imagination_diver' && e.kind !== 'amicus' && (e.kind !== 'faceling' || e.state === 'chase') && e.state !== 'retreat' && e.state !== 'stakeout' && e.attackCd <= 0;
     if (canAttack) {
       const hitRad = (e.kind === 'snail') ? 0.95 : 1.32;
       for (const cand of allTargets) {
@@ -6797,7 +7105,7 @@ function updateEntities(dt, playerMovedDist) {
         }
       }
     }
-    if (e.kind !== 'snail' && e.kind !== 'imagination_diver' && (e.life <= 0 || (e.kind !== 'partygoer' && minAnyPlayerDist > 42))) {
+    if (e.kind !== 'snail' && e.kind !== 'imagination_diver' && e.kind !== 'amicus' && (e.life <= 0 || (e.kind !== 'partygoer' && minAnyPlayerDist > 42))) {
       entityGroup.remove(e.mesh); activeEntities.splice(i, 1);
     }
   }
@@ -7383,8 +7691,24 @@ function enterLevel(idx, showCurtain = true, routeText = '') {
   hemiLight.color.setHex(lv.lightColor); hemiLight.intensity = lv.hasCeil ? 0.16 : 0.34;
 
   sound.setAmbient(lv.sound);
+  state.channelAction = null;
+  state.amicusDecoyUsed = false;
   updateChunks(true);
   state.yaw = computeBestSpawnYaw();
+
+  // V9.2.0 D-1 Pool Layer Imagination Diver: rolled ONCE per visit at 15% (ONLY spawn path!)
+  if (lv.arch === 'pool_layer' && mp.role !== 'guest' && state.playing && state.horrorMode && settings.entityFreq !== 'none') {
+    if (Math.random() < 0.15) {
+      spawnEntity('imagination_diver', { x: state.pos.x + 12, z: state.pos.z - 12 });
+    }
+  }
+  // V9.2.0 H-2 Amicus Fake Human: rolled ONCE per floor entry at 3% on all floors except LEVEL !
+  if (lv.arch !== 'red_hospital' && mp.role !== 'guest' && state.playing) {
+    if (Math.random() < 0.03) {
+      spawnEntity('amicus');
+    }
+  }
+
   updateHUDText(); updateObjectiveUI(); updateInventoryUI();
 
   if (showCurtain) {
@@ -7507,38 +7831,45 @@ function executeTransition(etype) {
   if (mp.role === 'host') mpBroadcast({ type: 'level', levelIdx: next, depth: state.depth, routeText });
 }
 
-function triggerExitTransition(it) {
-  const etype = it.data.etype || 'door';
-  const lv = LEVELS[state.levelIdx];
-
-  // V8/V9 §6-4 All-Survive White Door Rule (carried downed peers count as arrived!)
-  if (etype === 'white_door' && isMpActive()) {
-    const chk = checkWhiteDoorAllReady(it.x, it.z);
-    if (!chk.ok) {
-      sound.playSwitch();
-      if (chk.unrescuedDowned > 0) showToast(`白い扉：ダウン中の仲間(${chk.unrescuedDowned}人)を蘇生または搬送せよ！`);
-      else if (chk.disconnectedCnt > 0) showToast(`白い扉：切断中の仲間(${chk.disconnectedCnt}人)の再接続を待機中...`);
-      else showToast(`白い扉：全員集合が必要（あと ${chk.missing} 人）`);
-      return;
+// V9.2.0 E-2 Noise lure helper: attracts sound-axis entities (hound, bacteria, partygoer) just like lockpick failure!
+function attractNoiseEntities(nx, nz, radius = 32, lureDur = 9.0) {
+  let lured = 0;
+  for (const e of activeEntities) {
+    if ((e.kind === 'hound' || e.kind === 'bacteria' || e.kind === 'partygoer') && Math.hypot(e.x - nx, e.z - nz) < radius) {
+      e.lureX = nx; e.lureZ = nz; e.lureTimer = Math.max(e.lureTimer || 0, lureDur);
+      lured++;
     }
   }
+  return lured;
+}
 
-  // V8 §1 & §3 Power Lock Check (bypassed by noclip/rift/return_rift/white_door OR successful lockpick!)
-  const unlockedByPowerOrPick = state.taskDone || (it.data && it.data.pickedOpen);
-  if (!unlockedByPowerOrPick && etype !== 'noclip' && etype !== 'rift' && etype !== 'white_door' && etype !== 'return_rift') {
-    sound.playSwitch();
-    if (lv.arch === 'branch_layer') {
-      showToast('A翼・B翼の制御盤を同時操作し中央扉を開放してから進み抜けろ！');
-      return;
-    }
-    if ((state.inv[5] || 0) > 0) {
-      openLockpickModal(it);
-    } else {
-      showToast('無電力で施錠中：近くの壁面制御盤で電源を復旧するか、ピック[P]で開錠せよ！');
-    }
+// V9.2.0 E-2 & E-3 Complete Control Panel Recovery (blocked from completing 'fuse' floors!)
+function completeControlPanel(it) {
+  if (!it || it.used) return;
+  const lv = LEVELS[state.levelIdx];
+  if (lv.task.type === 'fuse') {
+    showToast('この階層はヒューズ2個の回収が必須です（制御盤では代替不可）');
     return;
   }
+  it.used = true; mpUsedUids.add(it.uid);
+  if (it.mesh && it.mesh.userData && it.mesh.userData.ledMat) {
+    it.mesh.userData.ledMat.color.setHex(0x44ff88); it.mesh.userData.ledMat.emissive.setHex(0x22ee66);
+  }
+  attractNoiseEntities(it.x, it.z, 34, 10.0);
+  if (mp.active) mpBroadcastOrSend({ type: 'use_obj', uid: it.uid, taskKind: 'control_panel', keepVisible: true });
+  state.taskProgress++;
+  const need = (lv.task.type === 'breaker') ? lv.task.target : 1;
+  if (state.taskProgress >= need) {
+    restoreFloorPower('壁面制御盤の電源復旧完了！');
+  } else {
+    sound.playSwitch();
+    showToast(`壁面配電盤を復旧 (${state.taskProgress}/${need}) — 復旧音に注意！`);
+    updateObjectiveUI();
+  }
+}
 
+function executeExitNow(it) {
+  const etype = (it && it.data && it.data.etype) || 'door';
   if (mp.active && mp.peers.size > 0) {
     const myId = mp.myId || 'local';
     if (mp.role === 'guest') {
@@ -7571,6 +7902,120 @@ function triggerExitTransition(it) {
   executeTransition(etype);
 }
 
+function triggerExitTransition(it) {
+  const etype = it.data.etype || 'door';
+  const lv = LEVELS[state.levelIdx];
+
+  // V8/V9 §6-4 All-Survive White Door Rule (carried downed peers count as arrived!)
+  if (etype === 'white_door' && isMpActive()) {
+    const chk = checkWhiteDoorAllReady(it.x, it.z);
+    if (!chk.ok) {
+      sound.playSwitch();
+      if (chk.unrescuedDowned > 0) showToast(`白い扉：ダウン中の仲間(${chk.unrescuedDowned}人)を蘇生または搬送せよ！`);
+      else if (chk.disconnectedCnt > 0) showToast(`白い扉：切断中の仲間(${chk.disconnectedCnt}人)の再接続を待機中...`);
+      else showToast(`白い扉：全員集合が必要（あと ${chk.missing} 人）`);
+      return;
+    }
+  }
+
+  // V8 §1 & §3 Power Lock Check (bypassed by noclip/rift/return_rift/white_door OR successful lockpick!)
+  const unlockedByPowerOrPick = state.taskDone || (it.data && it.data.pickedOpen);
+  if (!unlockedByPowerOrPick && etype !== 'noclip' && etype !== 'rift' && etype !== 'white_door' && etype !== 'return_rift') {
+    sound.playSwitch();
+    if (lv.arch === 'branch_layer') {
+      showToast('A翼・B翼の制御盤を同時操作し中央扉を開放してから進み抜けろ！');
+      return;
+    }
+    if ((state.inv[5] || 0) > 0) {
+      openLockpickModal(it);
+    } else {
+      showToast(lv.task.type === 'fuse' ? '無電力で施錠中：ヒューズ2個を回収するか、ピック[P]で開錠せよ！' : '無電力で施錠中：離れた壁面制御盤を長押し復旧するか、ピック[P]で開錠せよ！');
+    }
+    return;
+  }
+
+  // V9.2.0 E-4 Unlocked exits require 2.5s opening time (vulnerable while opening!)
+  if (etype !== 'noclip') {
+    if (state.channelAction && state.channelAction.kind === 'exit' && state.channelAction.it === it) return;
+    state.channelAction = { kind: 'exit', it, timer: 0, dur: 2.5, requireHold: false, startX: state.pos.x, startZ: state.pos.z };
+    sound.playSwitch();
+    document.getElementById('use-progress-label').textContent = '出口を開扉中... (2.5秒・無防備！)';
+    document.getElementById('use-progress-fill').style.width = '0%';
+    document.getElementById('use-progress-wrap').style.display = 'block';
+    return;
+  }
+  executeExitNow(it);
+}
+
+// V9.2.0 E-2 & E-4 Channel Action Controller (4.0s hold control panel with noise lure + 2.5s exit opening)
+function cancelChannelAction(msg = '') {
+  if (!state.channelAction) return;
+  state.channelAction = null;
+  if (!state.useAction && !state.reviveTarget) {
+    document.getElementById('use-progress-wrap').style.display = 'none';
+  }
+  if (msg) showToast(msg);
+}
+
+function updateChannelAction(dt) {
+  const ca = state.channelAction;
+  if (!ca) return;
+  if (state.downed || state.hide.active || state.paused || state.settingsOpen || state.codexOpen || state.bagOpen || !ca.it || ca.it.used) {
+    cancelChannelAction();
+    return;
+  }
+  const distToObj = Math.hypot(state.pos.x - ca.it.x, state.pos.z - ca.it.z);
+  const movedFromStart = Math.hypot(state.pos.x - ca.startX, state.pos.z - ca.startZ);
+  if (ca.kind === 'control_panel') {
+    const held = !!(keys['KeyE'] || mUseHeld);
+    if (!held) {
+      cancelChannelAction('⚡ 制御盤の復旧を中断（4秒間長押しが必要）');
+      return;
+    }
+    if (distToObj > (ca.it.radius || 2.9) + 0.6 || movedFromStart > 2.0) {
+      cancelChannelAction('⚡ 制御盤から離れたため復旧が中断された');
+      return;
+    }
+    ca.timer += dt;
+    const pct = Math.min(100, (ca.timer / ca.dur) * 100);
+    document.getElementById('use-progress-label').textContent = `制御盤を復旧中... (${Math.max(0, ca.dur - ca.timer).toFixed(1)}s / 騒音発生中)`;
+    document.getElementById('use-progress-fill').style.width = pct.toFixed(0) + '%';
+    document.getElementById('use-progress-wrap').style.display = 'block';
+    if (ca.timer >= (ca.nextNoiseAt || 0.4)) {
+      ca.nextNoiseAt = ca.timer + 1.35;
+      sound.playChannelHum(pct / 100);
+      const lured = attractNoiseEntities(ca.it.x, ca.it.z, 32, 9.0);
+      if (lured > 0 && !ca.noiseWarned) {
+        ca.noiseWarned = true;
+        showToast('⚠ 復旧の駆動音が響いた！音に反応する存在が近づいている！');
+      }
+    }
+    if (ca.timer >= ca.dur) {
+      const targetIt = ca.it;
+      state.channelAction = null;
+      document.getElementById('use-progress-wrap').style.display = 'none';
+      completeControlPanel(targetIt);
+    }
+  } else if (ca.kind === 'exit') {
+    if (distToObj > (ca.it.radius || 3.0) + 0.7 || movedFromStart > 2.2) {
+      cancelChannelAction('出口から離れたため開扉を中断した');
+      return;
+    }
+    state.stillTime = 0; // Keep LEVEL! pressure from insta-killing mid-open; pursuing entities still threaten!
+    ca.timer += dt;
+    const pct = Math.min(100, (ca.timer / ca.dur) * 100);
+    document.getElementById('use-progress-label').textContent = `出口を開扉中... (${Math.max(0, ca.dur - ca.timer).toFixed(1)}s)`;
+    document.getElementById('use-progress-fill').style.width = pct.toFixed(0) + '%';
+    document.getElementById('use-progress-wrap').style.display = 'block';
+    if (ca.timer >= ca.dur) {
+      const targetIt = ca.it;
+      state.channelAction = null;
+      document.getElementById('use-progress-wrap').style.display = 'none';
+      executeExitNow(targetIt);
+    }
+  }
+}
+
 function showToast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
@@ -7579,16 +8024,16 @@ function showToast(msg) {
 
 // Item Use with Short Cast Time (slots 0..4; slots 5=Lockpick, 6=Ball handled directly)
 const ITEM_DEFS = [
-  { name: 'アーモンド水', dur: 1.05, apply: () => { state.hp = Math.min(100, state.hp+25); state.hunger = Math.min(100, state.hunger+16); state.sanity = Math.min(100, state.sanity+35); state.stamina = Math.min(100, state.stamina+30); sound.playDrink(); showToast('アーモンドウォーターを飲んだ（HP+25 / 安定+35）'); } },
-  { name: '携帯食料', dur: 1.2, apply: () => {
+  { name: 'アーモンド水', ico: '💧', desc: 'HP+25 / 空腹+16 / 正気+35 / スタミナ+30', dur: 1.05, apply: () => { state.hp = Math.min(100, state.hp+25); state.hunger = Math.min(100, state.hunger+16); state.sanity = Math.min(100, state.sanity+35); state.stamina = Math.min(100, state.stamina+30); sound.playDrink(); showToast('アーモンドウォーターを飲んだ（HP+25 / 安定+35）'); } },
+  { name: '携帯食料', ico: '🥫', desc: '空腹+38 / HP+6（デスラット誘引）', dur: 1.2, apply: () => {
     state.hunger = Math.min(100, state.hunger+38); state.hp = Math.min(100, state.hp+6); sound.playPickup();
     let lured = 0;
     for (const e of activeEntities) if (e.kind === 'deathrat' && Math.hypot(e.x-state.pos.x, e.z-state.pos.z) < 16) { e.lureX = state.pos.x; e.lureZ = state.pos.z; e.lureTimer = 6.0; lured++; }
     showToast(lured > 0 ? '携帯食料を使用（空腹+38 / デスラットを6秒間おびき寄せた！）' : '携帯食料を食べた（空腹+38）');
   } },
-  { name: '救急キット', dur: 1.6, apply: () => { state.hp = Math.min(100, state.hp+55); sound.playPickup(); showToast('救急キットで手当した（HP+55）'); } },
-  { name: 'モスゼリー', dur: 1.0, apply: () => { state.hunger = Math.min(100, state.hunger+30); state.mothRepelTimer = 45; sound.playDrink(); showToast('モスゼリーを摂取（空腹+30 / 45秒間 ドクガ忌避）'); } },
-  { name: '乾電池', dur: 0.85, apply: () => {
+  { name: '救急キット', ico: '🩹', desc: 'HP+55 大回復', dur: 1.6, apply: () => { state.hp = Math.min(100, state.hp+55); sound.playPickup(); showToast('救急キットで手当した（HP+55）'); } },
+  { name: 'モスゼリー', ico: '🍯', desc: '空腹+30 / 45秒間 ドクガ忌避', dur: 1.0, apply: () => { state.hunger = Math.min(100, state.hunger+30); state.mothRepelTimer = 45; sound.playDrink(); showToast('モスゼリーを摂取（空腹+30 / 45秒間 ドクガ忌避）'); } },
+  { name: '乾電池', ico: '🔋', desc: 'ライト電池+50% / ハッピーファイル即駆除', dur: 0.85, apply: () => {
     state.battery = Math.min(100, state.battery+50); sound.playSwitch();
     if (state.happyfileTimer > 0) {
       state.happyfileTimer = 0; state.happyfileStillTimer = 0; document.getElementById('happyfile-bar').style.display = 'none';
@@ -7597,8 +8042,70 @@ const ITEM_DEFS = [
   } }
 ];
 
+// V9.2.0 B-3 Bag Modal: large comfortable inventory panel; pauses game time in Solo, live in MP!
+const BAG_ALL_ITEMS = [
+  { slot: 0, ico: '💧', name: 'アーモンド水', desc: 'HP+25 / 空腹+16 / 正気+35 / スタミナ+30', btn: '使う' },
+  { slot: 1, ico: '🥫', name: '携帯食料', desc: '空腹+38 / HP+6（デスラット誘引）', btn: '使う' },
+  { slot: 2, ico: '🩹', name: '救急キット', desc: 'HP+55 大回復', btn: '使う' },
+  { slot: 3, ico: '🍯', name: 'モスゼリー', desc: '空腹+30 / 45秒間 ドクガ忌避', btn: '使う' },
+  { slot: 4, ico: '🔋', name: '乾電池', desc: 'ライト電池+50% / ハッピーファイル即駆除', btn: '使う' },
+  { slot: 5, ico: '🧷', name: 'ピック', desc: '施錠された出口扉の前で使用しピッキング開錠', btn: '開錠' },
+  { slot: 6, ico: '⚾', name: 'ボール', desc: '前方へ投擲し音でレク・クロカビ・ディンゴを誘引', btn: '投げる' }
+];
+function renderBagModal() {
+  const grid = document.getElementById('bag-grid');
+  const badge = document.getElementById('bag-pause-badge');
+  if (badge) {
+    const mpLive = isMpActive();
+    badge.textContent = mpLive ? '● マルチ稼働中（時間停止なし）' : '⏸ ソロ一時停止中';
+    badge.classList.toggle('mp-live', mpLive);
+  }
+  if (!grid) return;
+  const infected = state.happyfileTimer > 0;
+  grid.innerHTML = '';
+  for (const item of BAG_ALL_ITEMS) {
+    const qty = state.inv[item.slot] || 0;
+    const card = document.createElement('div');
+    card.className = 'bag-item-card ' + (qty > 0 ? 'has-qty' : 'zero-qty');
+    const dispName = infected ? INV_GARBLED[item.slot] : item.name;
+    const dispQty = infected ? '×?' : `×${qty}`;
+    card.innerHTML = `
+      <div class="bag-item-ico">${item.ico}</div>
+      <div class="bag-item-info">
+        <div class="bag-item-head"><span class="bag-item-name">${dispName}</span><span class="bag-item-qty">${dispQty}</span></div>
+        <div class="bag-item-desc">${item.desc}</div>
+      </div>
+      <button class="bag-use-btn" ${qty <= 0 ? 'disabled' : ''}>${item.btn}</button>
+    `;
+    const btn = card.querySelector('.bag-use-btn');
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeBagModal();
+      useInventorySlot(item.slot);
+    });
+    grid.appendChild(card);
+  }
+}
+function openBagModal() {
+  if (!state.playing || state.downed || state.lockpick.active) return;
+  if (state.settingsOpen || state.codexOpen || state.noteOpen) return;
+  state.bagOpen = true;
+  state.paused = !isMpActive();
+  renderBagModal();
+  document.getElementById('bag-modal').classList.add('show');
+  try { if (document.pointerLockElement) document.exitPointerLock(); } catch (e) {}
+}
+function closeBagModal() {
+  if (!state.bagOpen) return;
+  state.bagOpen = false;
+  state.paused = (state.settingsOpen || state.codexOpen) && state.playing && !isMpActive();
+  document.getElementById('bag-modal').classList.remove('show');
+}
+window.openBagModal = openBagModal;
+window.closeBagModal = closeBagModal;
+
 function useInventorySlot(slot) {
-  if (!state.playing || state.paused || state.downed || state.noteOpen || state.settingsOpen || state.codexOpen || state.lockpick.active) return;
+  if (!state.playing || state.paused || state.downed || state.noteOpen || state.settingsOpen || state.codexOpen || state.bagOpen || state.lockpick.active) return;
   if (slot === 5) {
     const it = getBestInteractable();
     if (it && it.type === 'exit') openLockpickModal(it);
@@ -7723,7 +8230,7 @@ function dropHeavySample() {
 }
 
 function triggerInteract() {
-  if (!state.playing || state.paused || state.downed || state.settingsOpen || state.codexOpen) return;
+  if (!state.playing || state.paused || state.downed || state.settingsOpen || state.codexOpen || state.bagOpen) return;
   if (state.lockpick.active) { attemptLockpickTap(); return; }
   if (state.noteOpen) { closeNote(); return; }
   if (state.hide.active) { exitHideSpot(); return; }
@@ -7778,42 +8285,40 @@ function triggerInteract() {
   };
   const lv = LEVELS[state.levelIdx];
 
-  if (it.type === 'almond') { markUsed(); state.inv[0]++; sound.playPickup(); showToast('アーモンドウォーターを入手した'); }
-  else if (it.type === 'food') { markUsed(); state.inv[1]++; sound.playPickup(); showToast('携帯食料を入手した'); }
-  else if (it.type === 'medkit') { markUsed(); state.inv[2]++; sound.playPickup(); showToast('救急キットを入手した'); }
-  else if (it.type === 'jelly') { markUsed(); state.inv[3]++; sound.playPickup(); showToast('モスゼリーを入手した（ドクガ忌避）'); }
-  else if (it.type === 'battery') { markUsed(); state.inv[4]++; sound.playPickup(); showToast('乾電池を入手した [5]'); }
+  if (it.type === 'almond') { markUsed(); state.inv[0]++; sound.playPickup(); showToast('💧 アーモンドウォーターを入手'); }
+  else if (it.type === 'food') { markUsed(); state.inv[1]++; sound.playPickup(); showToast('🥫 携帯食料を入手'); }
+  else if (it.type === 'medkit') { markUsed(); state.inv[2]++; sound.playPickup(); showToast('🩹 救急キットを入手'); }
+  else if (it.type === 'jelly') { markUsed(); state.inv[3]++; sound.playPickup(); showToast('🍯 モスゼリーを入手（ドクガ忌避）'); }
+  else if (it.type === 'battery') { markUsed(); state.inv[4]++; sound.playPickup(); showToast('🔋 乾電池を入手 [5]'); }
   else if (it.type === 'lockpick') {
     if ((state.inv[5] || 0) >= LOCKPICK_MAX) { showToast(`ピックは最大${LOCKPICK_MAX}本まで所持できる`); return; }
-    markUsed(); state.inv[5] = (state.inv[5] || 0) + 1; sound.playPickup(); showToast(`ピックを拾った (${state.inv[5]}/${LOCKPICK_MAX})`);
+    markUsed(); state.inv[5] = (state.inv[5] || 0) + 1; sound.playPickup(); showToast(`🧷 ピックを入手 (${state.inv[5]}/${LOCKPICK_MAX})`);
   } else if (it.type === 'ball') {
-    markUsed(); state.inv[6] = (state.inv[6] || 0) + 1; sound.playPickup(); showToast('⚾ ボールを拾った！[B]で投擲（レク・クロカビ・ディンゴ用）');
+    markUsed(); state.inv[6] = (state.inv[6] || 0) + 1; sound.playPickup(); showToast('⚾ ボールを入手！[B]で投擲（レク・クロカビ・ディンゴ用）');
   } else if (it.type === 'heavy_sample') {
     if (!isMpActive()) return;
     markUsed(); state.heavySampleCarried = true; state.heavySampleUid = it.uid;
-    sound.playCrystal(); showToast('📦 重量サンプルを担いだ！2人で近づけば速度70%・確定価値3倍（[E]で置ける）');
+    sound.playCrystal(); showToast('📦 重量サンプルを入手・搬送中（2人搬送で速度70%・価値3倍）');
     updateObjectiveUI();
   } else if (it.type === 'fuse') {
     markUsed('fuse'); state.questFuses++; sound.playPickup();
     if (lv.task.type === 'fuse' && state.questFuses >= lv.task.target) {
-      restoreFloorPower('ヒューズ復旧完了！');
-    } else showToast(`電源ヒューズを回収 (${state.questFuses}/${lv.task.target})`);
+      restoreFloorPower('⚡ ヒューズを入手 — 電源復旧完了！');
+    } else showToast(`⚡ 電源ヒューズを入手 (${state.questFuses}/${lv.task.target})`);
     updateObjectiveUI();
   } else if (it.type === 'control_panel' || it.type === 'breaker') {
-    it.used = true; mpUsedUids.add(it.uid);
-    if (it.mesh && it.mesh.userData && it.mesh.userData.ledMat) {
-      it.mesh.userData.ledMat.color.setHex(0x44ff88); it.mesh.userData.ledMat.emissive.setHex(0x22ee66);
+    // V9.2.0 E-2 & E-3: 4.0s hold channel with noise lure; NEVER shortcuts fuse floors!
+    if (lv.task.type === 'fuse') {
+      showToast('この階層はヒューズ2個の回収が必須です（制御盤では代替不可）');
+      return;
     }
-    if (mp.active) mpBroadcastOrSend({ type: 'use_obj', uid: it.uid, taskKind: 'control_panel', keepVisible: true });
-    state.taskProgress++;
-    const need = (lv.task.type === 'breaker') ? lv.task.target : 1;
-    if (state.taskProgress >= need) {
-      restoreFloorPower('壁面制御盤の電源復旧完了！');
-    } else {
-      sound.playSwitch();
-      showToast(`壁面配電制御盤を復旧 (${state.taskProgress}/${need})`);
-      updateObjectiveUI();
-    }
+    if (state.channelAction && state.channelAction.kind === 'control_panel' && state.channelAction.it === it) return;
+    state.channelAction = { kind: 'control_panel', it, timer: 0, dur: 4.0, requireHold: true, nextNoiseAt: 0.4, noiseWarned: false, startX: state.pos.x, startZ: state.pos.z };
+    sound.playSwitch();
+    document.getElementById('use-progress-label').textContent = '制御盤を復旧中... (4.0s長押し / 騒音注意)';
+    document.getElementById('use-progress-fill').style.width = '0%';
+    document.getElementById('use-progress-wrap').style.display = 'block';
+    return;
   } else if (it.type === 'branch_panel') {
     // V8 MP §1 Branch Layer simultaneous A/B wing control panels!
     const wing = it.data.wing || 'A';
@@ -7831,7 +8336,10 @@ function triggerInteract() {
     markUsed(); state.unconfirmedSamples++; sound.playCrystal();
     saveRecords(r => { r.sampleLevels.add(state.levelIdx); });
     completeSideObjective('sample'); updateHUDText();
-    showToast(`✦ 特異点サンプル採取！（未確定 ×${state.unconfirmedSamples} — 持つほど足音増・移動微減）`);
+    showToast(`✦ 特異点サンプルを入手！（未確定 ×${state.unconfirmedSamples} — 持つほど足音増・移動微減）`);
+    if (state.depth === 1 && state.levelIdx === 0) {
+      showFirstHint('tut_l0_sample', 'ヒント：特異点サンプルを回収し、マニラルームや帰還の裂け目・白い扉で確定させよう');
+    }
   } else if (it.type === 'crate') {
     markUsed(); state.inv[0]++; state.inv[1]++; state.inv[4]++;
     if ((state.inv[5] || 0) < LOCKPICK_MAX && Math.random() < 0.6) state.inv[5]++;
@@ -8065,6 +8573,7 @@ function drawEntitySilhouette(canvas, id, unlocked) {
     }
   }
   else if (id === 'imagination_diver') { ctx.fillStyle = '#edf6fa'; ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2); ctx.fill(); ctx.fillStyle = '#48c8e8'; ctx.beginPath(); ctx.arc(0,0,12,0,Math.PI*2); ctx.fill(); ctx.fillStyle = '#05080c'; ctx.beginPath(); ctx.arc(0,0,5,0,Math.PI*2); ctx.fill(); }
+  else if (id === 'amicus') { ctx.fillStyle = '#ece6dc'; ctx.beginPath(); ctx.arc(0,-18,7,0,Math.PI*2); ctx.fill(); ctx.fillRect(-9,-10,18,22); ctx.fillStyle = '#78e6b8'; ctx.fillRect(-10,-9,20,5); ctx.fillStyle = '#ece6dc'; ctx.fillRect(-7,12,5,16); ctx.fillRect(2,12,5,16); }
   else if (id === 'smiler') { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(-10,-8,4,0,Math.PI*2); ctx.arc(10,-8,4,0,Math.PI*2); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.beginPath(); ctx.arc(0,0,16,0.2*Math.PI,0.8*Math.PI); ctx.stroke(); }
   else if (id === 'mannequin') { ctx.beginPath(); ctx.arc(0,-19,6,0,Math.PI*2); ctx.fill(); ctx.fillRect(-7,-11,14,18); ctx.fillRect(-6,9,5,18); ctx.fillRect(1,9,5,18); }
   else if (id === 'hound') { ctx.fillRect(-16,-4,28,10); ctx.beginPath(); ctx.arc(16,-4,6,0,Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.moveTo(-12,6); ctx.lineTo(-16,22); ctx.moveTo(8,6); ctx.lineTo(12,22); ctx.stroke(); }
@@ -8369,6 +8878,7 @@ function mpApplyRemoteTask(taskKind) {
   if (!taskKind) return;
   const lv = LEVELS[state.levelIdx];
   if (taskKind === 'control_panel' || taskKind === 'breaker') {
+    if (lv.task.type === 'fuse') return; // V9.2.0 E-3 Fuse floors cannot be shortcut by control panels!
     state.blackoutTimer = 0;
     state.taskProgress++;
     const need = (lv.task.type === 'breaker') ? lv.task.target : 1;
@@ -8895,12 +9405,17 @@ window.addEventListener('keydown', (e) => {
   if (!state.playing) return;
   if (k === 'Escape') {
     if (state.lockpick && state.lockpick.active) closeLockpickModal();
+    else if (state.bagOpen) closeBagModal();
     else if (state.codexOpen) closeCodex();
     else if (state.noteOpen) closeNote();
     else togglePauseSettings(!state.settingsOpen);
     return;
   }
-  if (state.paused || state.settingsOpen || state.codexOpen) return;
+  if (k === 'KeyI' && !wasDown && !state.settingsOpen && !state.codexOpen && !state.noteOpen && !(state.lockpick && state.lockpick.active)) {
+    if (state.bagOpen) closeBagModal(); else openBagModal();
+    return;
+  }
+  if (state.paused || state.settingsOpen || state.codexOpen || state.bagOpen) return;
   if (state.lockpick && state.lockpick.active) {
     if ((k === 'Space' || k === 'KeyE') && !wasDown) { e.preventDefault(); attemptLockpickTap(); }
     return;
@@ -8935,7 +9450,7 @@ window.addEventListener('keyup', (e) => {
   if (e.code === 'KeyR') state.peekBack = false;
   if (e.code === 'KeyF') {
     if (keyFTimer) { clearTimeout(keyFTimer); keyFTimer = null; }
-    if (!keyFDecoyFired && state.playing && !state.paused && !state.settingsOpen && !state.codexOpen && !(state.lockpick && state.lockpick.active)) toggleFlashlight();
+    if (!keyFDecoyFired && state.playing && !state.paused && !state.settingsOpen && !state.codexOpen && !state.bagOpen && !(state.lockpick && state.lockpick.active)) toggleFlashlight();
   }
 });
 
@@ -8952,22 +9467,22 @@ function toggleCrouch() {
     return;
   }
   state.crouching = !state.crouching;
-  if (state.crouching) mobileDashToggle = false;
+  mobileDashToggle = false;
   sound.playUiClick();
   document.getElementById('m-crouch').classList.toggle('toggled', state.crouching);
   document.getElementById('crosshair').classList.toggle('crouch', state.crouching);
 }
 
 renderer.domElement.addEventListener('mousedown', (e) => {
-  if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || (state.lockpick && state.lockpick.active) || isTouchDevice) return;
+  if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || state.bagOpen || (state.lockpick && state.lockpick.active) || isTouchDevice) return;
   sound.init(); mouseDragging = true; lastMouseX = e.clientX; lastMouseY = e.clientY;
   if (document.pointerLockElement !== renderer.domElement && renderer.domElement.requestPointerLock) {
     try { renderer.domElement.requestPointerLock(); } catch (err) {}
   }
 });
-window.addEventListener('mouseup', () => { mouseDragging = false; });
+window.addEventListener('mouseup', () => { mouseDragging = false; mUseHeld = false; });
 document.addEventListener('mousemove', (e) => {
-  if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || (state.lockpick && state.lockpick.active)) return;
+  if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || state.bagOpen || (state.lockpick && state.lockpick.active)) return;
   const sens = 0.0021 * settings.lookSens;
   let dx = 0, dy = 0;
   if (document.pointerLockElement === renderer.domElement) { dx = e.movementX; dy = e.movementY; }
@@ -8981,7 +9496,7 @@ document.addEventListener('mousemove', (e) => {
   }
 });
 
-// Mobile Floating Stick with §5-2 Deadzone + Response Curve & §3 Omni-Directional 92% Auto-Dash
+// V9.2.0 B-1 Mobile Floating Stick: Walk-ONLY (auto-dash abolished; sprinting is unified to holding #m-dash!)
 const joyArea = document.getElementById('joy-touch-area'), joyBase = document.getElementById('joy-base'), joyKnob = document.getElementById('joy-knob');
 function resetJoyVisual() { joyBase.style.left = ''; joyBase.style.top = ''; joyBase.style.bottom = ''; joyBase.classList.remove('active', 'autorun'); joyKnob.style.transform = 'translate(0px,0px)'; }
 function updateJoyFromTouch(t) {
@@ -8994,12 +9509,12 @@ function updateJoyFromTouch(t) {
     const curved = Math.pow((rawMag - dz) / (1 - dz), 1.3);
     joy.dx = Math.cos(ang) * curved; joy.dy = Math.sin(ang) * curved;
   }
-  joy.autoSprint = settings.autoRunStick && (rawMag >= 0.92);
-  joyBase.classList.toggle('autorun', joy.autoSprint);
+  joy.autoSprint = false;
+  joyBase.classList.remove('autorun');
   joyKnob.style.transform = `translate(${cx}px,${cy}px)`;
 }
 joyArea.addEventListener('touchstart', (e) => {
-  e.preventDefault(); if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || (state.lockpick && state.lockpick.active)) return;
+  e.preventDefault(); if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || state.bagOpen || (state.lockpick && state.lockpick.active)) return;
   sound.init();
   for (const t of e.changedTouches) {
     if (!joy.active && t.identifier !== lookTouchId && t.identifier !== dashTouchId && t.identifier !== peekTouchId) {
@@ -9018,14 +9533,14 @@ joyArea.addEventListener('touchend', endJoy, { passive: false }); joyArea.addEve
 
 const lookArea = document.getElementById('look-touch-area');
 lookArea.addEventListener('touchstart', (e) => {
-  e.preventDefault(); if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || (state.lockpick && state.lockpick.active)) return;
+  e.preventDefault(); if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || state.bagOpen || (state.lockpick && state.lockpick.active)) return;
   sound.init();
   for (const t of e.changedTouches) if (lookTouchId === null && t.identifier !== joy.id && t.identifier !== dashTouchId && t.identifier !== peekTouchId) {
     lookTouchId = t.identifier; lastTouchX = t.clientX; lastTouchY = t.clientY; lookMoved = 0;
   }
 }, { passive: false });
 lookArea.addEventListener('touchmove', (e) => {
-  e.preventDefault(); if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || (state.lockpick && state.lockpick.active)) return;
+  e.preventDefault(); if (!state.playing || state.paused || state.noteOpen || state.settingsOpen || state.codexOpen || state.bagOpen || (state.lockpick && state.lockpick.active)) return;
   for (const t of e.changedTouches) if (t.identifier === lookTouchId) {
     const dx = t.clientX - lastTouchX, dy = t.clientY - lastTouchY;
     lastTouchX = t.clientX; lastTouchY = t.clientY; lookMoved += Math.hypot(dx, dy);
@@ -9037,17 +9552,16 @@ lookArea.addEventListener('touchmove', (e) => {
 const endLook = (e) => { for (const t of e.changedTouches) if (t.identifier === lookTouchId) { if (lookMoved < 11 && getBestInteractable()) triggerInteract(); lookTouchId = null; } };
 lookArea.addEventListener('touchend', endLook, { passive: false }); lookArea.addEventListener('touchcancel', endLook, { passive: false });
 
-const dashBtn = document.getElementById('m-dash'); let lastDashTap = 0;
+// V9.2.0 B-1 Restored #m-dash: strictly hold-to-sprint (touch + mouse!)
+const dashBtn = document.getElementById('m-dash');
 if (dashBtn) {
-  dashBtn.addEventListener('touchstart', (e) => {
-    e.preventDefault(); e.stopPropagation(); sound.init(); sound.playUiClick();
-    dashTouchId = e.changedTouches[0].identifier;
-    const now = performance.now();
-    if (now - lastDashTap < 280) { mobileDashToggle = !mobileDashToggle; showToast(mobileDashToggle ? 'ダッシュロック ON' : 'ダッシュロック OFF'); }
-    lastDashTap = now; mobileDashHeld = true; if (state.crouching) toggleCrouch(); dashBtn.classList.add('pressed');
-  }, { passive: false });
-  const endDash = (e) => { for (const t of e.changedTouches) if (t.identifier === dashTouchId) { dashTouchId = null; mobileDashHeld = false; dashBtn.classList.remove('pressed'); } };
+  const startDash = () => { sound.init(); sound.playUiClick(); mobileDashHeld = true; mobileDashToggle = false; if (state.crouching) toggleCrouch(); dashBtn.classList.add('pressed'); };
+  const stopDash = () => { dashTouchId = null; mobileDashHeld = false; dashBtn.classList.remove('pressed'); };
+  dashBtn.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); dashTouchId = e.changedTouches[0].identifier; startDash(); }, { passive: false });
+  const endDash = (e) => { for (const t of e.changedTouches) if (t.identifier === dashTouchId) stopDash(); };
   dashBtn.addEventListener('touchend', endDash, { passive: false }); dashBtn.addEventListener('touchcancel', endDash, { passive: false });
+  dashBtn.addEventListener('mousedown', (e) => { e.stopPropagation(); startDash(); });
+  window.addEventListener('mouseup', () => { if (mobileDashHeld && dashTouchId === null) stopDash(); });
 }
 
 const peekBtn = document.getElementById('m-peek');
@@ -9069,7 +9583,23 @@ function bindTouchBtn(id, fn) {
   el.addEventListener('touchcancel', () => el.classList.remove('pressed'));
   el.addEventListener('click', (e) => { e.stopPropagation(); if (touched) { touched = false; return; } sound.init(); sound.playUiClick(); fn(); });
 }
-bindTouchBtn('m-use', triggerInteract);
+// V9.2.0 E-2 Track #m-use hold state for 4.0s control panel channel recovery!
+let mUseHeld = false;
+(() => {
+  const el = document.getElementById('m-use'); if (!el) return;
+  let touched = false;
+  el.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); touched = true; mUseHeld = true; sound.init(); sound.playUiClick(); el.classList.add('pressed'); triggerInteract(); }, { passive: false });
+  el.addEventListener('touchend', () => { mUseHeld = false; el.classList.remove('pressed'); });
+  el.addEventListener('touchcancel', () => { mUseHeld = false; el.classList.remove('pressed'); });
+  el.addEventListener('mousedown', (e) => { e.stopPropagation(); if (touched) { touched = false; return; } mUseHeld = true; sound.init(); sound.playUiClick(); el.classList.add('pressed'); triggerInteract(); });
+  el.addEventListener('mouseup', () => { mUseHeld = false; el.classList.remove('pressed'); });
+  el.addEventListener('mouseleave', () => { mUseHeld = false; el.classList.remove('pressed'); });
+})();
+// V9.2.0 B-2 Pickup Chip tap & B-3 Bag Modal buttons
+bindTouchBtn('pickup-chip', triggerInteract);
+bindTouchBtn('m-bag', openBagModal);
+document.getElementById('btn-bag-hud').addEventListener('click', (e) => { e.stopPropagation(); sound.init(); openBagModal(); });
+document.getElementById('bag-close-btn').addEventListener('click', (e) => { e.stopPropagation(); closeBagModal(); });
 
 // V7.2 §6.7 + V8 §2 Mobile #m-light: short tap = toggle flashlight, long press (>=450ms) = drop decoy light!
 (() => {
@@ -9204,16 +9734,21 @@ const INV_REAL_NAMES = ['アーモンド水', '携帯食料', '救急キット',
 const INV_GARBLED = ['ｱｰﾓﾝﾄﾞ#ERR', '食料?0x4F', '救%急K!T', 'ﾓｽ_NULL', '電#池_666', 'ﾋﾟｯｸ_ERR', 'ﾎﾞｰﾙ_NULL'];
 function updateInventoryUI() {
   const infected = state.happyfileTimer > 0;
+  let totalQty = 0;
   for (let i = 0; i < 7; i++) {
     const cntEl = document.getElementById('cnt-' + i), slot = document.getElementById('slot-' + i);
-    if (!cntEl || !slot) continue;
     const qty = state.inv[i] || 0;
+    totalQty += qty;
+    if (!cntEl || !slot) continue;
     cntEl.textContent = infected ? '?' : qty;
     const nm = slot.querySelector('.inv-name');
     if (nm) nm.textContent = infected ? INV_GARBLED[i] : INV_REAL_NAMES[i];
     slot.classList.toggle('has-item', qty > 0);
     slot.classList.toggle('empty', qty <= 0);
   }
+  const bagCnt = document.getElementById('m-bag-cnt');
+  if (bagCnt) bagCnt.textContent = infected ? '?' : totalQty;
+  if (state.bagOpen) renderBagModal();
 }
 // V7.2 §6.6 Stacked Sonar Pings so close markers (EXIT 31m / EXIT 19m etc.) NEVER overlap!
 function updateSignalStrip() {
@@ -9343,26 +9878,49 @@ function updateLightPool(lv) {
   }
 }
 
-let lastTime = performance.now(), uiTick = 0;
+let lastTime = performance.now(), uiTick = 0, autoPerfTier = 0, lowFpsStreak = 0;
+function applyAutoPerfTier(tier) {
+  autoPerfTier = Math.max(autoPerfTier, tier);
+  const dprTable = [Math.min(window.devicePixelRatio || 1, settings.lowPerf ? 1.0 : 1.5), 0.85, 0.75, 0.65];
+  adaptiveDpr = Math.min(adaptiveDpr, dprTable[Math.min(3, autoPerfTier)]);
+  renderer.setPixelRatio(adaptiveDpr);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  if (autoPerfTier >= 2) {
+    renderer.shadowMap.enabled = false;
+    if (playerShadow) playerShadow.visible = false;
+    if (dustPoints) dustPoints.visible = false;
+  }
+  if (autoPerfTier >= 3) {
+    if (typeof MatCache !== 'undefined') for (const k in MatCache) applyMaterialPerf(MatCache[k], true);
+    scene.traverse((obj) => { if (obj.isMesh && obj.material) applyMaterialPerf(obj.material, true); });
+  }
+}
 function animate(now) {
   requestAnimationFrame(animate);
   const rawDt = (now - lastTime) / 1000;
   const dt = Math.min(0.05, Math.max(0.001, rawDt));
   lastTime = now;
 
-  // §8-1 Adaptive pixelRatio controller for smooth mobile 60fps
+  // V9.2.0 C-6 Tiered FPS Auto-Quality Controller (progressively lowers resolution & shadows when FPS stays low!)
   avgFrameDt = avgFrameDt * 0.94 + Math.min(0.1, rawDt) * 0.06;
   dprAdjustTimer += dt;
   if (dprAdjustTimer > 2.5 && state.playing && !state.paused) {
     dprAdjustTimer = 0;
-    if (avgFrameDt > 0.036 && adaptiveDpr > 0.85) {
-      adaptiveDpr = Math.max(0.85, +(adaptiveDpr - 0.15).toFixed(2));
-      renderer.setPixelRatio(adaptiveDpr); renderer.setSize(window.innerWidth, window.innerHeight);
+    if (avgFrameDt > 0.036) {
+      lowFpsStreak++;
+      if (lowFpsStreak >= 2 && autoPerfTier < 3) {
+        lowFpsStreak = 0;
+        const nextTier = autoPerfTier + 1;
+        applyAutoPerfTier(nextTier);
+        if (nextTier === 2) showToast('⚙ FPS低下を検知：影・解像度を自動軽量化しました');
+      }
+    } else {
+      lowFpsStreak = Math.max(0, lowFpsStreak - 1);
     }
   }
 
   if (!state.playing) { camera.rotation.y = Math.sin(now * 0.00025) * 0.28; renderer.render(scene, camera); return; }
-  if (state.paused || state.settingsOpen || state.codexOpen) { renderer.render(scene, camera); return; }
+  if (state.paused || state.settingsOpen || state.codexOpen || (state.bagOpen && !isMpActive())) { renderer.render(scene, camera); return; }
 
   state.elapsed += dt; state.runTime += dt;
   const lv = LEVELS[state.levelIdx];
@@ -9394,6 +9952,7 @@ function animate(now) {
   } else state.boilerSteamOn = true;
 
   updateItemUse(dt);
+  updateChannelAction(dt);
   updateLockpick(dt);
 
   const targetPeek = (state.peekBack && !state.hide.active) ? 1 : 0;
@@ -9423,12 +9982,13 @@ function animate(now) {
     if (joy.active) { moveF -= joy.dy; moveR += joy.dx; }
   }
   const len = Math.hypot(moveF, moveR);
-  const wantDash = (keys['ShiftLeft'] || keys['ShiftRight'] || mobileDashHeld || mobileDashToggle || joy.autoSprint);
+  // V9.2.0 B-1 Stick is walk-only; sprinting is unified to Shift / #m-dash hold!
+  const wantDash = (keys['ShiftLeft'] || keys['ShiftRight'] || mobileDashHeld);
   if (state.stamina <= 1) state.exhausted = true;
   if (state.exhausted && state.stamina >= 24) state.exhausted = false;
   const carryingHeavy = !!state.heavySampleCarried;
   const carryingPeer = !!state.carryingPeerId;
-  const canSprint = !lockedByModal && !state.useAction && !carryingHeavy && !carryingPeer && wantDash && !state.exhausted && !state.crouching && len > 0.12 && state.stamina > 1;
+  const canSprint = !lockedByModal && !state.useAction && !state.channelAction && !carryingHeavy && !carryingPeer && wantDash && !state.exhausted && !state.crouching && len > 0.12 && state.stamina > 1;
   state.sprinting = canSprint;
 
   // V8 §8 Sample weight (-2.5% per unconfirmed sample, max -15%), Pool wade, Slime/Watch slow, MP Carry/Heavy Sample
@@ -9662,7 +10222,7 @@ function animate(now) {
   camera.rotation.z = Math.sin(state.bobPhase*0.5) * (curSpd > 0.2 ? (canSprint ? 0.016 : 0.008) : 0);
 
   if (playerBody && playerShadow) {
-    playerBody.visible = !state.hide.active; playerShadow.visible = !state.hide.active && !settings.lowPerf;
+    playerBody.visible = !state.hide.active; playerShadow.visible = !state.hide.active && !settings.lowPerf && autoPerfTier < 2;
     playerBody.position.set(state.pos.x, state.floorY + (state.crouching ? -0.35 : 0), state.pos.z);
     playerBody.rotation.y = state.yaw;
     const swing = curSpd > 0.2 ? Math.sin(state.bobPhase)*(canSprint ? 0.65 : 0.42) : 0;
@@ -9709,30 +10269,61 @@ function animate(now) {
     if (ring) { ring.setAttribute('stroke-dashoffset', (226.19*(1-state.stamina/100)).toFixed(1)); ring.setAttribute('stroke', state.exhausted ? '#ff6464' : '#ffe57f'); }
     if (dashBtn) dashBtn.classList.toggle('sprinting', canSprint);
     const dSub = document.getElementById('m-dash-sub');
-    if (dSub) dSub.textContent = mobileDashToggle ? 'LOCK' : (state.exhausted ? 'TIRED' : 'DASH');
+    if (dSub) dSub.textContent = state.exhausted ? 'TIRED' : (canSprint ? 'RUN' : 'HOLD');
 
     const hw = document.getElementById('hazard-warn');
     if (warnText) { hw.textContent = warnText; hw.style.display = 'block'; } else hw.style.display = 'none';
 
-    // V7.2 §6.7 Dynamic context label on #m-use
+    // V9.2.0 B-2 Rounded Ground Pickup Chip (icon + name, tappable) + C-4 L0 D1 Contextual Hints!
+    const GROUND_PICKUP_INFO = {
+      almond: { ico: '💧', name: 'アーモンドウォーター' },
+      food: { ico: '🥫', name: '携帯食料' },
+      medkit: { ico: '🩹', name: '救急キット' },
+      jelly: { ico: '🍯', name: 'モスゼリー' },
+      battery: { ico: '🔋', name: '乾電池' },
+      lockpick: { ico: '🧷', name: 'ピック' },
+      ball: { ico: '⚾', name: 'ボール' },
+      fuse: { ico: '⚡', name: '電源ヒューズ' },
+      sample: { ico: '✦', name: '特異点サンプル' },
+      heavy_sample: { ico: '📦', name: '重量サンプル' }
+    };
     const hit = getBestInteractable(), pr = document.getElementById('interact-prompt'), ch = document.getElementById('crosshair');
+    const chip = document.getElementById('pickup-chip'), chipIco = document.getElementById('pickup-chip-ico'), chipName = document.getElementById('pickup-chip-name');
     const mUse = document.getElementById('m-use'), mCrouch = document.getElementById('m-crouch');
     if (state.hide.active) {
-      pr.style.display = 'none'; ch.classList.remove('hover'); mUse.classList.add('can-interact');
+      pr.style.display = 'none'; if (chip) chip.style.display = 'none';
+      ch.classList.remove('hover'); mUse.classList.add('can-interact');
       mUse.firstChild.textContent = '出る';
       if (state.hide.kind === 'car') { mCrouch.firstChild.textContent = state.hide.ducked ? '起きる' : '伏せる'; mCrouch.classList.toggle('toggled', state.hide.ducked); }
       else mCrouch.firstChild.textContent = 'しゃがみ';
     } else if (state.carryingPeerId) {
-      pr.textContent = '[E] 担いでいる仲間を下ろす'; pr.style.display = 'block'; ch.classList.add('hover'); mUse.classList.add('can-interact');
+      pr.textContent = '[E] 担いでいる仲間を下ろす'; pr.style.display = 'block'; if (chip) chip.style.display = 'none';
+      ch.classList.add('hover'); mUse.classList.add('can-interact');
       mUse.firstChild.textContent = '下ろす'; mCrouch.firstChild.textContent = 'しゃがみ';
     } else if (hit && !state.noteOpen) {
-      pr.textContent = isTouchDevice ? hit.label.replace('[E] ', '') : hit.label;
-      pr.style.display = 'block'; ch.classList.add('hover'); mUse.classList.add('can-interact');
-      const ctxMap = { hide: '隠れる', control_panel: '復旧', breaker: '復旧', branch_panel: '起動', exit: '開ける', chasm: '降りる', crate: '拾う', sample: '回収', heavy_sample: '担ぐ', lockpick_item: '拾う', ball_item: '拾う', fuse: '拾う', keycard: '拾う', log: '読む' };
+      const gInfo = GROUND_PICKUP_INFO[hit.type];
+      if (gInfo && chip) {
+        pr.style.display = 'none';
+        chipIco.textContent = gInfo.ico;
+        chipName.textContent = gInfo.name;
+        chip.style.display = 'inline-flex';
+      } else {
+        if (chip) chip.style.display = 'none';
+        pr.textContent = isTouchDevice ? hit.label.replace('[E] ', '').replace('[E長押し 4秒] ', '長押し4秒: ') : hit.label;
+        pr.style.display = 'block';
+      }
+      ch.classList.add('hover'); mUse.classList.add('can-interact');
+      const ctxMap = { hide: '隠れる', control_panel: '長押し復旧', breaker: '長押し復旧', branch_panel: '起動', exit: '開ける', chasm: '降りる', crate: '拾う', sample: '拾う', heavy_sample: '担ぐ', almond: '拾う', food: '拾う', medkit: '拾う', jelly: '拾う', battery: '拾う', lockpick: '拾う', ball: '拾う', fuse: '拾う', keycard: '拾う', note: '読む' };
       mUse.firstChild.textContent = ctxMap[hit.type] || '調べる';
       mCrouch.firstChild.textContent = 'しゃがみ';
+      // V9.2.0 C-4 LEVEL 0 Depth 1 contextual one-time tutorial hints
+      if (state.depth === 1 && state.levelIdx === 0) {
+        if (hit.type === 'hide') showFirstHint('tut_l0_locker', 'ヒント：ロッカーや遮蔽物では [E] で隠れて敵をやり過ごせる');
+        else if (hit.type === 'sample') showFirstHint('tut_l0_sample', 'ヒント：特異点サンプルを回収し、マニラルームや帰還の裂け目・白い扉で確定させよう');
+      }
     } else {
-      pr.style.display = 'none'; ch.classList.remove('hover'); mUse.classList.remove('can-interact');
+      pr.style.display = 'none'; if (chip) chip.style.display = 'none';
+      ch.classList.remove('hover'); mUse.classList.remove('can-interact');
       mUse.firstChild.textContent = '調べる'; mCrouch.firstChild.textContent = 'しゃがみ';
     }
     const secs = Math.floor(state.elapsed);
@@ -9930,7 +10521,6 @@ initSharedGeos();
 createBackroomsTextures();
 PropFactory.init();
 PropFactory.preloadGlbModels();
-PropFactory.preloadPropModels();
 initPlayerBody();
 refreshTitleRecords();
 syncSettingsUI();
