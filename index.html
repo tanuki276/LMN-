@@ -907,13 +907,281 @@
   .ledger-thumb-box img { width: 64px; height: 38px; object-fit: cover; border-radius: 3px; border: 1px solid rgba(108,255,178,0.45); display: block; }
 
   /* Q-1 Core Ending Modal */
-  #core-ending-modal .panel-card { max-width: 520px; text-align: center; border-color: rgba(140, 220, 255, 0.55); }
+  #core-ending-modal .panel-card { max-width: 520px; text-align: center; border-color: rgba(212, 194, 132, 0.55); }
   .ending-choice-btn {
-    width: 100%; padding: 12px 14px; margin-top: 8px; border-radius: 7px;
-    border: 1px solid rgba(255,255,255,0.24); background: rgba(255,255,255,0.06);
-    color: #f4f8ff; font-size: 14px; font-weight: 700; cursor: pointer; text-align: left;
+    width: 100%; padding: 12px 14px; margin-top: 8px; border-radius: 3px;
+    border: 1px solid rgba(212, 194, 132, 0.34); background: rgba(28, 26, 20, 0.85);
+    color: #efe7cc; font-size: 13.5px; font-weight: 700; cursor: pointer; text-align: left;
   }
-  .ending-choice-btn:hover { background: rgba(120, 220, 255, 0.16); border-color: #8ee2ff; }
+  .ending-choice-btn:hover { background: rgba(212, 194, 132, 0.16); border-color: #dfd098; }
+
+  /* ============================================================
+     V10.2.0 H (HUD LEFT COLUMN FLEX) & K-6 (BACKROOMS CORPORATE TERMINAL SKIN)
+     ============================================================ */
+  :root {
+    --panel: rgba(24, 22, 17, 0.90);
+    --border: rgba(206, 192, 146, 0.36);
+    --accent: #d4c07a;
+    --text: #eae2c6;
+    --muted: #a69d82;
+    --paper: #dcd3b4;
+    --ink: #221f18;
+    --stamp: #a23228;
+  }
+  html, body {
+    font-family: ui-monospace, 'SFMono-Regular', 'Consolas', 'BIZ UDGothic', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', monospace;
+  }
+  /* Subtle VHS edge grain + scanline framing without harming HUD legibility */
+  #vhs-overlay {
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, transparent 1px, transparent 3px),
+      radial-gradient(ellipse at center, transparent 52%, rgba(16,14,9,0.74) 100%);
+    box-shadow: inset 0 0 28px rgba(0,0,0,0.55);
+  }
+  #cam-chrome {
+    font-family: ui-monospace, 'Consolas', monospace;
+    color: rgba(232, 222, 184, 0.72);
+    letter-spacing: 0.08em;
+  }
+
+  /* H-2: Single vertical flex column for top-left info panel + vitals box (ZERO structural overlap at ANY viewport!) */
+  .hud-left-col {
+    position: absolute;
+    top: max(18px, calc(env(safe-area-inset-top) + 12px));
+    left: max(12px, env(safe-area-inset-left));
+    display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+    z-index: 20; pointer-events: none;
+    max-width: min(268px, 54vw);
+  }
+  .hud-left-col .hud-top-left {
+    position: relative !important; top: auto !important; left: auto !important; bottom: auto !important; right: auto !important;
+    width: 100%; max-width: 100% !important; min-width: 168px;
+    border-radius: 2px; border: 1px solid var(--border);
+    background: rgba(24, 22, 16, 0.88);
+    box-shadow: inset 0 1px 0 rgba(235, 224, 180, 0.12), 0 2px 8px rgba(0,0,0,0.5);
+    backdrop-filter: none;
+    padding: 6px 9px;
+  }
+  .hud-left-col .hud-bottom-left {
+    position: relative !important; top: auto !important; left: auto !important; bottom: auto !important; right: auto !important;
+    border-radius: 2px; border: 1px solid var(--border);
+    background: rgba(24, 22, 16, 0.88) !important;
+    box-shadow: inset 0 1px 0 rgba(235, 224, 180, 0.1), 0 2px 8px rgba(0,0,0,0.45);
+    backdrop-filter: none;
+    pointer-events: auto;
+  }
+  #hud-seed { display: none !important; }
+  #hud-level-code { color: #d6c278; letter-spacing: 0.12em; }
+  #hud-depth { background: rgba(212, 192, 122, 0.2); border: 1px solid rgba(212, 192, 122, 0.35); color: #f2e8c4; border-radius: 2px; }
+  #hud-stability {
+    border-radius: 2px; background: rgba(42, 39, 28, 0.9);
+    border: 1px solid rgba(206, 192, 146, 0.4); color: #e2d6ab;
+  }
+  #hud-stability.low, #hud-stability.warn { background: rgba(82, 46, 20, 0.9); border-color: #d48c46; color: #f5d0a2; }
+  #hud-stability.crit { background: rgba(98, 22, 20, 0.94); border-color: #d64b42; color: #ffb4ae; }
+  #hud-emp { color: #cbc2a4; }
+  #hud-cont-badge {
+    display: none; padding: 1px 5px; border-radius: 2px;
+    border: 1px solid rgba(216, 152, 84, 0.7); background: rgba(86, 44, 16, 0.88);
+    color: #f6d5a6; font-family: monospace; font-size: 9.5px; font-weight: 800; letter-spacing: 0.04em;
+  }
+  #hud-cont-badge.show { display: inline-block; }
+
+  /* H-2: Merged 1-line samples + docs/cuts + short risk suffix */
+  #hud-work-line {
+    margin-top: 3px; font-family: monospace; font-size: 10px; color: #ddd2ad;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #hud-samples, #hud-docs { display: inline; margin: 0; font-size: inherit; color: inherit; }
+  #hud-sample-risk {
+    display: inline; margin-left: 5px; padding: 0 3px; border-radius: 2px;
+    background: rgba(140, 44, 32, 0.55); border: 1px solid rgba(214, 100, 82, 0.55);
+    color: #f6c4b8; font-size: 9px; font-weight: 700;
+  }
+  #hud-sample-risk:empty { display: none; }
+
+  /* H-2: Clamped objective panel lines (main <= 2 lines, sub & dir <= 1 line each) */
+  #obj-panel { border-top: 1px dashed rgba(206, 192, 146, 0.28); margin-top: 4px; padding-top: 4px; }
+  #hud-main-obj {
+    color: #f0e4b8; font-weight: 700; font-size: 10px; line-height: 1.3;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  #hud-sub-obj {
+    color: #c8be96; font-size: 9.5px; margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #hud-sub-obj.done { color: #b7c994; text-decoration: line-through; opacity: 0.8; }
+  #obj-dir-indicator {
+    position: static !important; top: auto !important; left: auto !important; transform: none !important;
+    margin-top: 2px; padding: 1px 5px; border-radius: 2px;
+    background: rgba(38, 35, 25, 0.9); border: 1px solid rgba(206, 192, 146, 0.36);
+    color: #e6dbb2; font-size: 9.5px; box-shadow: none;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+  }
+  #quest-items { color: #e6ca7a; font-size: 9.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #emergency-bar { border-radius: 2px; background: rgba(140, 32, 24, 0.92); border: 1px solid #d97a6c; font-size: 9.5px; }
+
+  @media (max-width: 860px), (pointer: coarse) {
+    .hud-left-col { max-width: min(230px, 56vw); gap: 5px; }
+    .hud-left-col .hud-top-left { padding: 4px 7px; min-width: 140px; }
+    .hud-left-col .hud-bottom-left { width: 146px; padding: 5px 7px; }
+    #hud-level-name { font-size: 11px; }
+    #hud-work-line { font-size: 9px; }
+  }
+  @media (max-height: 460px) {
+    .hud-left-col { top: 8px; gap: 4px; }
+    .hud-left-col .hud-bottom-left { width: 132px; padding: 4px 6px; }
+  }
+
+  /* K-6: Utilitarian Corporate Notice / Terminal Skin (drop cyan SF accents & rounded mobile-game chrome) */
+  .hud-icon-btn {
+    border-radius: 2px; background: rgba(26, 24, 18, 0.92); border: 1px solid var(--border);
+    color: #e6dcb8; font-family: monospace; font-size: 10.5px; font-weight: 800; letter-spacing: 0.05em;
+    padding: 5px 8px; backdrop-filter: none;
+  }
+  .hud-icon-btn:hover { background: rgba(212, 192, 122, 0.2); border-color: var(--accent); }
+  #mp-hud-badge {
+    border-radius: 2px; background: rgba(34, 31, 22, 0.92);
+    border: 1px solid rgba(212, 192, 122, 0.45); color: #e2d5a8;
+  }
+  #anomaly-badge {
+    border-radius: 2px; background: rgba(32, 22, 18, 0.94);
+    border: 1px solid rgba(186, 86, 70, 0.65); color: #f0cfc2;
+  }
+  #signal-strip-wrap {
+    border-radius: 2px; background: rgba(20, 19, 14, 0.9);
+    border: 1px solid rgba(196, 182, 134, 0.45);
+  }
+  .sig-ping.exit { color: #d8e69a; text-shadow: none; }
+  .sig-ping.supply { color: #e4c678; }
+  #sanity-fill { background: linear-gradient(90deg, #8b8262, #d4c68e); }
+  #hp-fill { background: linear-gradient(90deg, #628454, #9bb878); }
+  #hunger-fill { background: linear-gradient(90deg, #a67834, #d9ae62); }
+  #battery-fill { background: linear-gradient(90deg, #a69032, #dfd07c); }
+  .inv-slot { border-radius: 2px; background: rgba(24, 22, 16, 0.9); border-color: rgba(206, 192, 146, 0.3); }
+  .inv-ico {
+    font-family: monospace; font-size: 11px !important; font-weight: 800;
+    color: #e6d8a6; border: 1px solid rgba(206, 192, 146, 0.4);
+    padding: 1px 4px; border-radius: 2px; background: rgba(44, 40, 28, 0.7);
+  }
+  .m-round-btn {
+    border-color: rgba(206, 192, 146, 0.48); background: rgba(24, 22, 16, 0.88);
+    color: #ede4c8; backdrop-filter: none;
+  }
+  #cam-btn {
+    border-color: rgba(206, 192, 146, 0.52); background: rgba(26, 24, 18, 0.9); color: #eee5c8;
+  }
+  #cam-btn.ready {
+    border-color: #d8c67a; background: rgba(62, 54, 28, 0.94);
+    box-shadow: 0 0 14px rgba(212, 192, 122, 0.55), 0 4px 12px rgba(0,0,0,0.6);
+  }
+  #cam-btn .cam-ico { font-family: monospace; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; }
+  #cam-target-info { border-radius: 2px; background: rgba(22, 20, 15, 0.9); border-color: var(--border); color: #ebe2c4; }
+  #pickup-chip { border-radius: 2px; background: rgba(26, 24, 18, 0.94); border-color: var(--accent); color: #f0e6c4; }
+  #pickup-chip-ico { font-family: monospace; font-size: 11px; font-weight: 800; padding: 1px 4px; border: 1px solid var(--border); }
+
+  /* K-6: Outpost Terminal — Cheap Corporate Internal System / Printed Ledger Form */
+  #terminal-modal .panel-card {
+    background: #d8cfa9; color: #211e17;
+    border: 2px solid #59523e; border-radius: 2px;
+    box-shadow: 0 18px 46px rgba(0,0,0,0.86), inset 0 0 0 1px rgba(255,252,235,0.45);
+    font-family: ui-monospace, 'Consolas', 'BIZ UDGothic', 'Hiragino Kaku Gothic ProN', monospace;
+  }
+  #terminal-modal .panel-card h2 {
+    color: #1c1912; border-bottom: 2px solid #4a4434; padding-bottom: 8px;
+    letter-spacing: 0.06em; font-size: 14px;
+  }
+  #terminal-modal #term-status-badge {
+    color: #2c281c !important; background: rgba(82, 74, 52, 0.14);
+    border: 1px solid #6e664f; padding: 2px 6px; border-radius: 1px; font-weight: 700;
+  }
+  #terminal-modal .tab-bar { border-bottom: 1px solid #6e664f; gap: 4px; }
+  #terminal-modal .tab-btn {
+    background: #c8be96; color: #342f23; border: 1px solid #7c745c; border-bottom: none;
+    border-radius: 2px 2px 0 0; font-family: monospace; font-weight: 700;
+  }
+  #terminal-modal .tab-btn.active {
+    background: #2b271e; color: #efe6c6; border-color: #2b271e;
+  }
+  #terminal-modal .primary {
+    background: #2b271e; color: #f0e8cb; border: 1px solid #181610; border-radius: 2px;
+    font-family: monospace; font-weight: 700;
+  }
+  #terminal-modal .primary:hover { background: #3f392c; }
+  #terminal-modal .secondary {
+    background: #c8be96; color: #221f18; border: 1px solid #6c644d; border-radius: 2px;
+    font-family: monospace; font-weight: 700;
+  }
+  .term-form-meta {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
+    padding: 5px 8px; margin-bottom: 9px;
+    background: rgba(74, 68, 50, 0.12); border-top: 1px solid #6b634b; border-bottom: 1px solid #6b634b;
+    font-size: 10.5px; color: #2d291e; font-weight: 700;
+  }
+  .term-stamp {
+    display: inline-block; padding: 1px 6px; border: 1.5px solid #a23228; color: #a23228;
+    font-size: 10px; font-weight: 900; letter-spacing: 0.1em; border-radius: 1px;
+    transform: rotate(-2deg); background: rgba(162, 50, 40, 0.06);
+  }
+  .term-alert-row {
+    padding: 7px 9px; margin-bottom: 9px; border: 1px solid #9e2d24; border-left: 4px solid #9e2d24;
+    background: rgba(162, 50, 40, 0.12); color: #6e1a14; font-size: 11.5px; font-weight: 700;
+  }
+  .term-unlock-row {
+    margin-top: 10px; padding: 7px 9px; border: 1px solid #4c6438; border-left: 4px solid #4c6438;
+    background: rgba(76, 100, 56, 0.12); color: #253618; font-size: 12px;
+  }
+  .term-section-cap { font-size: 11px; color: #4a4435; margin-bottom: 6px; border-bottom: 1px dashed #8a8166; padding-bottom: 3px; }
+  .term-select {
+    background: #ece4c5; color: #1d1a13; border: 1px solid #6e664f; border-radius: 2px;
+    padding: 7px 9px; font-size: 12px; font-family: monospace;
+  }
+  .term-mode-row { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+  .term-mode-btn {
+    flex: 1; min-width: 150px; padding: 7px 9px; border-radius: 2px;
+    border: 1px solid #6e664f; background: #cdc39c; color: #2b271e;
+    font-family: monospace; font-size: 11.5px; font-weight: 700; cursor: pointer; text-align: center;
+  }
+  .term-mode-btn.active { background: #2b271e; color: #f0e7c8; border-color: #1a1711; }
+  .term-mode-note {
+    font-size: 11px; line-height: 1.45; color: #3b3527; background: rgba(74, 68, 50, 0.1);
+    border-left: 3px solid #6b634b; padding: 6px 8px; margin-bottom: 9px;
+  }
+  #terminal-modal .contract-card {
+    background: #e5ddb9; border: 1px solid #7d755c; border-radius: 2px; color: #201d16;
+  }
+  #terminal-modal .contract-card.selected { border: 2px solid #2b271e; background: #ece5c6; }
+  #terminal-modal .c-head { display: flex; justify-content: space-between; gap: 8px; font-weight: 800; font-size: 12.5px; color: #1b1811; border-bottom: 1px dashed #999074; padding-bottom: 4px; margin-bottom: 4px; }
+  #terminal-modal .c-meta { font-size: 10.5px; color: #4b4433; }
+  #terminal-modal .c-desc { font-size: 11.5px; color: #363125; line-height: 1.45; }
+  #terminal-modal .c-reward { font-size: 11px; color: #4a3f1f; font-weight: 700; margin-top: 4px; }
+  #terminal-modal .delivery-row { border-bottom: 1px solid #9f967a; color: #221f18; justify-content: space-between; }
+  #terminal-modal .term-total-row { border-top: 2px solid #3a3529; margin-top: 6px; padding-top: 8px; font-weight: 800; }
+  #terminal-modal .hist-entry {
+    background: #e5ddb9; border: 1px solid #8a8166; border-left: 4px solid #484232;
+    border-radius: 2px; color: #211e17;
+  }
+  #terminal-modal .hist-entry.dead { border-left-color: #a23228; background: #e3d0c4; }
+  #terminal-modal .h-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; border-bottom: 1px dashed #9b9276; padding-bottom: 3px; margin-bottom: 4px; }
+  #terminal-modal .codex-item { background: #e5ddb9; border: 1px solid #8a8166; border-radius: 2px; color: #211e17; }
+  #terminal-modal .codex-name { color: #1b1811; }
+  #terminal-modal .codex-tag { background: #d0c6a0; color: #3d3729; border: 1px solid #8a8166; border-radius: 1px; }
+  #terminal-modal .codex-tag.ok { background: #2b271e; color: #efe6c6; border-color: #2b271e; }
+  .term-mini-btn {
+    padding: 4px 9px; border-radius: 2px; border: 1px solid #4e4736;
+    background: #2b271e; color: #efe6c6; font-family: monospace; font-size: 11px; font-weight: 700; cursor: pointer;
+  }
+  .term-mini-btn:disabled { opacity: 0.4; cursor: default; }
+  .ledger-thumb-card {
+    display: flex; flex-direction: column; gap: 3px; align-items: stretch;
+    background: #d5cca4; border: 1px solid #7f775e; padding: 3px; border-radius: 2px;
+  }
+  .ledger-thumb-card img { width: 78px; height: 46px; object-fit: cover; display: block; border: 1px solid #59523e; }
+  .thumb-dl-btn {
+    padding: 2px 4px; font-size: 9.5px; font-family: monospace; font-weight: 700;
+    background: #2b271e; color: #efe6c6; border: none; border-radius: 1px; cursor: pointer;
+  }
+  .thumb-dl-btn:hover { background: #474031; }
 </style>
 </head>
 <body>
@@ -936,9 +1204,9 @@
 <div id="hit-edge-b"></div>
 <div id="kawagi-vignette"></div>
 <div id="watch-sweep-overlay"></div>
-<div id="watch-sweep-banner">⚠ 監視光照射！家・店舗・車・ロッカーへ隠れろ！</div>
+<div id="watch-sweep-banner">[!] 監視光照射！家・店舗・車・ロッカーへ隠れろ</div>
 <div id="kawagi-banner">背後に気配 — カワハギが付いてきている</div>
-<div id="happyfile-bar">⚠ HAPPYFILE 感染中：消灯＋5秒静止で再起動 / 電池[5]で即駆除</div>
+<div id="happyfile-bar">[!] HAPPYFILE 感染中：消灯＋5秒静止で再起動 / 電池[5]で即駆除</div>
 <div id="downed-overlay">
   <div id="downed-title">DOWNED // 行動不能</div>
   <div id="downed-timer">猶予 45s — 仲間の蘇生を待機中</div>
@@ -986,35 +1254,63 @@
     </button>
   </div>
   <button class="m-round-btn" id="m-pulse">探知<span class="m-btn-sub">長押しPIN</span></button>
-  <button class="m-round-btn" id="m-bag">🎒<span class="m-btn-sub">バッグ</span><span class="m-bag-cnt" id="m-bag-cnt">0</span></button>
+  <button class="m-round-btn" id="m-bag">BAG<span class="m-btn-sub">バッグ</span><span class="m-bag-cnt" id="m-bag-cnt">0</span></button>
 </div>
 
 <!-- HUD (z-index: 18) -->
 <div id="hud">
-  <div class="hud-top-left">
-    <div class="lvl-row">
-      <span id="hud-level-code">LEVEL 0</span>
-      <span id="hud-depth">深度 1</span>
+  <!-- V10.2.0 H-2: Single vertical flex column for top-left info panel + vitals box (zero overlap) -->
+  <div class="hud-left-col">
+    <div class="hud-top-left">
+      <div class="lvl-row">
+        <span id="hud-level-code">LEVEL 0</span>
+        <span id="hud-depth">深度 1</span>
+      </div>
+      <div id="hud-level-name">The Lobby</div>
+      <div id="hud-meta">
+        <span id="hud-dist">0 m</span>
+        <span id="hud-seed">SEED: ---</span>
+        <span id="hud-disc">発見: 1/28</span>
+      </div>
+      <div id="hud-v10-bar">
+        <span id="hud-stability">安定度 100/100</span>
+        <span id="hud-emp">派遣 #1</span>
+        <span id="hud-cont-badge">[連続派遣] 00:00</span>
+      </div>
+      <div id="hud-work-line">
+        <span id="hud-samples">標本×0</span> / <span id="hud-docs">資料×0・撮影×0</span><span id="hud-sample-risk"></span>
+      </div>
+      <div id="obj-panel">
+        <div id="hud-main-obj">① 制御盤で電源復旧（またはピッキング） → ② 帰還扉解錠 → ③ 帰還</div>
+        <div id="hud-sub-obj">副目的：---</div>
+        <div id="obj-dir-indicator">[制御盤] 探索中</div>
+        <div id="quest-items"></div>
+        <div id="emergency-bar">[!] 不安定化：残り 60 秒</div>
+      </div>
     </div>
-    <div id="hud-level-name">The Lobby</div>
-    <div id="hud-meta">
-      <span id="hud-dist">0 m</span>
-      <span id="hud-seed">SEED: ---</span>
-      <span id="hud-disc">発見: 1/20</span>
-    </div>
-    <div id="hud-v10-bar">
-      <span id="hud-stability">拠点安定度 100/100</span>
-      <span id="hud-emp">派遣 #1</span>
-    </div>
-    <div id="hud-samples">サンプル ×0（未確定 ×0）</div>
-    <div id="hud-docs">資料 ×0 / 撮影カット ×0</div>
-    <div id="hud-sample-risk"></div>
-    <div id="obj-panel">
-      <div id="hud-main-obj">① 制御盤で電源復旧（またはピッキング） → ② 帰還扉解錠 → ③ 帰還</div>
-      <div id="hud-sub-obj">副目的：---</div>
-      <div id="obj-dir-indicator">🧭 制御盤: 探索中</div>
-      <div id="quest-items"></div>
-      <div id="emergency-bar">⚠ 不安定化：残り 60 秒</div>
+
+    <div class="hud-bottom-left" id="hud-vitals-box">
+      <button id="btn-vitals-toggle" type="button">ステータス ▾</button>
+      <div class="stat-row">
+        <div class="stat-label"><span>HP</span><span id="hp-val">100</span></div>
+        <div class="bar-bg"><div class="bar-fill" id="hp-fill"></div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label"><span>HUNGER</span><span id="hunger-val">100</span></div>
+        <div class="bar-bg"><div class="bar-fill" id="hunger-fill"></div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label"><span>SANITY</span><span id="sanity-val">100</span></div>
+        <div class="bar-bg"><div class="bar-fill" id="sanity-fill"></div></div>
+      </div>
+      <div class="stat-row" id="battery-row">
+        <div class="stat-label"><span>BATTERY</span><span id="battery-val">100%</span></div>
+        <div class="bar-bg thin"><div class="bar-fill" id="battery-fill"></div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label"><span>STAMINA</span><span id="stamina-val">100</span></div>
+        <div class="bar-bg thin"><div class="bar-fill" id="stamina-fill"></div></div>
+      </div>
     </div>
   </div>
 
@@ -1025,24 +1321,24 @@
 
   <div class="hud-top-right">
     <div class="hud-actions-row">
-      <button class="hud-icon-btn" id="btn-bag-hud" title="バッグ (I)">🎒</button>
-      <button class="hud-icon-btn" id="btn-audio-toggle" title="ミュート">🔊</button>
-      <button class="hud-icon-btn" id="btn-codex-hud" title="図鑑・アーカイブ">📖</button>
-      <button class="hud-icon-btn" id="btn-pause" title="メニュー・設定">☰</button>
+      <button class="hud-icon-btn" id="btn-bag-hud" title="バッグ (I)">BAG</button>
+      <button class="hud-icon-btn" id="btn-audio-toggle" title="ミュート">SND</button>
+      <button class="hud-icon-btn" id="btn-codex-hud" title="図鑑・アーカイブ">LOG</button>
+      <button class="hud-icon-btn" id="btn-pause" title="メニュー・設定">MENU</button>
     </div>
     <div id="mp-hud-badge">CO-OP: 1/4</div>
     <div id="hazard-warn">環境ハザード警告</div>
-    <div id="anomaly-badge">異常検知: ---</div>
+    <div id="anomaly-badge">観測: ---</div>
   </div>
 
-  <div id="ach-toast">🏆 実績解除</div>
+  <div id="ach-toast">[実績解除]</div>
   <div id="peek-indicator">◀ REAR VIEW ▶</div>
   <div id="sonar-rear-marker">▼ 背後反応：カワハギ接近 ▼</div>
   <div id="crosshair"></div>
   <div id="stare-ring-wrap">
     <svg id="stare-ring-svg" viewBox="0 0 44 44">
       <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="3"/>
-      <circle id="stare-ring-fill" cx="22" cy="22" r="18" fill="none" stroke="#9be8ff" stroke-width="3" stroke-dasharray="113.1" stroke-dashoffset="113.1" stroke-linecap="round"/>
+      <circle id="stare-ring-fill" cx="22" cy="22" r="18" fill="none" stroke="#d4c07a" stroke-width="3" stroke-dasharray="113.1" stroke-dashoffset="113.1" stroke-linecap="round"/>
     </svg>
   </div>
   <div id="use-progress-wrap">
@@ -1051,7 +1347,7 @@
   </div>
   <div id="interact-prompt">[E] インタラクト</div>
   <div id="pickup-chip" role="button" tabindex="0">
-    <span id="pickup-chip-ico">💧</span>
+    <span id="pickup-chip-ico">物</span>
     <span id="pickup-chip-name">アイテム</span>
     <span id="pickup-chip-act">拾う</span>
   </div>
@@ -1069,9 +1365,9 @@
     <button id="cam-btn" type="button" title="撮影シャッター (F)">
       <svg id="cam-ring-svg" viewBox="0 0 72 72">
         <circle cx="36" cy="36" r="32" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="4"/>
-        <circle id="cam-ring-fill" cx="36" cy="36" r="32" fill="none" stroke="#9ef5c5" stroke-width="4" stroke-dasharray="201.06" stroke-dashoffset="201.06" stroke-linecap="round"/>
+        <circle id="cam-ring-fill" cx="36" cy="36" r="32" fill="none" stroke="#d4c07a" stroke-width="4" stroke-dasharray="201.06" stroke-dashoffset="201.06" stroke-linecap="round"/>
       </svg>
-      <span class="cam-ico">📷</span>
+      <span class="cam-ico">CAM</span>
       <span class="cam-sub">[F] 撮影</span>
     </button>
   </div>
@@ -1080,39 +1376,15 @@
     <div class="cap" id="cam-thumb-cap">撮影記録</div>
   </div>
 
-  <div class="hud-bottom-left" id="hud-vitals-box">
-    <button id="btn-vitals-toggle" type="button">ステータス ▾</button>
-    <div class="stat-row">
-      <div class="stat-label"><span>HP</span><span id="hp-val">100</span></div>
-      <div class="bar-bg"><div class="bar-fill" id="hp-fill"></div></div>
-    </div>
-    <div class="stat-row">
-      <div class="stat-label"><span>HUNGER</span><span id="hunger-val">100</span></div>
-      <div class="bar-bg"><div class="bar-fill" id="hunger-fill"></div></div>
-    </div>
-    <div class="stat-row">
-      <div class="stat-label"><span>SANITY</span><span id="sanity-val">100</span></div>
-      <div class="bar-bg"><div class="bar-fill" id="sanity-fill"></div></div>
-    </div>
-    <div class="stat-row" id="battery-row">
-      <div class="stat-label"><span>BATTERY</span><span id="battery-val">100%</span></div>
-      <div class="bar-bg thin"><div class="bar-fill" id="battery-fill"></div></div>
-    </div>
-    <div class="stat-row">
-      <div class="stat-label"><span>STAMINA</span><span id="stamina-val">100</span></div>
-      <div class="bar-bg thin"><div class="bar-fill" id="stamina-fill"></div></div>
-    </div>
-  </div>
-
-  <!-- 7 Inventory & Tool Slots (Mobile switches to crisp Icon + Count!) -->
+  <!-- 7 Inventory & Tool Slots (Printed utilitarian labels, zero emojis!) -->
   <div id="inventory">
-    <div class="inv-slot" id="slot-0"><div class="inv-key">[1]</div><div class="inv-ico">💧</div><div class="inv-cnt" id="cnt-0">0</div><div class="inv-name">アーモンド水</div><div class="inv-sub">HP+25 安定+35</div></div>
-    <div class="inv-slot" id="slot-1"><div class="inv-key">[2]</div><div class="inv-ico">🥫</div><div class="inv-cnt" id="cnt-1">0</div><div class="inv-name">携帯食料</div><div class="inv-sub">空腹+38</div></div>
-    <div class="inv-slot" id="slot-2"><div class="inv-key">[3]</div><div class="inv-ico">🩹</div><div class="inv-cnt" id="cnt-2">0</div><div class="inv-name">救急キット</div><div class="inv-sub">HP+55</div></div>
-    <div class="inv-slot" id="slot-3"><div class="inv-key">[4]</div><div class="inv-ico">🍯</div><div class="inv-cnt" id="cnt-3">0</div><div class="inv-name">モスゼリー</div><div class="inv-sub">食+30 ドクガ忌避</div></div>
-    <div class="inv-slot" id="slot-4"><div class="inv-key">[5]</div><div class="inv-ico">🔋</div><div class="inv-cnt" id="cnt-4">0</div><div class="inv-name">乾電池</div><div class="inv-sub">電池+50% / 駆除</div></div>
-    <div class="inv-slot" id="slot-5"><div class="inv-key">[P]</div><div class="inv-ico">🧷</div><div class="inv-cnt" id="cnt-5">0</div><div class="inv-name">ピック</div><div class="inv-sub">施錠扉を開錠</div></div>
-    <div class="inv-slot" id="slot-6"><div class="inv-key">[B]</div><div class="inv-ico">⚾</div><div class="inv-cnt" id="cnt-6">0</div><div class="inv-name">ボール</div><div class="inv-sub">投擲囮(3種)</div></div>
+    <div class="inv-slot" id="slot-0"><div class="inv-key">[1]</div><div class="inv-ico">水</div><div class="inv-cnt" id="cnt-0">0</div><div class="inv-name">アーモンド水</div><div class="inv-sub">HP+25 安定+35</div></div>
+    <div class="inv-slot" id="slot-1"><div class="inv-key">[2]</div><div class="inv-ico">食</div><div class="inv-cnt" id="cnt-1">0</div><div class="inv-name">携帯食料</div><div class="inv-sub">空腹+38</div></div>
+    <div class="inv-slot" id="slot-2"><div class="inv-key">[3]</div><div class="inv-ico">救</div><div class="inv-cnt" id="cnt-2">0</div><div class="inv-name">救急キット</div><div class="inv-sub">HP+55</div></div>
+    <div class="inv-slot" id="slot-3"><div class="inv-key">[4]</div><div class="inv-ico">蜜</div><div class="inv-cnt" id="cnt-3">0</div><div class="inv-name">モスゼリー</div><div class="inv-sub">食+30 ドクガ忌避</div></div>
+    <div class="inv-slot" id="slot-4"><div class="inv-key">[5]</div><div class="inv-ico">電</div><div class="inv-cnt" id="cnt-4">0</div><div class="inv-name">乾電池</div><div class="inv-sub">電池+50% / 駆除</div></div>
+    <div class="inv-slot" id="slot-5"><div class="inv-key">[P]</div><div class="inv-ico">針</div><div class="inv-cnt" id="cnt-5">0</div><div class="inv-name">ピック</div><div class="inv-sub">施錠扉を開錠</div></div>
+    <div class="inv-slot" id="slot-6"><div class="inv-key">[B]</div><div class="inv-ico">球</div><div class="inv-cnt" id="cnt-6">0</div><div class="inv-name">ボール</div><div class="inv-sub">投擲囮(3種)</div></div>
   </div>
 
   <div id="controls-hint">
@@ -1143,8 +1415,8 @@
 <div id="bag-modal" class="modal-backdrop">
   <div class="panel-card">
     <h2>
-      <span>🎒 BAG // 所持品バッグ</span>
-      <span id="bag-pause-badge">⏸ ソロ一時停止中</span>
+      <span>[BAG] 所持品バッグ</span>
+      <span id="bag-pause-badge">[PAUSE] ソロ一時停止中</span>
     </h2>
     <div id="bag-grid"></div>
     <div style="margin-top:14px;">
@@ -1157,8 +1429,8 @@
 <div id="terminal-modal" class="modal-backdrop">
   <div class="panel-card">
     <h2>
-      <span>🖥 OUTPOST TERMINAL // 前哨拠点端末</span>
-      <span id="term-status-badge" style="font-family:monospace;font-size:11px;color:#8be8b6;">派遣 #1 | 安定度 100/100</span>
+      <span>[TERMINAL] 前哨拠点 社内業務端末</span>
+      <span id="term-status-badge" style="font-family:monospace;font-size:11px;">派遣 #1 | 安定度 100/100</span>
     </h2>
     <div class="tab-bar" id="term-tab-bar">
       <button class="tab-btn active" data-term-tab="dispatch">出勤・依頼</button>
@@ -1179,8 +1451,8 @@
 <!-- V10.0.0 Q-1 Depth 20 Core Ending 3-Choice Modal -->
 <div id="core-ending-modal" class="modal-backdrop">
   <div class="panel-card">
-    <h2>◈ DEPTH 20 // 核（CORE）の記録完了</h2>
-    <p style="font-size:12.5px;color:#d6dce6;line-height:1.7;margin:10px 0 12px;">
+    <h2>[CORE] DEPTH 20 // 核（CORE）の記録完了</h2>
+    <p style="font-size:12.5px;color:#dfd6b8;line-height:1.7;margin:10px 0 12px;">
       この場所では、記録され続けているものだけが存在し続けられる。<br>
       最深部・深度20で「核」を撮影したあなたは、派遣元の通信回線が開いた今、最終選択を迫られている。
     </p>
@@ -1214,9 +1486,13 @@
   <div class="panel-card">
     <h2>
       <span id="settings-heading">SYSTEM // SETTINGS</span>
-      <button class="secondary" id="set-codex-jump" style="padding:4px 9px;font-size:11px;">📖 図鑑・記録</button>
+      <button class="secondary" id="set-codex-jump" style="padding:4px 9px;font-size:11px;">[LOG] 図鑑・記録</button>
     </h2>
 
+    <div class="set-row" id="pause-seed-row">
+      <span>現在ワールドシード</span>
+      <span class="set-val" id="pause-seed-val">---</span>
+    </div>
     <div class="set-section">AUDIO &amp; DISPLAY</div>
     <div class="set-row">
       <span>マスター音量</span>
@@ -1444,8 +1720,8 @@
 <div id="title-screen">
   <div class="card">
     <div class="tag">
-      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V10.0.1</span>
-      <span class="escape-badge" id="title-escape-badge">★ 核の記録完了</span>
+      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V10.2.0</span>
+      <span class="escape-badge" id="title-escape-badge">[記録完了] 核の記録</span>
     </div>
     <h1>Like Homes</h1>
     <p class="desc">
@@ -1460,7 +1736,7 @@
 
     <div class="form-row">
       <input type="text" id="seed-input" placeholder="ワールドシード (空欄でランダム)" maxlength="16">
-      <button class="secondary" id="daily-seed-btn" title="日付固定のデイリーシードを設定">📅 本日のシード</button>
+      <button class="secondary" id="daily-seed-btn" title="日付固定のデイリーシードを設定">[DATE] 本日のシード</button>
     </div>
     <div class="form-row">
       <select id="start-level-select"></select>
@@ -1475,14 +1751,14 @@
       <select id="title-skin-pattern" title="柄"></select>
     </div>
     <button class="collapse-pill" id="title-collapse-btn" type="button">
-      <span>⚡ シード崩壊モード（踏破済み＆出口も視界外で再生成）</span>
+      <span>[!] シード崩壊モード（踏破済み＆出口も視界外で再生成）</span>
       <b id="title-collapse-state">OFF</b>
     </button>
     <div class="form-row">
       <button class="primary" id="start-btn" style="flex:2;">前哨拠点へ出勤（ソロ）</button>
-      <button class="secondary" id="title-mp-btn">👥 マルチ</button>
-      <button class="secondary" id="title-codex-btn">📖 図鑑</button>
-      <button class="secondary" id="title-settings-btn">⚙ 設定</button>
+      <button class="secondary" id="title-mp-btn">[MP] マルチ</button>
+      <button class="secondary" id="title-codex-btn">[LOG] 図鑑</button>
+      <button class="secondary" id="title-settings-btn">[SYS] 設定</button>
     </div>
     <div id="load-error"></div>
 
@@ -1500,7 +1776,7 @@
     <div id="model-load-status" style="font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;min-height:14px;"></div>
 
     <div class="credits-bar">
-      <span id="credits-ver">Like Homes // V10.0.1</span>
+      <span id="credits-ver">Like Homes // V10.2.0</span>
       <span>CREDITS: LIKE HOMES PROJECT (THREE.JS / PEERJS)</span>
     </div>
   </div>
@@ -1542,7 +1818,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V10.0.1';
+const VERSION = 'V10.2.0';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -1897,22 +2173,22 @@ function parseSkinId(skinId) {
   return { suit, accent, pattern, id: `${suit.id}_${accent.id}_${pattern.id}` };
 }
 
-// §6 Named Phenomena Codex (including Entity 666 HappyFile!)
+// §6 Named Phenomena Codex (V10.2.0 J: Terse observation log fragments — no explanatory/academic phrasing)
 const PHENOMENA_META = {
-  voltage_surge:    { id: 'voltage_surge',    name: '電圧サージ', desc: '照明が一時的に落ち、視界が暗転した瞬間に背後の空間構造が再配置される現象。' },
-  crossing_shadow:  { id: 'crossing_shadow',  name: '横切る人影', desc: '通路の奥を黒い人影が音もなく横切って消える視覚異常。' },
-  fake_exit:        { id: 'fake_exit',        name: '偽非常口',   desc: '背後に突如現れ、一度視線を合わせた後に目を離すと消滅する偽の非常口。' },
-  mirage_stairs:    { id: 'mirage_stairs',    name: '蜃気楼階段', desc: '近づくと輪郭にノイズと歪みが増し、間近で霧散する偽の階段。' },
-  phantom_steps:    { id: 'phantom_steps',    name: '不在の足音', desc: '誰もいないはずの左右の通路から響いてくる足音。' },
-  whisper:          { id: 'whisper',          name: '囁き',       desc: '環境ノイズに混ざって耳元で低く響き、正気度を僅かに削る囁き声。' },
-  zero_gravity:     { id: 'zero_gravity',     name: '無重力',     desc: '家具などの小物が局所的に宙へ浮かび回転する重力異常。' },
-  perspective_warp: { id: 'perspective_warp', name: '遠近歪み',   desc: '視野の遠近感が一時的に引き伸ばされる空間知覚異常。' },
-  blink_shift:      { id: 'blink_shift',      name: '瞬き変異',   desc: '瞬きによる一瞬の暗転の隙に、背後の壁や小物が入れ替わる非ユークリッド変異。' },
-  color_loss:       { id: 'color_loss',       name: '色彩喪失',   desc: '視界から色彩が一時的に抜け落ちる感覚異常。' },
-  afterimage_text:  { id: 'afterimage_text',  name: '残像文字',   desc: '警告めいた文字列が空中に浮かび上がる現象。' },
-  mirror_ghost:     { id: 'mirror_ghost',     name: '鏡面残像',   desc: '窓ガラスや鏡の奥に別の誰かの姿が一瞬だけ映り込む現象。' },
-  distant_phone:    { id: 'distant_phone',    name: '遠方電話',   desc: '壁の向こうの遠い場所から呼び出し音が鳴り続ける聴覚異常。' },
-  happyfile:        { id: 'happyfile',        name: 'ハッピーファイル', desc: '電子環境（Level 3 / 33 / 3999）で発生する実体のないウイルス現象（Entity 666）。20秒間 HUD・ソナー・インベントリを汚染し偽の出口を混ぜる。対処：懐中電灯を消して5秒静止で再起動、または乾電池[5]で即駆除。' }
+  voltage_surge:    { id: 'voltage_surge',    name: '電圧サージ', desc: '蛍光灯が一斉に落ちた。点き直したとき、背後の壁の位置が変わっていた。' },
+  crossing_shadow:  { id: 'crossing_shadow',  name: '横切る人影', desc: '角の向こうを黒い影が横切った。足音は聞こえなかった。追いかけたが誰もいない。' },
+  fake_exit:        { id: 'fake_exit',        name: '偽非常口',   desc: '振り返ると非常口があった。一度目を離して見直したら、ただの壁に戻っていた。' },
+  mirage_stairs:    { id: 'mirage_stairs',    name: '蜃気楼階段', desc: '奥に階段が見えた。近づくほど輪郭が滲み、手を伸ばす前に消えた。' },
+  phantom_steps:    { id: 'phantom_steps',    name: '不在の足音', desc: '隣の通路から靴音が近づいてきた。角を覗いたが、床には何もない。' },
+  whisper:          { id: 'whisper',          name: '囁き',       desc: '空調の音に混じって、耳元で誰かが低く喋っていた。言葉は聞き取れない。' },
+  zero_gravity:     { id: 'zero_gravity',     name: '無重力',     desc: '小物が浮いていた。誰も触れていない。そのままゆっくり回っていた。' },
+  perspective_warp: { id: 'perspective_warp', name: '遠近歪み',   desc: '廊下が急に奥へ伸びたように見えた。立ち止まって数秒待つと元に戻った。' },
+  blink_shift:      { id: 'blink_shift',      name: '瞬き変異',   desc: '瞬きをした。目を開けると、さっき通り過ぎたはずの備品が消えていた。' },
+  color_loss:       { id: 'color_loss',       name: '色彩喪失',   desc: '壁の黄ばみも標識の赤も、数秒だけ全部灰色に見えた。耳鳴りが残った。' },
+  afterimage_text:  { id: 'afterimage_text',  name: '残像文字',   desc: '何もない空中に文字が浮かんでいた。目を凝らすと薄れて消えた。' },
+  mirror_ghost:     { id: 'mirror_ghost',     name: '鏡面残像',   desc: '鏡の中の人物が、こちらを見ていた。振り返ると誰もいない。' },
+  distant_phone:    { id: 'distant_phone',    name: '遠方電話',   desc: '壁の向こうで電話が鳴り続けている。受話器を取る音はしない。' },
+  happyfile:        { id: 'happyfile',        name: 'ハッピーファイル', desc: '端末の画面が文字化けし、存在しない出口が表示された。消灯して5秒動かないか、乾電池[5]で収まった。' }
 };
 const PHENOMENA_ORDER = Object.keys(PHENOMENA_META);
 
@@ -2467,11 +2743,122 @@ function deliverShiftResults(shiftData) {
   return summary;
 }
 
+// V10.2.0 E-3: Immediate transmission during Continuous Dispatch Mode (smaller stability recovery: +2 per cut, +4 per doc; persists directly to ledger!)
+function transmitContinuousCut(cut, depth, levelName = '') {
+  const base = loadV10Base();
+  const ledger = loadV10Ledger();
+  if (!ledger.entities[cut.kind]) {
+    ledger.entities[cut.kind] = { angles: { front: 0, side: 0, back: 0 }, closeCount: 0, samples: 0, setCompleted: false, thumbs: [] };
+  }
+  const le = ledger.entities[cut.kind];
+  le.angles[cut.angle] = (le.angles[cut.angle] || 0) + 1;
+  if (cut.isClose) le.closeCount = (le.closeCount || 0) + 1;
+  le.thumbs.push({
+    angle: cut.angle,
+    isClose: !!cut.isClose,
+    dist: Math.round((cut.dist || 0) * 10) / 10,
+    depth,
+    levelName: levelName || '',
+    employeeId: base.employeeId,
+    ts: cut.ts || Date.now(),
+    dataUrl: cut.dataUrl || null
+  });
+  if (le.angles.front > 0 && le.angles.side > 0 && le.angles.back > 0) le.setCompleted = true;
+  if (typeof markCodex === 'function') markCodex(cut.kind, true);
+  base.stability = Math.max(0, Math.min(100, (base.stability || 0) + 2));
+  saveV10Base(base);
+  saveV10Ledger(ledger);
+  return { stabGain: 2, stability: base.stability };
+}
+function transmitContinuousAnomaly(anom) {
+  const base = loadV10Base();
+  const ledger = loadV10Ledger();
+  ledger.anomalies[anom.kind] = (ledger.anomalies[anom.kind] || 0) + 1;
+  base.stability = Math.max(0, Math.min(100, (base.stability || 0) + 2));
+  saveV10Base(base);
+  saveV10Ledger(ledger);
+  return { stabGain: 2, stability: base.stability };
+}
+function transmitContinuousDoc(doc, depth) {
+  const base = loadV10Base();
+  const ledger = loadV10Ledger();
+  ledger.docs.push({ title: doc.title || '未整理の研究資料', depth, employeeId: base.employeeId, ts: doc.ts || Date.now() });
+  if (ledger.docs.length > 150) ledger.docs.splice(0, ledger.docs.length - 150);
+  base.stability = Math.max(0, Math.min(100, (base.stability || 0) + 4));
+  saveV10Base(base);
+  saveV10Ledger(ledger);
+  return { stabGain: 4, stability: base.stability };
+}
+// V10.2.0 E-4: Continuous Dispatch D-S+ Rank evaluator (primary axis = reachedDepth, weighted with cuts, docs, survival time)
+function computeContinuousRank({ startDepth = 1, reachedDepth = 1, cutsSent = 0, docsSent = 0, timeSec = 0 } = {}) {
+  const progress = Math.max(0, reachedDepth - startDepth);
+  const score = reachedDepth * 12 + progress * 6 + cutsSent * 7 + docsSent * 9 + Math.min(30, Math.floor((timeSec || 0) / 30) * 3);
+  if ((reachedDepth >= 10 && score >= 210) || score >= 260) return 'S+';
+  if ((reachedDepth >= 7 && score >= 145) || score >= 185) return 'S';
+  if ((reachedDepth >= 5 && score >= 95) || score >= 120) return 'A';
+  if ((reachedDepth >= 3 && score >= 52) || score >= 72) return 'B';
+  if (reachedDepth >= 2 || score >= 28) return 'C';
+  return 'D';
+}
+
+// V10.2.0 F: Ledger photo JPEG download (exact stored 320px JPEG, filename likehomes_<entity>_<angle>_<timestamp>.jpg)
+function formatPhotoTimestamp(ts) {
+  const d = new Date(ts || Date.now());
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+function sanitizePhotoToken(str) {
+  return String(str || 'unknown').replace(/[\\/:*?"<>|\s]+/g, '_').replace(/^_+|_+$/g, '') || 'unknown';
+}
+function buildLedgerPhotoFilename(entityName, angle, ts) {
+  const angLabel = (typeof ANGLE_LABELS_JA !== 'undefined' && ANGLE_LABELS_JA[angle]) ? ANGLE_LABELS_JA[angle] : (angle || 'cut');
+  return `likehomes_${sanitizePhotoToken(entityName)}_${sanitizePhotoToken(angLabel)}_${formatPhotoTimestamp(ts)}.jpg`;
+}
+function downloadLedgerPhoto(dataUrl, entityName, angle, ts) {
+  if (!dataUrl) return false;
+  const filename = buildLedgerPhotoFilename(entityName, angle, ts);
+  try {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return filename;
+  } catch (e) {
+    return false;
+  }
+}
+function downloadAllLedgerPhotos() {
+  const ledger = loadV10Ledger();
+  const queue = [];
+  if (ledger && ledger.entities) {
+    for (const id of Object.keys(ledger.entities)) {
+      const le = ledger.entities[id];
+      const name = (typeof ENTITY_META !== 'undefined' && ENTITY_META[id] && ENTITY_META[id].name) ? ENTITY_META[id].name : id;
+      for (const t of (le && le.thumbs ? le.thumbs : [])) {
+        if (t && t.dataUrl) queue.push({ dataUrl: t.dataUrl, name, angle: t.angle, ts: t.ts });
+      }
+    }
+  }
+  if (!queue.length) {
+    if (typeof showToast === 'function') showToast('ダウンロード可能な保存写真がありません');
+    return 0;
+  }
+  queue.forEach((item, idx) => {
+    setTimeout(() => downloadLedgerPhoto(item.dataUrl, item.name, item.angle, item.ts), idx * 180);
+  });
+  if (typeof showToast === 'function') showToast(`台帳写真 ${queue.length} 件のダウンロードを開始しました`);
+  return queue.length;
+}
+
 window.V10Storage = {
   V10_KEYS, V10_REWARDS, v10SafeSetItem, v10PruneLedgerThumbs,
   loadV10Base, saveV10Base, loadV10History, appendV10History,
   loadV10Ledger, saveV10Ledger, loadV10Contracts, generateV10Contracts,
-  evaluateContractCompletion, deliverShiftResults
+  evaluateContractCompletion, deliverShiftResults,
+  transmitContinuousCut, transmitContinuousAnomaly, transmitContinuousDoc, computeContinuousRank,
+  buildLedgerPhotoFilename, downloadLedgerPhoto, downloadAllLedgerPhotos
 };
 
 /* ============================================================
@@ -2495,17 +2882,53 @@ class SoundEngine {
       this.ambGain = this.ctx.createGain();
       this.ambGain.gain.value = 0.34;
       this.ambGain.connect(this.master);
+      // V10.2.0 K-5: Permanent continuous room-tone bus (routed through master => obeys muted & volume=0)
+      this.roomToneGain = this.ctx.createGain();
+      this.roomToneGain.gain.value = 0.24;
+      this.roomToneGain.connect(this.master);
+      this.roomToneNodes = null;
       const sr = this.ctx.sampleRate;
       this.noiseBuf = this.ctx.createBuffer(1, sr * 3, sr);
       const d = this.noiseBuf.getChannelData(0);
       for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      this.startRoomTone(this.currentMode);
       this.applyVolume();
       if (this.currentMode) this.setAmbient(this.currentMode);
     } catch (e) {}
   }
+  startRoomTone(mode = 'fluorescent') {
+    if (!this.ctx || !this.noiseBuf || !this.roomToneGain || this.roomToneNodes) return;
+    try {
+      const t = this.ctx.currentTime;
+      const lowSrc = this.ctx.createBufferSource(); lowSrc.buffer = this.noiseBuf; lowSrc.loop = true;
+      const lowFlt = this.ctx.createBiquadFilter(); lowFlt.type = 'lowpass'; lowFlt.frequency.value = 135; lowFlt.Q.value = 0.7;
+      const lowG = this.ctx.createGain(); lowG.gain.value = 0.14;
+      lowSrc.connect(lowFlt); lowFlt.connect(lowG); lowG.connect(this.roomToneGain); lowSrc.start(t);
+
+      const airSrc = this.ctx.createBufferSource(); airSrc.buffer = this.noiseBuf; airSrc.loop = true;
+      const airFlt = this.ctx.createBiquadFilter(); airFlt.type = 'bandpass'; airFlt.frequency.value = 420; airFlt.Q.value = 1.2;
+      const airG = this.ctx.createGain(); airG.gain.value = 0.055;
+      airSrc.connect(airFlt); airFlt.connect(airG); airG.connect(this.roomToneGain); airSrc.start(t);
+
+      this.roomToneNodes = { lowSrc, lowFlt, lowG, airSrc, airFlt, airG };
+      this.updateRoomToneForMode(mode);
+    } catch (e) {}
+  }
+  updateRoomToneForMode(mode = 'fluorescent') {
+    if (!this.ctx || !this.roomToneNodes) return;
+    const t = this.ctx.currentTime;
+    const isWet = (mode === 'pool' || mode === 'rain' || mode === 'sunken' || mode === 'bath' || mode === 'glasshouse');
+    const isIndustrial = (mode === 'pipes' || mode === 'electric' || mode === 'warehouse' || mode === 'construction' || mode === 'station');
+    const lowHz = isWet ? 165 : (isIndustrial ? 115 : 135);
+    const airHz = isWet ? 640 : (isIndustrial ? 340 : 430);
+    const airGain = isWet ? 0.075 : 0.055;
+    this.roomToneNodes.lowFlt.frequency.setTargetAtTime(lowHz, t, 0.25);
+    this.roomToneNodes.airFlt.frequency.setTargetAtTime(airHz, t, 0.25);
+    this.roomToneNodes.airG.gain.setTargetAtTime(airGain, t, 0.25);
+  }
   applyVolume() {
     if (!this.master || !this.ctx) return;
-    const g = settings.muted ? 0 : (settings.volume / 100) * 0.9;
+    const g = (settings.muted || settings.volume <= 0) ? 0 : (settings.volume / 100) * 0.9;
     this.master.gain.setTargetAtTime(g, this.ctx.currentTime, 0.04);
   }
   clearAmbient() {
@@ -2515,6 +2938,8 @@ class SoundEngine {
   setAmbient(mode) {
     this.currentMode = mode;
     if (!this.ctx) return;
+    if (!this.roomToneNodes) this.startRoomTone(mode);
+    else this.updateRoomToneForMode(mode);
     this.clearAmbient();
     const t = this.ctx.currentTime;
     const addOsc = (type, freq, gainVal, detune = 0) => {
@@ -3345,8 +3770,8 @@ function createBackroomsTextures() {
     ctx.strokeStyle = 'rgba(195,230,242,0.36)'; ctx.lineWidth = 2; ctx.strokeRect(32, 40, s - 64, s - 80);
   }, 1, 1);
   TexCache.blob_shadow = makeCanvasTex(128, (ctx, s) => {
-    const g = ctx.createRadialGradient(s/2,s/2,6,s/2,s/2,s/2);
-    g.addColorStop(0,'rgba(0,0,0,0.42)'); g.addColorStop(0.6,'rgba(0,0,0,0.18)'); g.addColorStop(1,'rgba(0,0,0,0)');
+    const g = ctx.createRadialGradient(s/2,s/2,4,s/2,s/2,s/2);
+    g.addColorStop(0,'rgba(0,0,0,0.68)'); g.addColorStop(0.55,'rgba(0,0,0,0.28)'); g.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle = g; ctx.fillRect(0,0,s,s);
   }, 1, 1);
   TexCache.noclip_warp = makeCanvasTex(256, (ctx, s) => {
@@ -4297,8 +4722,14 @@ const PropFactory = {
     const g = new THREE.Group(), M = this.mats;
     addPart(g, Geo.box1, M.darkMetal, 0.46, 0.04, 0.44, 0, 0.46, 0);
     addPart(g, Geo.box1, M.darkMetal, 0.46, 0.36, 0.04, 0, 0.78, -0.2);
+    // Rear legs (extending up to backrest)
     addPart(g, Geo.cyl8, M.steel, 0.035, 0.88, 0.035, -0.21, 0.44, -0.18, 0.14, 0, 0);
     addPart(g, Geo.cyl8, M.steel, 0.035, 0.88, 0.035, 0.21, 0.44, -0.18, 0.14, 0, 0);
+    // V10.2.0 I: Front legs (matching steel material & 0.035 diameter, angled forward-down to floor y=0 at z≈+0.18)
+    addPart(g, Geo.cyl8, M.steel, 0.035, 0.48, 0.035, -0.21, 0.23, 0.17, -0.14, 0, 0);
+    addPart(g, Geo.cyl8, M.steel, 0.035, 0.48, 0.035, 0.21, 0.23, 0.17, -0.14, 0, 0);
+    g.userData.isFoldingChair = true;
+    g.userData.tipped = !!tipped;
     if (tipped) { g.rotation.x = Math.PI * 0.46; g.position.y = 0.2; }
     return g;
   },
@@ -6218,6 +6649,10 @@ const state = {
   heavySampleCarried: false, heavySampleUid: null, heavySampleCoCarrier: null,
   branchWing: 'A', branchDoorOpen: false, branchPanelATimer: 0, branchPanelBTimer: 0,
   abandonedPeer: false, hostDisconnected: false,
+  // V10.2.0 E: Continuous Dispatch Mode state (solo only)
+  continuousMode: false, continuousStartDepth: 1, continuousMaxDepth: 1,
+  continuousCutsSent: 0, continuousDocsSent: 0, continuousTime: 0,
+  selectedDispatchMode: 'normal',
   hide: { active: false, kind: null, spot: null, ducked: false, returnX: 0, returnZ: 0, returnFloorY: 0, returnYaw: 0, lookOffset: 0, mimicTick: 0 }
 };
 const activeBalls = [];
@@ -6238,7 +6673,7 @@ function unlockAchievement(id) {
   if (newly) {
     sound.playAch();
     const el = document.getElementById('ach-toast');
-    el.textContent = `🏆 実績解除：${meta.name}`;
+    el.textContent = `[実績] 実績解除：${meta.name}`;
     el.classList.add('show');
     clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 3600);
   }
@@ -6260,7 +6695,7 @@ function showFirstHint(key, text) {
   const rec = loadRecords();
   if (rec.hintsShown && rec.hintsShown[key]) return;
   saveRecords(r => { r.hintsShown = r.hintsShown || {}; r.hintsShown[key] = true; });
-  showToast('💡 ' + text);
+  showToast('[注記] ' + text);
 }
 
 function rollSideObjective() {
@@ -6279,7 +6714,7 @@ function completeSideObjective(type) {
   state.sideObj.done = true;
   state.inv[0]++; state.inv[4]++;
   sound.playAch();
-  showToast('★ 副目的達成！報酬：アーモンド水+1 / 乾電池+1');
+  showToast('[*] 副目的達成！報酬：アーモンド水+1 / 乾電池+1');
   updateInventoryUI(); updateObjectiveUI();
 }
 
@@ -6465,6 +6900,109 @@ function addHideSpot(chunk, mesh, x, y, z, rotY, kind, label, colHalfW = 0.55, c
     data: { hideKind: kind, rotY, outX, outZ, floorY: y, isMimic, mimicTell, mimicRevealed, mimicCreakCd }
   });
 }
+// ============================================================
+// V10.2.0 K-1..K-4 VISUAL POLISH ENGINE (ACES Exposure, Contact Shadows, Seeded Prop Variation, Harmonic Floor Fog)
+// ============================================================
+function computeFloorAtmosphere(lv) {
+  const ambC = new THREE.Color(lv && lv.ambColor !== undefined ? lv.ambColor : 0x555555);
+  const litC = new THREE.Color(lv && lv.lightColor !== undefined ? lv.lightColor : 0xfff0d0);
+  const rawFog = new THREE.Color(lv && lv.fogColor !== undefined ? lv.fogColor : 0x161616);
+  const ambLum = ambC.r * 0.299 + ambC.g * 0.587 + ambC.b * 0.114;
+  const litLum = litC.r * 0.299 + litC.g * 0.587 + litC.b * 0.114;
+  const ambInt = (lv && lv.ambInt !== undefined) ? lv.ambInt : 0.22;
+  const litInt = (lv && lv.lightInt !== undefined) ? lv.lightInt : 1.7;
+  // Normalized floor brightness 0..1 from existing floor tint & light specs (light intensities themselves unchanged!)
+  const brightness = Math.max(0, Math.min(1, ambInt * 1.45 + ambLum * 0.32 + (litInt - 1.2) * 0.22 + litLum * 0.14));
+
+  // K-1: Subtle per-floor ACES Filmic exposure (bright floors slightly lower to prevent highlight clipping, dark floors gently lifted)
+  const exposure = Math.max(0.88, Math.min(1.14, +(1.13 - brightness * 0.24).toFixed(3)));
+
+  // K-2: Contact shadow opacity inversely tied to floor brightness (softer on bright floors, richer on dark floors)
+  const shadowOpacity = Math.max(0.34, Math.min(0.62, +(0.60 - brightness * 0.24).toFixed(3)));
+
+  // K-4: Cohesive per-floor fog color & ambient color temperature derived from existing floor tint table
+  // Blend rawFog toward floor tint so every floor has a distinct harmonious air tone without clashing with walls/floors
+  const fogTint = rawFog.clone().lerp(ambC, 0.26).lerp(litC, 0.08);
+  // Clamp fog density so 10m visibility stays crisp (e^(-(0.054*10)^2) ≈ 0.75) while giving distinct depth feel
+  const rawDens = (lv && lv.fogDensity !== undefined) ? lv.fogDensity : 0.05;
+  const fogDensity = Math.max(0.022, Math.min(0.054, +(rawDens * 0.84).toFixed(4)));
+  const ambHarmonized = ambC.clone().lerp(litC, 0.18);
+  const hemiSky = litC.clone().lerp(ambC, 0.22);
+  const hemiGround = rawFog.clone().lerp(ambC, 0.35);
+
+  return {
+    brightness,
+    exposure,
+    shadowOpacity,
+    fogColor: fogTint.getHex(),
+    fogDensity,
+    ambColor: ambHarmonized.getHex(),
+    hemiSkyColor: hemiSky.getHex(),
+    hemiGroundColor: hemiGround.getHex()
+  };
+}
+
+// K-2: Grounding blob shadow mesh (flat on floor y, NEVER projects onto walls/ceilings)
+function createGroundShadow(radX, radZ, opacity = 0.48, yPos = 0.015) {
+  const mat = new THREE.MeshBasicMaterial({
+    map: TexCache.blob_shadow,
+    transparent: true,
+    opacity,
+    depthWrite: false,
+    polygonOffset: true,
+    polygonOffsetFactor: -2
+  });
+  const m = new THREE.Mesh(Geo.plane, mat);
+  m.rotation.x = -Math.PI / 2;
+  m.scale.set(radX * 2, radZ * 2, 1);
+  m.position.y = yPos;
+  m.userData.isGroundShadow = true;
+  return m;
+}
+
+// K-3: Deterministic seeded color/scale/rotation variation for repeated props (bounded variant cache per material)
+const PROP_MAT_VAR_CACHE = new Map();
+function getVariedPropMaterial(srcMat, bucketIdx, hShift, lShift) {
+  if (!srcMat || !srcMat.color || srcMat.emissiveIntensity > 0.6) return srcMat;
+  const key = srcMat.uuid + '_' + bucketIdx;
+  if (PROP_MAT_VAR_CACHE.has(key)) return PROP_MAT_VAR_CACHE.get(key);
+  const hsl = { h: 0, s: 0, l: 0 };
+  srcMat.color.getHSL(hsl);
+  const m = srcMat.clone();
+  // Preserve near-white materials so white surfaces never turn yellow (only subtle lightness shift!)
+  const isNearWhite = (hsl.l > 0.84 && hsl.s < 0.14);
+  const nextH = isNearWhite ? hsl.h : (hsl.h + hShift + 1) % 1;
+  const nextL = Math.max(0.05, Math.min(0.95, hsl.l * (1 + lShift)));
+  m.color.setHSL(nextH, hsl.s, nextL);
+  if (PROP_MAT_VAR_CACHE.size > 240) PROP_MAT_VAR_CACHE.clear();
+  PROP_MAT_VAR_CACHE.set(key, m);
+  return m;
+}
+function applyDeterministicPropVariation(obj, rng, opts = {}) {
+  const isWallConstrained = !!(opts.fixedRot !== undefined || opts.cardinal || opts.wallBacked || opts.isStreetFixture);
+  // Rotation jitter: ±25° freestanding, ±5° for wall-backed / cardinal props
+  const maxYaw = isWallConstrained ? (5 * Math.PI / 180) : (25 * Math.PI / 180);
+  const yawDelta = (rng() * 2 - 1) * maxYaw;
+  // Scale: deterministic 0.90..1.10
+  const scaleMul = 0.90 + rng() * 0.20;
+  // Color: deterministic ±8% lightness & gentle hue shift in 8 reproducible buckets
+  const bucketIdx = Math.floor(rng() * 8);
+  const lShift = ((bucketIdx / 7) * 2 - 1) * 0.08;
+  const hShift = (((bucketIdx * 5) % 8) / 7 * 2 - 1) * 0.025;
+
+  if (obj) {
+    obj.scale.multiplyScalar(scaleMul);
+    obj.traverse(n => {
+      if (n.isMesh && n.material && !Array.isArray(n.material) && !n.userData.isGroundShadow) {
+        n.material = getVariedPropMaterial(n.material, bucketIdx, hShift, lShift);
+      }
+    });
+    obj.userData.propVariation = { yawDelta, scaleMul, bucketIdx, lShift, hShift };
+  }
+  return { yawDelta, scaleMul, bucketIdx, lShift, hShift };
+}
+window.V10Visuals = { computeFloorAtmosphere, createGroundShadow, applyDeterministicPropVariation };
+
 function tryPlaceRandomProp(chunk, rng, wx, wz, spreadX, spreadZ, clearanceR, colHalfW, colHalfD, factoryFn, opts = {}) {
   const isSpawn = (chunk.cx === 0 && chunk.cz === 0);
   const footW = colHalfW > 0 ? colHalfW : Math.max(0.25, clearanceR * 0.5);
@@ -6474,17 +7012,54 @@ function tryPlaceRandomProp(chunk, rng, wx, wz, spreadX, spreadZ, clearanceR, co
     if (isSpawn && Math.hypot(px, pz) < 3.4) continue;
     // V9.3.0 E-3 Keep benches out of crosswalk center strip
     if (opts.noCrosswalkCenter && chunk.zoneType === 'crosswalk' && Math.abs(px - wx) < 4.4 && Math.abs(pz - wz) < 4.4) continue;
-    const rot = opts.fixedRot !== undefined ? opts.fixedRot : (opts.cardinal ? Math.floor(rng()*4)*Math.PI/2 : rng()*Math.PI*2);
+    const baseRot = opts.fixedRot !== undefined ? opts.fixedRot : (opts.cardinal ? Math.floor(rng()*4)*Math.PI/2 : rng()*Math.PI*2);
+    // V10.2.0 K-3: Roll deterministic variation up front so collision check reflects final scaled & rotated footprint!
+    const isWallConstrained = !!(opts.fixedRot !== undefined || opts.cardinal || opts.wallBacked || opts.isStreetFixture);
+    const maxYaw = isWallConstrained ? (5 * Math.PI / 180) : (25 * Math.PI / 180);
+    const yawDelta = (rng() * 2 - 1) * maxYaw;
+    const rot = baseRot + yawDelta;
+    let scaleMul = 0.90 + rng() * 0.20;
+    if (opts.scaleJitter) scaleMul *= (1 + (rng() - 0.5) * opts.scaleJitter * 0.5);
+    const bucketIdx = Math.floor(rng() * 8);
+    const lShift = ((bucketIdx / 7) * 2 - 1) * 0.08;
+    const hShift = (((bucketIdx * 5) % 8) / 7 * 2 - 1) * 0.025;
+
+    const scaledFootW = footW * scaleMul, scaledFootD = footD * scaleMul;
     // V9.3.0 E-2 Full rotated footprint check against ALL colliders (+ 0.4m clearance from fixed street fixtures)
-    if (pointCollides(chunk.colliders, px, pz, clearanceR)) continue;
-    if (colHalfW > 0 && colHalfD > 0 && rectOverlapsAny(chunk.colliders, px, pz, footW, footD, rot, 0.08)) continue;
+    if (pointCollides(chunk.colliders, px, pz, clearanceR * scaleMul)) continue;
+    if (colHalfW > 0 && colHalfD > 0 && rectOverlapsAny(chunk.colliders, px, pz, scaledFootW, scaledFootD, rot, 0.08)) continue;
     const obj = factoryFn();
-    obj.position.set(px, opts.y || 0, pz); obj.rotation.y = rot;
-    if (opts.scaleJitter) obj.scale.multiplyScalar(1 + (rng()-0.5)*opts.scaleJitter);
+    obj.position.set(px, opts.y || obj.position.y || 0, pz); obj.rotation.y = rot;
+    obj.scale.multiplyScalar(scaleMul);
+    obj.traverse(n => {
+      if (n.isMesh && n.material && !Array.isArray(n.material) && !n.userData.isGroundShadow) {
+        n.material = getVariedPropMaterial(n.material, bucketIdx, hShift, lShift);
+      }
+    });
+    obj.userData.propVariation = { yawDelta, scaleMul, bucketIdx, lShift, hShift };
     chunk.group.add(obj);
+
+    // V10.2.0 K-2: Grounding contact shadow on floor (elongated along tipped fall axis if tipped!)
+    const lvNow = getActiveLevel();
+    const atm = computeFloorAtmosphere(lvNow);
+    const isTipped = !!(obj.userData && obj.userData.tipped);
+    const shRadX = Math.max(0.32, scaledFootW * (isTipped ? 1.35 : 1.55));
+    const shRadZ = Math.max(0.32, scaledFootD * (isTipped ? 2.25 : 1.55));
+    const shY = (opts.y || 0) + 0.014;
+    const propShadow = createGroundShadow(shRadX, shRadZ, atm.shadowOpacity, shY);
+    propShadow.position.set(px, shY, pz);
+    propShadow.rotation.z = -rot; // orient elongated shadow along prop's Y heading on the horizontal XZ plane
+    if (isTipped) {
+      // Shift shadow slightly along the fallen backrest direction so it sits directly beneath the tipped body
+      propShadow.position.x += Math.sin(rot) * (0.24 * scaleMul);
+      propShadow.position.z += Math.cos(rot) * (0.24 * scaleMul);
+    }
+    chunk.group.add(propShadow);
+    obj.userData.groundShadow = propShadow;
+
     let col = null;
     if (colHalfW > 0 && colHalfD > 0) {
-      const { extX, extZ } = getRotatedHalfExtents(colHalfW, colHalfD, rot);
+      const { extX, extZ } = getRotatedHalfExtents(colHalfW * scaleMul, colHalfD * scaleMul, rot);
       col = { minX: px - extX, maxX: px + extX, minZ: pz - extZ, maxZ: pz + extZ, minY: 0, maxY: 3.0, disabled: false, isStreetFixture: !!opts.isStreetFixture };
       chunk.colliders.push(col);
     }
@@ -6493,11 +7068,11 @@ function tryPlaceRandomProp(chunk, rng, wx, wz, spreadX, spreadZ, clearanceR, co
       let altX = px, altZ = pz;
       for (let k = 0; k < 5; k++) {
         const tx = px+(rng()-0.5)*3, tz = pz+(rng()-0.5)*3;
-        if (!rectOverlapsAny(chunk.colliders, tx, tz, footW, footD, rot, 0.08, 0, col)) { altX = tx; altZ = tz; break; }
+        if (!rectOverlapsAny(chunk.colliders, tx, tz, scaledFootW, scaledFootD, rot, 0.08, 0, col)) { altX = tx; altZ = tz; break; }
       }
-      if (altX !== px || altZ !== pz) chunk.shiftables.push({ kind: 'prop', mesh: obj, collider: col, x: px, z: pz, altX, altZ, baseX: px, baseZ: pz, active: true, cooldown: 4 + rng()*5 });
+      if (altX !== px || altZ !== pz) chunk.shiftables.push({ kind: 'prop', mesh: obj, shadow: propShadow, collider: col, x: px, z: pz, altX, altZ, baseX: px, baseZ: pz, active: true, cooldown: 4 + rng()*5 });
     }
-    return { obj, x: px, z: pz, rot };
+    return { obj, x: px, z: pz, rot, scaleMul };
   }
   return null;
 }
@@ -7079,6 +7654,7 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
         const pRadius = 5.4;
         const pZoneMesh = PropFactory.partyBoundaryZone(pRadius); pZoneMesh.position.set(wx, 0, wz); chunk.group.add(pZoneMesh);
         const pt = PropFactory.partyTableSet(); pt.position.set(wx, 0, wz); chunk.group.add(pt); chunk.animatedProps.push(pt);
+        chunk.colliders.push({ minX: wx-1.0, maxX: wx+1.0, minZ: wz-0.55, maxZ: wz+0.55, minY: 0, maxY: 1.2, disabled: false }); // V10.2.0 A-4 table blocks BFS cells
         chunk.partyZone = { x: wx, z: wz, r: pRadius, spawned: false };
         addInteractable(chunk, PropFactory.almondWater(), wx+1.5, 0, wz+1.4, 'almond', '[E] アーモンドウォーターを拾う');
         addInteractable(chunk, PropFactory.medkit(), wx-1.6, 0, wz-1.2, 'medkit', '[E] 救急キットを拾う');
@@ -7678,6 +8254,7 @@ function triggerUnseenShifts(dt, forceInstant = false) {
           s.active = !s.active; const nx = s.active ? s.baseX : s.altX, nz = s.active ? s.baseZ : s.altZ;
           if (Math.hypot(nx - state.pos.x, nz - state.pos.z) > 3.2) {
             s.mesh.position.x = nx; s.mesh.position.z = nz; s.mesh.rotation.y += (Math.random()-0.5)*1.2;
+            if (s.shadow) { s.shadow.position.x = nx; s.shadow.position.z = nz; s.shadow.rotation.z = -s.mesh.rotation.y; }
             if (s.collider) { const hw = (s.collider.maxX-s.collider.minX)*0.5, hd = (s.collider.maxZ-s.collider.minZ)*0.5; s.collider.minX = nx-hw; s.collider.maxX = nx+hw; s.collider.minZ = nz-hd; s.collider.maxZ = nz+hd; }
             s.x = nx; s.z = nz; s.cooldown = 6; shiftedAny = true;
           }
@@ -7789,9 +8366,35 @@ function pushOutOfWalls(x, z, r = 0.48) {
   return { x, z };
 }
 
-// V9.2.0 A-1 Grid-Based BFS Pathfinding (2.0m cells, center + 4 sub-points ±0.5m thin-wall check, expanded limits 260/±18, dynamic stuck-cell blocking!)
-const BFS_CELL = 2.0;
-const BFS_SUB_OFFSETS = [[0, 0], [0.5, 0], [-0.5, 0], [0, 0.5], [0, -0.5]];
+// V9.2.0 A-1 Grid-Based BFS Pathfinding (center + 4 sub-points thin-wall check, dynamic stuck-cell blocking!)
+// V10.2.0 A-3: BFS_CELL refined 2.0m -> 1.0m so small obstacles (party table ~2.0x1.1m) block cells correctly.
+//   Search limits scaled to keep the same world radius (44m / ±36 cells). Shared blocked-cell cache (TTL) keeps cost low.
+//   Unreachable goal => path to the nearest reachable cell (partial) instead of endless recomputation.
+// V10.2.0 A-4: optional opts.zone {x,z,r} => cells outside the zone are non-walkable (VIP party area).
+const BFS_CELL = 1.0;
+const BFS_SUB_OFFSETS = [[0, 0], [0.25, 0], [-0.25, 0], [0, 0.25], [0, -0.25]];
+const BFS_MAX_RADIUS_CELLS = 44, BFS_BOX_CELLS = 36, BFS_MAX_VISITED = 1400;
+const BFS_GRID_CACHE = { map: new Map(), stamp: 0, chunkCount: -1 };
+function bfsCellBlockedCached(near, gx, gz, entR) {
+  const now = (typeof state !== 'undefined' && state) ? (state.elapsed || 0) : 0;
+  const chCount = (typeof chunks !== 'undefined' && chunks) ? chunks.size : 0;
+  if (now - BFS_GRID_CACHE.stamp > 1.5 || now < BFS_GRID_CACHE.stamp || chCount !== BFS_GRID_CACHE.chunkCount) {
+    BFS_GRID_CACHE.map.clear(); BFS_GRID_CACHE.stamp = now; BFS_GRID_CACHE.chunkCount = chCount;
+  }
+  const k = gx + ',' + gz + '|' + entR;
+  const hit = BFS_GRID_CACHE.map.get(k);
+  if (hit !== undefined) return hit;
+  const wx = gx * BFS_CELL, wz = gz * BFS_CELL;
+  let b = isInsideManilaRoom(wx, wz);
+  if (!b) {
+    for (let i = 0; i < BFS_SUB_OFFSETS.length; i++) {
+      const [ox, oz] = BFS_SUB_OFFSETS[i];
+      if (pointCollides(near, wx + ox, wz + oz, entR, 0)) { b = true; break; }
+    }
+  }
+  BFS_GRID_CACHE.map.set(k, b);
+  return b;
+}
 function getBfsColliders(sx, sz, tx, tz) {
   const minX = Math.min(sx, tx) - 18, maxX = Math.max(sx, tx) + 18;
   const minZ = Math.min(sz, tz) - 18, maxZ = Math.max(sz, tz) + 18;
@@ -7807,66 +8410,82 @@ function getBfsColliders(sx, sz, tx, tz) {
   }
   return getNearbyColliders((sx + tx) * 0.5, (sz + tz) * 0.5);
 }
-function computeBfsNextStep(sx, sz, tx, tz, entR = 0.36, extraBlocked = null) {
+function computeBfsNextStep(sx, sz, tx, tz, entR = 0.36, extraBlocked = null, opts = null) {
   const scx = Math.round(sx / BFS_CELL), scz = Math.round(sz / BFS_CELL);
-  const tcx = Math.round(tx / BFS_CELL), tcz = Math.round(tz / BFS_CELL);
+  let tcx = Math.round(tx / BFS_CELL), tcz = Math.round(tz / BFS_CELL);
+  const zone = opts && opts.zone ? opts.zone : null;
   if (scx === tcx && scz === tcz) return { x: tx, z: tz, found: true };
-  if (Math.hypot(tcx - scx, tcz - scz) > 22) return null;
+  if (Math.hypot(tcx - scx, tcz - scz) > BFS_MAX_RADIUS_CELLS) return null;
   const near = typeof getBfsColliders === 'function' ? getBfsColliders(sx, sz, tx, tz) : getNearbyColliders((sx + tx) * 0.5, (sz + tz) * 0.5);
-  const blockedCache = new Map();
+  const zoneR = zone ? Math.max(0.6, zone.r - 0.6) : 0;
+  const nbMinX = Math.min(sx, tx) - 17, nbMaxX = Math.max(sx, tx) + 17;
+  const nbMinZ = Math.min(sz, tz) - 17, nbMaxZ = Math.max(sz, tz) + 17;
   const isBlocked = (gx, gz) => {
     const k = gx + ',' + gz;
-    if (blockedCache.has(k)) return blockedCache.get(k);
-    if (extraBlocked && (extraBlocked instanceof Set ? extraBlocked.has(k) : (extraBlocked instanceof Map ? extraBlocked.has(k) : false))) {
-      blockedCache.set(k, true); return true;
-    }
+    if (extraBlocked && (extraBlocked instanceof Set ? extraBlocked.has(k) : (extraBlocked instanceof Map ? extraBlocked.has(k) : false))) return true;
+    if (zone && Math.hypot(gx * BFS_CELL - zone.x, gz * BFS_CELL - zone.z) > zoneR) return true;
     const wx = gx * BFS_CELL, wz = gz * BFS_CELL;
-    if (isInsideManilaRoom(wx, wz)) { blockedCache.set(k, true); return true; }
-    let b = false;
-    for (let i = 0; i < BFS_SUB_OFFSETS.length; i++) {
-      const [ox, oz] = BFS_SUB_OFFSETS[i];
-      if (pointCollides(near, wx + ox, wz + oz, entR, 0)) { b = true; break; }
-    }
-    blockedCache.set(k, b);
-    return b;
+    if (wx < nbMinX || wx > nbMaxX || wz < nbMinZ || wz > nbMaxZ) return true; // outside gathered colliders => unknown => not walkable
+    return bfsCellBlockedCached(near, gx, gz, entR);
   };
+  // A-4: VIP goal outside its zone => clamp goal into the zone first
+  if (zone) {
+    const gdx = tcx * BFS_CELL - zone.x, gdz = tcz * BFS_CELL - zone.z, gd = Math.hypot(gdx, gdz);
+    if (gd > zoneR) { tcx = Math.round((zone.x + gdx / gd * zoneR) / BFS_CELL); tcz = Math.round((zone.z + gdz / gd * zoneR) / BFS_CELL); }
+  }
   const startKey = scx + ',' + scz;
   const goalKey = tcx + ',' + tcz;
-  const queue = [[scx, scz]];
+  const goalBlocked = isBlocked(tcx, tcz);
+  const qx = [scx], qz = [scz];
+  let qh = 0;
   const parent = new Map();
   parent.set(startKey, null);
   const dirs = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
   let found = false, visited = 0;
-  while (queue.length > 0 && visited < 260) {
-    const [cx, cz] = queue.shift();
+  let bestKey = startKey, bestD = Math.hypot(tcx - scx, tcz - scz);
+  while (qh < qx.length && visited < BFS_MAX_VISITED) {
+    const cx = qx[qh], cz = qz[qh]; qh++;
     visited++;
     if (cx === tcx && cz === tcz) { found = true; break; }
+    const cd = Math.hypot(tcx - cx, tcz - cz);
+    if (cd < bestD) { bestD = cd; bestKey = cx + ',' + cz; }
     for (const [dx, dz] of dirs) {
       const nx = cx + dx, nz = cz + dz;
       const nk = nx + ',' + nz;
       if (parent.has(nk)) continue;
-      if (Math.abs(nx - scx) > 18 || Math.abs(nz - scz) > 18) continue;
-      if (nk !== goalKey && isBlocked(nx, nz)) continue;
+      if (Math.abs(nx - scx) > BFS_BOX_CELLS || Math.abs(nz - scz) > BFS_BOX_CELLS) continue;
+      const isGoal = (nk === goalKey);
+      if (isGoal ? (goalBlocked && zone) : isBlocked(nx, nz)) continue;
+      if (isGoal && goalBlocked && !zone) {
+        // Goal cell itself is occupied (target hugging a wall / prop) — allow only if the target is directly reachable
+        if (!hasLineOfSight(cx * BFS_CELL, cz * BFS_CELL, tx, tz)) continue;
+      }
       // Also test midpoint between cells so a thin partition on the cell seam cannot be crossed!
       const midX = (cx + dx * 0.5) * BFS_CELL, midZ = (cz + dz * 0.5) * BFS_CELL;
       if (pointCollides(near, midX, midZ, entR * 0.85, 0)) continue;
       if (dx !== 0 && dz !== 0 && (isBlocked(cx + dx, cz) || isBlocked(cx, cz + dz))) continue;
       parent.set(nk, cx + ',' + cz);
-      queue.push([nx, nz]);
+      qx.push(nx); qz.push(nz);
     }
   }
-  if (!found) return null;
+  let endKey = goalKey, partial = false;
+  if (!found) {
+    // A-3/A-4: unreachable => head for the nearest reachable cell (and wait there) instead of freezing/recomputing forever
+    if (bestKey === startKey) return null;
+    endKey = bestKey; partial = true;
+  }
   // Backtrack to 2 cells ahead of start for smooth cornering
   const path = [];
-  let cur = goalKey;
+  let cur = endKey;
   while (cur && cur !== startKey) {
     const [px, pz] = cur.split(',').map(Number);
     path.push({ x: px * BFS_CELL, z: pz * BFS_CELL });
     cur = parent.get(cur);
   }
   path.reverse();
-  const pick = path[Math.min(1, path.length - 1)] || { x: tx, z: tz };
-  return { x: pick.x, z: pick.z, found: true };
+  const last = path[path.length - 1];
+  const pick = path[Math.min(1, path.length - 1)] || (partial ? last : { x: tx, z: tz });
+  return { x: pick.x, z: pick.z, found: !partial, partial, endX: last ? last.x : tx, endZ: last ? last.z : tz };
 }
 window.computeBfsNextStep = computeBfsNextStep;
 
@@ -8043,6 +8662,18 @@ function spawnEntity(kindOverride = null, posOverride = null, zoneRef = null, ex
   const mesh = PropFactory.createEntityModel(kind, isChild, mimicMeta);
   const startY = (kind === 'imagination_diver') ? (lv.waterY || 0.24) : 0;
   mesh.position.set(sx, startY, sz);
+  // V10.2.0 K-2: Grounding contact blob shadow under every entity (larger for VIP/clump/watch/straggler; moves with entity!)
+  if (kind !== 'imagination_diver') {
+    const atm = computeFloorAtmosphere(lv);
+    const isLarge = (kind === 'partygoer' || kind === 'clump' || kind === 'watch' || kind === 'straggler');
+    const isSmall = (kind === 'deathrat' || kind === 'snail');
+    const shRad = isLarge ? 1.15 : (isSmall ? 0.58 : 0.78);
+    const shOp = (kind === 'deathmoth') ? (atm.shadowOpacity * 0.55) : atm.shadowOpacity;
+    const entShadow = createGroundShadow(shRad, shRad, shOp, 0.018);
+    mesh.add(entShadow);
+    mesh.userData = mesh.userData || {};
+    mesh.userData.groundShadow = entShadow;
+  }
   entityGroup.add(mesh);
 
   const initHomeX = (extraOpts && extraOpts.clusterOriginX !== undefined) ? extraOpts.clusterOriginX : sx;
@@ -8168,7 +8799,7 @@ function updateWatchSweep(dt) {
     const sheltered = isPlayerSheltered();
     if (ov) { ov.classList.remove('omen'); ov.style.opacity = sheltered ? '0.18' : '0.88'; }
     if (bn) {
-      bn.textContent = sheltered ? '✓ 遮蔽物に隠れ中 — 監視光を回避している' : '⚠ 監視光照射中！家・店舗・車・ロッカーへ隠れろ！';
+      bn.textContent = sheltered ? '✓ 遮蔽物に隠れ中 — 監視光を回避している' : '[!] 監視光照射中！家・店舗・車・ロッカーへ隠れろ！';
       bn.classList.add('show');
     }
     if (!sheltered && !state.downed) {
@@ -8193,7 +8824,7 @@ function updateWatchSweep(dt) {
       ov.style.opacity = (0.12 + prog * 0.36 + Math.abs(Math.sin(state.elapsed * (6 + prog * 8))) * 0.14).toFixed(2);
     }
     if (bn) {
-      bn.textContent = `⚠ 監視光収束中（あと ${Math.max(0, ws.dur).toFixed(1)}s）— 建物・店舗・車・ロッカーへ逃げ込め！`;
+      bn.textContent = `[!] 監視光収束中（あと ${Math.max(0, ws.dur).toFixed(1)}s）— 建物・店舗・車・ロッカーへ逃げ込め！`;
       bn.classList.add('show');
     }
     if (ws.dur <= 2.4 && (ws.warnBeepStep || 0) < 1) { ws.warnBeepStep = 1; sound.playWatchSweepWarn(0.5); }
@@ -8223,6 +8854,57 @@ function computeAmicusWaypoint(ex, ez, tx, tz) {
   const wz = ez + (dz / (dist || 1)) * step;
   const safe = pushOutOfWalls(wx, wz, 0.45);
   return { x: safe.x, z: safe.z };
+}
+
+// V10.2.0 A-2: Retreat destination for BFS (no more straight "away from player" pushing into walls).
+// Samples open points 7-11m away, biased away from the threat; prefers points with a clear line from the entity.
+function pickRetreatGoal(e, fromX, fromZ) {
+  const awayAng = Math.atan2(e.z - fromZ, e.x - fromX);
+  let best = null, bestScore = -Infinity;
+  for (let i = 0; i < 14; i++) {
+    const ang = awayAng + (i === 0 ? 0 : ((i % 2 ? 1 : -1) * Math.ceil(i / 2) * 0.24));
+    const rad = 7 + (i % 3) * 2;
+    const px = e.x + Math.cos(ang) * rad, pz = e.z + Math.sin(ang) * rad;
+    const near = getNearbyColliders(px, pz);
+    if (pointCollides(near, px, pz, 0.45, 0) || isInsideManilaRoom(px, pz)) continue;
+    const away = Math.hypot(px - fromX, pz - fromZ);
+    const score = away + (hasLineOfSight(e.x, e.z, px, pz) ? 4 : 0) - Math.abs(ang - awayAng) * 1.5;
+    if (score > bestScore) { bestScore = score; best = { x: px, z: pz }; }
+  }
+  if (!best) {
+    const p = pushOutOfWalls(e.x + Math.cos(awayAng) * 6, e.z + Math.sin(awayAng) * 6, 0.45);
+    best = { x: p.x, z: p.z };
+  }
+  return best;
+}
+
+// V10.2.0 A-5: Entity stuck twice in a row => hop to the most open nearby cell (LOS + collision checked => never through walls).
+function relocateStuckEntity(e, goalX, goalZ) {
+  let best = null, bestScore = -Infinity;
+  for (let ox = -3; ox <= 3; ox++) {
+    for (let oz = -3; oz <= 3; oz++) {
+      if (ox === 0 && oz === 0) continue;
+      const cx = Math.round(e.x / BFS_CELL + ox) * BFS_CELL, cz = Math.round(e.z / BFS_CELL + oz) * BFS_CELL;
+      const d = Math.hypot(cx - e.x, cz - e.z);
+      if (d < 0.6 || d > 3.2) continue;
+      const near = getNearbyColliders(cx, cz);
+      if (pointCollides(near, cx, cz, 0.42, 0) || isInsideManilaRoom(cx, cz)) continue;
+      if (e.kind === 'partygoer' && e.zone && Math.hypot(cx - e.zone.x, cz - e.zone.z) > e.zone.r - 0.6) continue;
+      if (!hasLineOfSight(e.x, e.z, cx, cz)) continue;
+      let open = 0;
+      for (const [ax, az] of [[1,0],[-1,0],[0,1],[0,-1],[0.7,0.7],[-0.7,0.7],[0.7,-0.7],[-0.7,-0.7]]) {
+        if (!pointCollides(near, cx + ax, cz + az, 0.36, 0)) open++;
+      }
+      const toGoal = (goalX !== undefined) ? Math.hypot(goalX - cx, goalZ - cz) : 0;
+      const score = open * 2 - toGoal * 0.15 - d * 0.2;
+      if (score > bestScore) { bestScore = score; best = { x: cx, z: cz }; }
+    }
+  }
+  if (!best) return false;
+  e.x = best.x; e.z = best.z;
+  if (e.mesh) { e.mesh.position.x = e.x; e.mesh.position.z = e.z; }
+  e.bfsTarget = null; e.bfsTimer = 0;
+  return true;
 }
 
 // All living player targets (host + connected non-downed guests)
@@ -8459,6 +9141,8 @@ function updateEntities(dt, playerMovedDist) {
 
     let moveSpd = 0, moveDirX = dx / (dist || 1), moveDirZ = dz / (dist || 1);
     let useBfs = false, bfsGoalX = tgt.x, bfsGoalZ = tgt.z;
+    // V10.2.0 A-1: sensedNow = this species' sensing condition was ACTUALLY met this frame (sight / sound / light / vibration ...)
+    let sensedNow = false, bfsOpts = null;
     const meta = ENTITY_META[e.kind === 'horde' ? 'bacteria' : e.kind] || ENTITY_META.bacteria;
 
     // Helper for D-3: transition to return_home if outside territory upon breaking chase
@@ -8487,17 +9171,17 @@ function updateEntities(dt, playerMovedDist) {
       if (!e.amicusGifted && hDist <= 3.0) {
         e.amicusGifted = true;
         const giftPool = [
-          { slot: 0, name: 'アーモンドウォーター', ico: '💧' },
-          { slot: 4, name: '乾電池', ico: '🔋' },
-          { slot: 1, name: '携帯食料', ico: '🥫' },
-          { slot: 3, name: 'モスゼリー', ico: '🍯' }
+          { slot: 0, name: 'アーモンドウォーター', ico: '水' },
+          { slot: 4, name: '乾電池', ico: '電' },
+          { slot: 1, name: '携帯食料', ico: '食' },
+          { slot: 3, name: 'モスゼリー', ico: '蜜' }
         ];
-        if ((state.inv[5] || 0) < LOCKPICK_MAX) giftPool.push({ slot: 5, name: 'ピック', ico: '🧷' });
+        if ((state.inv[5] || 0) < LOCKPICK_MAX) giftPool.push({ slot: 5, name: 'ピック', ico: '針' });
         const picked = giftPool[Math.floor(Math.random() * giftPool.length)];
         state.inv[picked.slot] = (state.inv[picked.slot] || 0) + 1;
         updateInventoryUI();
         sound.playCounterSuccess(pan);
-        showToast(`🤝 アミークスから ${picked.ico} ${picked.name} を受け取った！（帰還扉まで案内してくれる）`);
+        showToast(`[接触] アミークスから ${picked.ico} ${picked.name} を受け取った！（帰還扉まで案内してくれる）`);
       }
 
       // G-3 Anti-Abandonment Warp: if gifted & >=30m from player & warp cd <= 0, warp to out-of-LOS 12-16m spot (min 5s cd)!
@@ -8538,7 +9222,7 @@ function updateEntities(dt, playerMovedDist) {
         if (td < 2.3 || e.amicusDecoyTimer >= 2.8) {
           state.amicusDecoyUsed = true;
           sound.playMimicDissolve(pan, hDist);
-          showToast('✨ アミークスが敵の注意を引き付けて霧散した！今だ、逃げろ！');
+          showToast('[消失] アミークスが敵の注意を引き付けて霧散した！今だ、逃げろ！');
           entityGroup.remove(e.mesh); activeEntities.splice(i, 1);
           continue;
         }
@@ -8641,12 +9325,17 @@ function updateEntities(dt, playerMovedDist) {
     } else if (e.state === 'stakeout') {
       e.stakeoutTimer -= dt; e.stakeoutSoundCd -= dt; stakeoutNear = true;
       const sdx = e.stakeoutX - e.x, sdz = e.stakeoutZ - e.z, sd = Math.hypot(sdx, sdz);
-      if (sd > 1.3) { moveSpd = 2.6; moveDirX = sdx/sd; moveDirZ = sdz/sd; } else moveSpd = 0;
+      if (sd > 1.3) { moveSpd = 2.6; moveDirX = sdx/sd; moveDirZ = sdz/sd; useBfs = true; bfsGoalX = e.stakeoutX; bfsGoalZ = e.stakeoutZ; } else moveSpd = 0;
       if (e.stakeoutSoundCd <= 0) { sound.playStakeoutBreath(0.18); sound.playFootstep(lv.surface, false, false); e.stakeoutSoundCd = 1.25; }
       if (e.stakeoutTimer <= 0) { e.state = 'retreat'; e.retreatTimer = 4.5; }
     } else if (e.state === 'retreat') {
       e.retreatTimer -= dt; moveSpd = Math.min(MAX_SPEED, 3.8 * speedMul); moveDirX = -dx/(dist||1); moveDirZ = -dz/(dist||1);
-      if (e.retreatTimer <= 0) { enterReturnOrStalk(); }
+      // V10.2.0 A-2: retreat (Blank Idol / Kawahagi / Dokuga repel / child faceling ...) goes through BFS to an open spot away from the player
+      if (!e.retreatGoal || Math.hypot(e.retreatGoal.x - e.x, e.retreatGoal.z - e.z) < 1.2 || Math.hypot(e.retreatGoal.x - tgt.x, e.retreatGoal.z - tgt.z) < 4.0) {
+        e.retreatGoal = pickRetreatGoal(e, tgt.x, tgt.z);
+      }
+      useBfs = true; bfsGoalX = e.retreatGoal.x; bfsGoalZ = e.retreatGoal.z;
+      if (e.retreatTimer <= 0) { e.retreatGoal = null; enterReturnOrStalk(); }
     } else if (activeBallTarget) {
       // V8 §3.5 Ball lure overrides pursuit for partygoer, bacteria, hound!
       const bdx = activeBallTarget.x - e.x, bdz = activeBallTarget.z - e.z, bd = Math.hypot(bdx, bdz);
@@ -8684,16 +9373,17 @@ function updateEntities(dt, playerMovedDist) {
       const hitByFlashlight = (flashLit && lookDot > 0.50 && hDist < 18 && hHasLOS) || (tFlash && tLookDot > 0.50 && dist < 18 && hasLOS);
       if (hitByFlashlight) {
         e.lightBurn += dt;
-        const remain = Math.max(0.05, 1 - e.lightBurn / 0.9);
+        // V10.2.0 D: required exposure 0.9s -> 1.8s
+        const remain = Math.max(0.05, 1 - e.lightBurn / 1.8);
         e.mesh.scale.setScalar(remain);
         moveSpd = 0;
-        if (e.lightBurn >= 0.9) {
+        if (e.lightBurn >= 1.8) {
           sound.playCounterSuccess(pan);
           showToast('メガンに光を浴びせて消滅させた！');
           e.life = 0;
         }
       } else {
-        e.lightBurn = Math.max(0, e.lightBurn - dt * 0.4);
+        e.lightBurn = Math.max(0, e.lightBurn - dt * 0.2); // V10.2.0 D: decay halved (0.4 -> 0.2) for a wider re-aim window
         e.mesh.scale.setScalar(1);
         const inDarkOrBlind = !tFlash || tLookDot < 0.35;
         if (canDetect && !tHidden && inDarkOrBlind && dist < 20) {
@@ -8728,6 +9418,7 @@ function updateEntities(dt, playerMovedDist) {
       const noisy = !tHidden && (tgt.sprinting || (tgt.movedDist > 0.01 && !tgt.crouch));
       const hearR = (tgt.sprinting ? 21 : (noisy ? 12 : (tCrouchStealth ? 2.5 : 4.5))) * levelSoundMul;
       const heardNow = canDetect && !tHidden && noisy && dist < hearR;
+      if (heardNow) sensedNow = true; // A-1: designed through-wall hearing
       if (heardNow) {
         if (!e.alerted) { e.alerted = true; sound.playEntityAlert('hound', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（盲目・音のみ反応！静止かしゃがみで振り切れ）`); }
         e.state = 'chase'; e.lostSightTimer = 0; e.lastSeenX = tgt.x; e.lastSeenZ = tgt.z; e.hasLastSeen = true;
@@ -8762,7 +9453,7 @@ function updateEntities(dt, playerMovedDist) {
         for (const dl of activeDecoyLights) { const dd = Math.hypot(dl.x - e.x, dl.z - e.z); if (dd < decoyDist) { decoyDist = dd; decoyTarget = dl; } }
         if (decoyTarget) {
           const ddx = decoyTarget.x - e.x, ddz = decoyTarget.z - e.z, dd = Math.hypot(ddx, ddz);
-          if (dd > 1.0) { moveDirX = ddx/dd; moveDirZ = ddz/dd; moveSpd = Math.min(MAX_SPEED, 4.4 * speedMul); }
+          if (dd > 1.0) { moveDirX = ddx/dd; moveDirZ = ddz/dd; moveSpd = Math.min(MAX_SPEED, 4.4 * speedMul); useBfs = true; bfsGoalX = decoyTarget.x; bfsGoalZ = decoyTarget.z; }
           e.state = 'stalk';
         } else {
           const litTarget = !tHidden && (tFlash || state.powerRestored);
@@ -8805,8 +9496,9 @@ function updateEntities(dt, playerMovedDist) {
         e.facelingAgitation = Math.max(0, e.facelingAgitation - dt * 1.4);
         if (e.state === 'chase' && e.facelingAgitation <= 0) { enterReturnOrStalk(); sound.playCounterSuccess(pan); }
         e.wanderAng += (Math.random()-0.5)*dt*0.9;
-        if (e.isChild && !hostHidden && hDist < 8 && e.prankCd <= 0) {
+        if (e.isChild && !hostHidden && hDist < 8 && hHasLOS && e.prankCd <= 0) {
           moveSpd = 3.2; moveDirX = hdx / (hDist || 1); moveDirZ = hdz / (hDist || 1);
+          useBfs = true; bfsGoalX = state.pos.x; bfsGoalZ = state.pos.z; // A-2: approach via BFS
           if (hDist < 1.35) { dropPlayerItemForPrank(); e.prankCd = 16; e.state = 'retreat'; e.retreatTimer = 4.5; }
         } else { moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.35; }
       }
@@ -8823,6 +9515,8 @@ function updateEntities(dt, playerMovedDist) {
         if (!e.alerted) { e.alerted = true; sound.playEntityAlert('partygoer', pan, hDist); showAnomalyBadge(`ENTITY: ${meta.name}（境界内侵入！外へ出れば即撤退する！）`); }
         e.state = 'chase'; chasingCount++; moveSpd = Math.min(MAX_SPEED, 6.25 * speedMul); useBfs = true;
         bfsGoalX = zoneIntruder.x; bfsGoalZ = zoneIntruder.z;
+        if (zoneIntruder === tgt) sensedNow = true; // A-1: intruder inside the visible party boundary
+        bfsOpts = { zone: z }; // A-4: cells outside the party area are non-walkable
         const zdx = zoneIntruder.x - e.x, zdz = zoneIntruder.z - e.z, zd = Math.hypot(zdx, zdz);
         moveDirX = zdx / (zd || 1); moveDirZ = zdz / (zd || 1);
         if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
@@ -8834,14 +9528,14 @@ function updateEntities(dt, playerMovedDist) {
           if (zld > z.r - 0.5) { gx = z.x + (zlx / zld) * (z.r - 0.5); gz = z.z + (zlz / zld) * (z.r - 0.5); }
         }
         const ldx = gx - e.x, ldz = gz - e.z, ld = Math.hypot(ldx, ldz);
-        if (ld > 0.9) { moveDirX = ldx / ld; moveDirZ = ldz / ld; moveSpd = Math.min(MAX_SPEED, 5.8 * speedMul); useBfs = true; bfsGoalX = gx; bfsGoalZ = gz; }
+        if (ld > 0.9) { moveDirX = ldx / ld; moveDirZ = ldz / ld; moveSpd = Math.min(MAX_SPEED, 5.8 * speedMul); useBfs = true; bfsGoalX = gx; bfsGoalZ = gz; if (z) bfsOpts = { zone: z }; }
         else moveSpd = 0;
         if (hDist < 18 && (!nearestChaser || hDist < nearestChaser.dist)) nearestChaser = { x: e.x, z: e.z, dist: hDist };
       } else if (z) {
         if (e.alerted) { sound.playCounterSuccess(pan); showToast('パーティ境界の外へ出た — VIPが撤退した！'); }
         e.state = 'stalk'; e.alerted = false;
         const hdxZ = z.x - e.x, hdzZ = z.z - e.z, hd = Math.hypot(hdxZ, hdzZ);
-        if (hd > 1.5) { moveDirX = hdxZ/hd; moveDirZ = hdzZ/hd; moveSpd = 3.0; }
+        if (hd > 1.5) { moveDirX = hdxZ/hd; moveDirZ = hdzZ/hd; moveSpd = 3.0; useBfs = true; bfsGoalX = z.x; bfsGoalZ = z.z; bfsOpts = { zone: z }; } // A-2: VIP return via BFS
       }
     } else if (e.kind === 'deathrat') {
       // V9.3.0 A + V10 P-4 モルトマウス (deathrat): 2.0s light exposure scatters; 30% shorter chase timeout (2.4s)
@@ -8867,9 +9561,13 @@ function updateEntities(dt, playerMovedDist) {
       }
       if (e.scatterTimer > 0 || (state.powerRestored && dist < 10)) {
         moveDirX = -dx/(dist||1); moveDirZ = -dz/(dist||1); moveSpd = 4.6;
+        // A-2: scatter through BFS to an open spot away from the player
+        if (!e.retreatGoal || Math.hypot(e.retreatGoal.x - e.x, e.retreatGoal.z - e.z) < 1.2 || Math.hypot(e.retreatGoal.x - tgt.x, e.retreatGoal.z - tgt.z) < 4.0) e.retreatGoal = pickRetreatGoal(e, tgt.x, tgt.z);
+        useBfs = true; bfsGoalX = e.retreatGoal.x; bfsGoalZ = e.retreatGoal.z;
       } else if (e.lureTimer > 0) {
+        e.retreatGoal = null;
         const ldx = e.lureX - e.x, ldz = e.lureZ - e.z, ld = Math.hypot(ldx, ldz);
-        if (ld > 0.8) { moveDirX = ldx/ld; moveDirZ = ldz/ld; moveSpd = 4.5; }
+        if (ld > 0.8) { moveDirX = ldx/ld; moveDirZ = ldz/ld; moveSpd = 4.5; useBfs = true; bfsGoalX = e.lureX; bfsGoalZ = e.lureZ; }
       } else {
         const detectR = tgt.sprinting ? 16 : 12;
         if (canDetect && !tHidden && dist < detectR && (hasLOS || tgt.movedDist > 0.01)) {
@@ -8910,6 +9608,7 @@ function updateEntities(dt, playerMovedDist) {
       const vibrating = !tHidden && tgt.movedDist > 0.012 && !tgt.crouch;
       const vibR = (tgt.sprinting ? 22 : (vibrating ? 14 : 3.2)) * levelSoundMul;
       if (canDetect && !tHidden && dist < vibR) {
+        sensedNow = true; // A-1: designed through-wall floor-vibration sensing
         if (!e.alerted) { e.alerted = true; showAnomalyBadge(`ENTITY: ${meta.name}（床振動感知！静止かしゃがみ歩きで回避）`); }
         moveSpd = Math.min(MAX_SPEED, 2.2 * speedMul); useBfs = true;
         if (hDist < 12) { chasingCount++; if (!nearestChaser || hDist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist: hDist }; }
@@ -8921,6 +9620,7 @@ function updateEntities(dt, playerMovedDist) {
     } else if (e.kind === 'mycelium') {
       // V10.0.0 L-2..L-5 Mycelium: LOS-aware sensing (11.5m/6.0m crouch/3.0m wall), 1.1s omen tremor, chase-only contact damage, spatial creep audio!
       const mycRange = hasLOS ? (tgt.crouch ? 6.0 : 11.5) : 3.0;
+      if (canDetect && !tHidden && dist < mycRange) sensedNow = true; // A-1: includes designed 3.0m no-LOS proximity
       if (e.state !== 'chase' && e.state !== 'omen' && canDetect && !tHidden && dist < mycRange) {
         e.state = 'omen'; e.omenTimer = 1.1; e.alerted = true;
         sound.playEntityAlert('mycelium', pan, hDist);
@@ -9013,6 +9713,7 @@ function updateEntities(dt, playerMovedDist) {
       // V9.2.0 + V10 P-4 Bacteria (クロカビ) & Horde: 30% shorter shake-off (1.0s / crouch 0.65s) -> return_home!
       const detectR = tgt.sprinting ? 17 : (tCrouchStealth ? 5.2 : 12.0);
       if (canDetect && !tHidden && (e.kind === 'horde' || (dist < detectR && hasLOS))) {
+        sensedNow = true; // A-1: horde = designed constant awareness
         if (!e.alerted) {
           e.alerted = true; e.state = 'chase'; sound.playEntityAlert('bacteria', pan, hDist);
           showAnomalyBadge(e.kind === 'horde' ? '背後からクロカビ群が迫っている！走れ！' : `ENTITY: ${meta.name}（角を曲がって視線を切れ・しゃがみ[C]有効）`);
@@ -9038,6 +9739,32 @@ function updateEntities(dt, playerMovedDist) {
       } else { e.wanderAng += (Math.random()-0.5)*dt; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng); moveSpd = 1.45; }
     }
 
+    // ---------------- V10.2.0 A-1 / A-2: lastKnown memory + no straight-line movement ----------------
+    const aiExempt = (e.kind === 'amicus' || e.kind === 'imagination_diver' || e.kind === 'snail' || e.kind === 'straggler' || e.kind === 'horde');
+    if (!tHidden && hasLOS && canDetect) sensedNow = true; // visual baseline (requires real line of sight)
+    if (sensedNow) { e.lastKnownX = tgt.x; e.lastKnownZ = tgt.z; e.hasLastKnown = true; e.lastSenseT = state.elapsed; }
+    if (!aiExempt && moveSpd > 0.05) {
+      // A-2: any leftover "walk straight at the target" (default direction, no BFS) becomes a BFS move
+      const defDirX = dx / (dist || 1), defDirZ = dz / (dist || 1);
+      if (!useBfs && moveDirX === defDirX && moveDirZ === defDirZ) { useBfs = true; bfsGoalX = tgt.x; bfsGoalZ = tgt.z; }
+      // A-1: BFS goal == target's CURRENT position is allowed only while sensing continues (chase). Otherwise => lastKnown / search.
+      const goalTracksTgt = useBfs && ((bfsGoalX === tgt.x && bfsGoalZ === tgt.z) || (e.kind === 'mycelium' && e.state === 'chase'));
+      const sensingContinuous = sensedNow || (state.elapsed - (e.lastSenseT !== undefined ? e.lastSenseT : -99)) < 0.3;
+      if (goalTracksTgt && !sensingContinuous) {
+        const lkd = e.hasLastKnown ? Math.hypot(e.lastKnownX - e.x, e.lastKnownZ - e.z) : 0;
+        if (e.hasLastKnown && lkd > 1.0) {
+          bfsGoalX = e.lastKnownX; bfsGoalZ = e.lastKnownZ;
+          moveDirX = (e.lastKnownX - e.x) / lkd; moveDirZ = (e.lastKnownZ - e.z) / lkd;
+        } else {
+          // Reached the last known spot (or never sensed): search locally instead of homing through walls
+          e.hasLastKnown = false; useBfs = false;
+          e.wanderAng += (Math.random() - 0.5) * dt * 1.6;
+          moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
+          moveSpd = Math.min(moveSpd, 1.3);
+        }
+      }
+    }
+
     // V9.2.0 A-1 & A-2 + V10 G-2 Cached BFS Pathfinding (Amicus never falls back to random wander!)
     if (e.tempBlockedCells && e.tempBlockedCells.size > 0) {
       e.tempBlockedCells.forEach((exp, k) => { if (state.elapsed > exp) e.tempBlockedCells.delete(k); });
@@ -9045,13 +9772,20 @@ function updateEntities(dt, playerMovedDist) {
     if (useBfs && moveSpd > 0.05 && e.kind !== 'snail' && e.kind !== 'imagination_diver') {
       const gCellX = Math.round(bfsGoalX / BFS_CELL), gCellZ = Math.round(bfsGoalZ / BFS_CELL);
       e.bfsTimer -= dt;
-      if (e.bfsTimer <= 0 || gCellX !== e.bfsLastPCX || gCellZ !== e.bfsLastPCZ) {
-        e.bfsTimer = 0.5; e.bfsLastPCX = gCellX; e.bfsLastPCZ = gCellZ;
-        e.bfsTarget = computeBfsNextStep(e.x, e.z, bfsGoalX, bfsGoalZ, 0.36, e.tempBlockedCells);
+      // A-3: keep the 0.5s cadence; a goal-cell change may trigger an early recompute at most every 0.25s (never every frame)
+      const goalMoved = (gCellX !== e.bfsLastPCX || gCellZ !== e.bfsLastPCZ);
+      if (e.bfsTimer <= 0 || (goalMoved && state.elapsed - (e.bfsLastCalcT || -9) >= 0.25)) {
+        e.bfsTimer = 0.5 + Math.random() * 0.08; e.bfsLastPCX = gCellX; e.bfsLastPCZ = gCellZ; e.bfsLastCalcT = state.elapsed;
+        e.bfsTarget = computeBfsNextStep(e.x, e.z, bfsGoalX, bfsGoalZ, 0.36, e.tempBlockedCells, bfsOpts);
       }
       if (e.bfsTarget) {
         const bdx = e.bfsTarget.x - e.x, bdz = e.bfsTarget.z - e.z, bd = Math.hypot(bdx, bdz);
         if (bd > 0.25) { moveDirX = bdx / bd; moveDirZ = bdz / bd; }
+        // A-3/A-4: unreachable goal => wait at the nearest reachable cell (no freezing mid-way, no endless recompute)
+        if (e.bfsTarget.partial && Math.hypot(e.bfsTarget.endX - e.x, e.bfsTarget.endZ - e.z) < 0.55) {
+          moveSpd = 0;
+          e.mesh.rotation.y = Math.atan2(bfsGoalX - e.x, bfsGoalZ - e.z);
+        }
       } else if (e.kind !== 'amicus') {
         const goalHasLOS = hasLineOfSight(e.x, e.z, bfsGoalX, bfsGoalZ);
         if (!goalHasLOS) {
@@ -9108,21 +9842,29 @@ function updateEntities(dt, playerMovedDist) {
           }
         }
       }
-      // V9.2.0 A-2 Stuck Detection
+      // V9.2.0 A-2 Stuck Detection (+ V10.2.0 A-5 consecutive-stuck relocation)
       if (e.kind !== 'snail' && e.kind !== 'imagination_diver' && moveSpd > 0.35 && actualMoved < 0.015) {
         e.stuckTime = (e.stuckTime || 0) + dt;
         if (e.stuckTime >= 0.8) {
           e.stuckTime = 0;
+          e.unstuckTime = 0;
+          e.stuckStreak = (e.stuckStreak || 0) + 1;
           if (!e.tempBlockedCells) e.tempBlockedCells = new Map();
-          const fcx = Math.round((e.x + moveDirX * BFS_CELL * 0.75) / BFS_CELL);
-          const fcz = Math.round((e.z + moveDirZ * BFS_CELL * 0.75) / BFS_CELL);
+          const fcx = Math.round((e.x + moveDirX * BFS_CELL * 1.0) / BFS_CELL);
+          const fcz = Math.round((e.z + moveDirZ * BFS_CELL * 1.0) / BFS_CELL);
           e.tempBlockedCells.set(fcx + ',' + fcz, state.elapsed + 6.0);
           e.bfsTimer = 0;
-          e.bfsTarget = useBfs ? computeBfsNextStep(e.x, e.z, bfsGoalX, bfsGoalZ, 0.36, e.tempBlockedCells) : null;
+          if (e.stuckStreak >= 2 && e.kind !== 'amicus') {
+            if (relocateStuckEntity(e, bfsGoalX, bfsGoalZ)) { e.stuckStreak = 0; e.relocations = (e.relocations || 0) + 1; }
+          }
+          e.bfsTarget = useBfs ? computeBfsNextStep(e.x, e.z, bfsGoalX, bfsGoalZ, 0.36, e.tempBlockedCells, bfsOpts) : null;
+          e.bfsLastCalcT = state.elapsed;
           e.wanderAng += Math.PI * 0.65;
         }
       } else {
         e.stuckTime = Math.max(0, (e.stuckTime || 0) - dt * 2.0);
+        e.unstuckTime = (e.unstuckTime || 0) + dt;
+        if (e.unstuckTime > 2.0) e.stuckStreak = 0; // streak = consecutive stuck events only
       }
       const u = e.mesh.userData;
       if (u && u.lArm && e.kind !== 'mannequin') {
@@ -9271,7 +10013,7 @@ function showAnomalyBadge(text, phenomId = null) {
   if (phenomId) registerPhenomenonSeen(phenomId);
   saveRecords(r => { r.anomalies = Math.max(r.anomalies, state.anomaliesSeen); });
   const b = document.getElementById('anomaly-badge');
-  b.textContent = `異常 #${state.anomaliesSeen}: ${text}`;
+  b.textContent = `観測 #${state.anomaliesSeen}: ${text}`;
   // V10.0.0 K-5: Extended badge visibility (7000ms)
   b.classList.add('show'); clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove('show'), 7000);
 }
@@ -9291,7 +10033,7 @@ function triggerRandomAnomaly() {
     state.lastAnomalyWasAudio = false;
     document.getElementById('happyfile-bar').style.display = 'block';
     sound.playStaticBurst(0.45, 0.22);
-    showAnomalyBadge('現象「ハッピーファイル」感染！消灯＋5秒静止で再起動せよ', 'happyfile');
+    showAnomalyBadge('ハッピーファイル — 画面が乱れた。消灯し5秒静止、または乾電池[5]。', 'happyfile');
     updateInventoryUI();
     return;
   }
@@ -9304,45 +10046,45 @@ function triggerRandomAnomaly() {
 
   if (pick === 0) {
     state.blackoutTimer = 2.6; sound.playSwitch(); triggerUnseenShifts(0, true);
-    state.lastAnomalyPhoto = { kind: 'voltage_surge', label: '照明電圧サージ', pos: state.pos.clone().addScaledVector(fwd, 5), expires: state.elapsed + 10 };
-    showAnomalyBadge('照明電圧サージ（停電＆空間変異）', 'voltage_surge');
+    state.lastAnomalyPhoto = { kind: 'voltage_surge', label: '電圧サージ', pos: state.pos.clone().addScaledVector(fwd, 5), expires: state.elapsed + 10 };
+    showAnomalyBadge('電圧サージ — 蛍光灯が落ちた。背後で壁が動いた気がする。', 'voltage_surge');
   } else if (pick === 1) {
     const sm = new THREE.MeshBasicMaterial({ color: 0x050507, transparent: true, opacity: 0.82 }), fig = new THREE.Group();
     addPart(fig, Geo.cyl8, sm, 0.42, 1.38, 0.28, 0, 0.9, 0); addPart(fig, Geo.sphere, sm, 0.3, 0.35, 0.3, 0, 1.78, 0);
     const start = state.pos.clone().addScaledVector(fwd, 9.5).addScaledVector(right, -3.5);
     fig.position.set(start.x, 0, start.z); anomGroup.add(fig);
-    activeAnomalies.push({ mesh: fig, type: 'shadow', phenomId: 'crossing_shadow', label: '黒い人影', vel: right.clone().multiplyScalar(3.8), life: 3.2 });
-    showAnomalyBadge('通路の奥を横切る黒い人影', 'crossing_shadow');
+    activeAnomalies.push({ mesh: fig, type: 'shadow', phenomId: 'crossing_shadow', label: '横切る人影', vel: right.clone().multiplyScalar(3.8), life: 3.2 });
+    showAnomalyBadge('横切る人影 — 奥の角を影が通った。足音はなかった。', 'crossing_shadow');
   } else if (pick === 2) {
     const door = PropFactory.exitDoor('door'), bp = state.pos.clone().addScaledVector(fwd, -5.2);
     door.position.set(bp.x, 0, bp.z); door.rotation.y = state.yaw; anomGroup.add(door);
-    activeAnomalies.push({ mesh: door, type: 'vanish_door', phenomId: 'fake_exit', label: '偽の非常口', life: 11, seenOnce: false });
-    sound.playSwitch(); showAnomalyBadge('背後に現れた偽の非常口', 'fake_exit');
+    activeAnomalies.push({ mesh: door, type: 'vanish_door', phenomId: 'fake_exit', label: '偽非常口', life: 11, seenOnce: false });
+    sound.playSwitch(); showAnomalyBadge('偽非常口 — 後ろに扉があった。さっきまで無かったはずだ。', 'fake_exit');
   } else if (pick === 3) {
     sound.playDistantSteps(Math.random()<0.5?-0.85:0.85);
-    showAnomalyBadge('誰もいない通路からの足音', 'phantom_steps');
+    showAnomalyBadge('不在の足音 — 通路の向こうから足音が聞こえた。誰もいない。', 'phantom_steps');
   } else if (pick === 4) {
     sound.playWhisper((Math.random()-0.5)*1.8); state.sanity = Math.max(0, state.sanity-4);
-    showAnomalyBadge('ノイズに混ざる低い囁き', 'whisper');
+    showAnomalyBadge('囁き — 耳元で低い声がした。言葉は聞き取れない。', 'whisper');
   } else if (pick === 5) {
     const fl = PropFactory.foldingChair(false), p = state.pos.clone().addScaledVector(fwd, 6.2);
     fl.position.set(p.x, 1.4, p.z); anomGroup.add(fl);
-    activeAnomalies.push({ mesh: fl, type: 'float', phenomId: 'zero_gravity', label: '無重力浮遊現象', life: 8.5 });
-    showAnomalyBadge('局所的な無重力浮遊現象', 'zero_gravity');
+    activeAnomalies.push({ mesh: fl, type: 'float', phenomId: 'zero_gravity', label: '無重力', life: 8.5 });
+    showAnomalyBadge('無重力 — 小物が浮いていた。誰も触れていない。', 'zero_gravity');
   } else if (pick === 6) {
     state.fovAnomalyOffset = 15; setTimeout(() => { state.fovAnomalyOffset = 0; }, 2500);
     sound.playTone(88, 1.8, 'sine', 0.14, 48);
-    state.lastAnomalyPhoto = { kind: 'perspective_warp', label: '空間遠近歪み', pos: state.pos.clone().addScaledVector(fwd, 6), expires: state.elapsed + 8 };
-    showAnomalyBadge('空間の遠近歪み', 'perspective_warp');
+    state.lastAnomalyPhoto = { kind: 'perspective_warp', label: '遠近歪み', pos: state.pos.clone().addScaledVector(fwd, 6), expires: state.elapsed + 8 };
+    showAnomalyBadge('遠近歪み — 廊下の奥行きが急に伸びた。', 'perspective_warp');
   } else if (pick === 7) {
     const mir = PropFactory.exitDoor('stairs'), p = state.pos.clone().addScaledVector(fwd, 11.5);
     mir.position.set(p.x, 0, p.z); mir.rotation.y = state.yaw; anomGroup.add(mir);
     activeAnomalies.push({ mesh: mir, type: 'mirage', phenomId: 'mirage_stairs', label: '蜃気楼階段', baseX: p.x, baseZ: p.z, life: 12 });
-    showAnomalyBadge('近づくと消える蜃気楼階段', 'mirage_stairs');
+    showAnomalyBadge('蜃気楼階段 — 奥に階段が見えた。近づくと薄れる。', 'mirage_stairs');
   } else if (pick === 8) {
     state.monoTimer = 4.5;
     state.lastAnomalyPhoto = { kind: 'color_loss', label: '色彩喪失', pos: state.pos.clone().addScaledVector(fwd, 5), expires: state.elapsed + 8 };
-    showAnomalyBadge('色彩喪失と耳鳴り', 'color_loss');
+    showAnomalyBadge('色彩喪失 — 視界から色が抜けた。耳鳴りが残る。', 'color_loss');
   } else if (pick === 9) {
     const phrases = ['YOU WERE HERE', "DON'T TURN AROUND", 'EXIT IS A LIE', 'IT HEARS YOU', 'FLOOR IS THIN'];
     const mat = new THREE.MeshBasicMaterial({ map: makeTextTexture(phrases[Math.floor(Math.random()*phrases.length)], 'rgba(0,0,0,0.01)', '#e8d898', 512, 96, 38), transparent: true, side: THREE.DoubleSide, depthWrite: false });
@@ -9350,11 +10092,11 @@ function triggerRandomAnomaly() {
     const p = state.pos.clone().addScaledVector(fwd, 7.2); pl.position.set(p.x, 1.9, p.z); pl.lookAt(state.pos.x, 1.9, state.pos.z);
     anomGroup.add(pl);
     activeAnomalies.push({ mesh: pl, type: 'text', phenomId: 'afterimage_text', label: '残像文字', life: 6.5 });
-    showAnomalyBadge('空中に浮かぶ残像文字', 'afterimage_text');
+    showAnomalyBadge('残像文字 — 空中に文字が浮かんでいた。', 'afterimage_text');
   } else if (pick === 10) {
     triggerBlink();
-    state.lastAnomalyPhoto = { kind: 'blink_shift', label: '視界瞬断', pos: state.pos.clone().addScaledVector(fwd, 5), expires: state.elapsed + 8 };
-    showAnomalyBadge('視界瞬断（背後の空間が再配置）', 'blink_shift');
+    state.lastAnomalyPhoto = { kind: 'blink_shift', label: '瞬き変異', pos: state.pos.clone().addScaledVector(fwd, 5), expires: state.elapsed + 8 };
+    showAnomalyBadge('瞬き変異 — 瞬きをした。背後の配置が違う。', 'blink_shift');
   } else if (pick === 11) {
     let targetSpot = null;
     chunks.forEach(ch => { for (const sp of ch.mirrorSpots) if (Math.hypot(sp.x-state.pos.x, sp.z-state.pos.z) < 16) targetSpot = sp; });
@@ -9363,11 +10105,11 @@ function triggerRandomAnomaly() {
     if (targetSpot) { pl.position.set(targetSpot.x, targetSpot.y, targetSpot.z); pl.rotation.y = targetSpot.rotY; }
     else { const p = state.pos.clone().addScaledVector(fwd, 5.5); pl.position.set(p.x, 1.5, p.z); pl.lookAt(state.pos.x, 1.5, state.pos.z); }
     anomGroup.add(pl);
-    activeAnomalies.push({ mesh: pl, type: 'reflection_ghost', phenomId: 'mirror_ghost', label: '窓ガラス残像', life: 5.0 });
-    sound.playWhisper(0); showAnomalyBadge('窓ガラスに一瞬映った誰かの残像', 'mirror_ghost');
+    activeAnomalies.push({ mesh: pl, type: 'reflection_ghost', phenomId: 'mirror_ghost', label: '鏡面残像', life: 5.0 });
+    sound.playWhisper(0); showAnomalyBadge('鏡面残像 — 鏡の中の人物が、こちらを見ていた。振り返ると誰もいない。', 'mirror_ghost');
   } else {
     sound.playPhoneRing();
-    showAnomalyBadge('どこか遠くで鳴り続ける電話音', 'distant_phone');
+    showAnomalyBadge('遠方電話 — 壁の向こうで電話が鳴り続けている。', 'distant_phone');
   }
 }
 
@@ -9383,7 +10125,7 @@ function updateNonEuclideanGimmicks(dt) {
         const texts = ['CORRIDOR A', 'CORRIDOR A?', 'AGAIN...', 'TURN BACK'];
         lz.poster.material = getMat('loop_p_' + lz.count, { map: makeTextTexture(texts[lz.count%4], '#241c24', '#f2cf91', 256, 128, 30) });
         state.syncFlash = 0.45; state.glitchAmount = Math.max(state.glitchAmount, 0.25);
-        showAnomalyBadge('非ユークリッド：同じ廊下をループしている…');
+        showAnomalyBadge('同じ廊下にまた戻っている。さっきの掲示板がそこにある。');
       }
     }
     if (ch.stretchExit && !ch.stretchExit.it.used) {
@@ -9393,7 +10135,7 @@ function updateNonEuclideanGimmicks(dt) {
         const push = (state.sprinting ? 2.5 : 1.65) * dt, ux = dx/(dist||1), uz = dz/(dist||1);
         it.x += ux*push; it.z += uz*push; it.mesh.position.x = it.x; it.mesh.position.z = it.z; se.stretched += push;
         state.fovAnomalyOffset = Math.min(8, se.stretched * 0.45);
-        if (se.stretched > 2.0 && !se.notified) { se.notified = true; showAnomalyBadge('空間膨張：出口が近そうで遠い…（進み続ければ届く）'); }
+        if (se.stretched > 2.0 && !se.notified) { se.notified = true; showAnomalyBadge('歩いても扉が近づかない。それでも前へ進むしかない。'); }
       } else if (se.stretched >= se.maxStretch) state.fovAnomalyOffset *= 0.9;
     }
     if (ch.noclipSpot && !state.hide.active && state.noclipDrop <= 0) {
@@ -9420,7 +10162,7 @@ function updateAnomalies(dt) {
     const bar = document.getElementById('happyfile-bar');
     if (!state.flashlightOn && state.stillTime > 0.25) {
       state.happyfileStillTimer += dt;
-      bar.textContent = `⚠ HAPPYFILE 再起動中... (${Math.min(5, state.happyfileStillTimer).toFixed(1)}/5.0s)`;
+      bar.textContent = `[!] HAPPYFILE 再起動中... (${Math.min(5, state.happyfileStillTimer).toFixed(1)}/5.0s)`;
       if (state.happyfileStillTimer >= 5.0) {
         state.happyfileTimer = 0; state.happyfileStillTimer = 0;
         bar.style.display = 'none'; sound.playSwitch(); showToast('システム再起動完了！ハッピーファイルを駆除した');
@@ -9428,7 +10170,7 @@ function updateAnomalies(dt) {
       }
     } else {
       state.happyfileStillTimer = 0;
-      bar.textContent = `⚠ HAPPYFILE 感染中 (${Math.ceil(state.happyfileTimer)}s)：消灯＋5秒静止で再起動 / 電池[5]で即駆除`;
+      bar.textContent = `[!] HAPPYFILE 感染中 (${Math.ceil(state.happyfileTimer)}s)：消灯＋5秒静止で再起動 / 電池[5]で即駆除`;
     }
     if (state.happyfileTimer <= 0) { bar.style.display = 'none'; updateInventoryUI(); }
   }
@@ -9463,7 +10205,7 @@ function updateAnomalies(dt) {
     state.emergencyTimer -= dt;
     const bar = document.getElementById('emergency-bar');
     bar.style.display = 'block';
-    bar.textContent = `⚠ この階層が不安定化：残り ${Math.ceil(state.emergencyTimer)} 秒`;
+    bar.textContent = `[!] この階層が不安定化：残り ${Math.ceil(state.emergencyTimer)} 秒`;
     if (state.emergencyTimer <= 0) {
       state.emergencyActive = false; bar.style.display = 'none';
       showToast('空間の不安定化が収束した（ペナルティなし）');
@@ -9475,7 +10217,7 @@ function updateAnomalies(dt) {
       if (Math.random() < (settings.seedCollapse ? 0.55 : 0.25)) {
         state.emergencyActive = true; state.emergencyTimer = 60;
         sound.playEntityAlert('bacteria');
-        showToast('⚠ 緊急：この階層が不安定化！60秒以内に出口へ入ると報酬獲得！');
+        showToast('[!] 緊急：この階層が不安定化！60秒以内に出口へ入ると報酬獲得！');
       }
     }
   }
@@ -9521,7 +10263,7 @@ function enterHideSpot(it) {
     sound.playMimicBite();
     state.hurtFlash = 0.95;
     state.glitchAmount = Math.max(state.glitchAmount, 0.7);
-    showToast('⚠ ミミックだ！中から噛みつかれた！今すぐ [E] で脱出しろ！');
+    showToast('[!] ミミックだ！中から噛みつかれた！今すぐ [E] で脱出しろ！');
   } else {
     sound.playDoorCreak();
   }
@@ -9588,7 +10330,7 @@ function bankSamples(reasonLabel = '', bonusMult = 1.0) {
     state.runSamples = state.confirmedSamples;
     saveRecords(r => { r.samplesCollected = (r.samplesCollected || 0) + totalNew; });
     checkAchievements();
-    if (reasonLabel) showToast(`✦ ${reasonLabel}：サンプル ×${totalNew} を確定！`);
+    if (reasonLabel) showToast(`[+] ${reasonLabel}：サンプル ×${totalNew} を確定！`);
   }
   updateHUDText();
   return totalNew;
@@ -9612,7 +10354,7 @@ function updateObjectiveUI() {
   const mainEl = document.getElementById('hud-main-obj');
   if (lv.isOutpost) {
     const base = loadV10Base();
-    mainEl.textContent = `🖥 前哨拠点：端末[E]で依頼・深度(最大${base.unlockedDepth})を選び外部扉から出勤`;
+    mainEl.textContent = `[端末] 前哨拠点：端末[E]で依頼・深度(最大${base.unlockedDepth})を選び外部扉から出勤`;
   } else if (lv.isCore) {
     mainEl.textContent = state.shiftCoreShot
       ? '✓ 「核（CORE）」撮影完了 → 帰還の扉[E]から前哨拠点へ帰還せよ！'
@@ -9622,7 +10364,7 @@ function updateObjectiveUI() {
       ? '✓ 中央扉開放済 → ③ 仲間と合流し出口から次階層へ！'
       : '① A翼・B翼の壁面制御盤を同時操作 → ② 中央扉開放 → ③ 合流し出口へ';
   } else if (lv.isSafeFloor) {
-    mainEl.textContent = '✦ 安全層：マニラ別室で補給＆回復し、準備ができたら帰還の扉へ';
+    mainEl.textContent = '[+] 安全層：マニラ別室で補給＆回復し、準備ができたら帰還の扉へ';
   } else if (state.taskDone) {
     mainEl.textContent = isMpActive()
       ? '✓ 電源復旧済・出口解錠 → ③ 出口から次の階層へ！'
@@ -9632,18 +10374,18 @@ function updateObjectiveUI() {
   } else if (t.type === 'fuse') {
     mainEl.textContent = `① ヒューズ回収(${state.questFuses}/${need}) → ② 帰還扉解錠 → ③ 帰還`;
   } else if (t.type === 'run') {
-    mainEl.textContent = '⚠ 止まるな！障害物を避けて突き当たりの帰還扉へ走れ！';
+    mainEl.textContent = '[!] 止まるな！障害物を避けて突き当たりの帰還扉へ走れ！';
   } else {
     mainEl.textContent = '① 壁面制御盤で電源復旧（または[P]ピッキング） → ② 帰還扉解錠 → ③ 帰還';
   }
 
   const qEl = document.getElementById('quest-items');
   const qParts = [];
-  if (state.shiftDocs && state.shiftDocs.length > 0) qParts.push(`📄資料×${state.shiftDocs.length}`);
-  if (state.questKeys > 0) qParts.push(`🔑カード×${state.questKeys}`);
-  if (state.questFuses > 0) qParts.push(`⚡ヒューズ×${state.questFuses}`);
-  if (state.heavySampleCarried) qParts.push('📦重量サンプル搬送中(価値×3)');
-  if (state.carryingPeerId) qParts.push('🚑仲間を搬送中(速度60%)');
+  if (state.shiftDocs && state.shiftDocs.length > 0) qParts.push(`[資料]資料×${state.shiftDocs.length}`);
+  if (state.questKeys > 0) qParts.push(`[鍵]カード×${state.questKeys}`);
+  if (state.questFuses > 0) qParts.push(`[電]ヒューズ×${state.questFuses}`);
+  if (state.heavySampleCarried) qParts.push('[重]重量サンプル搬送中(価値×3)');
+  if (state.carryingPeerId) qParts.push('[搬送]仲間を搬送中(速度60%)');
   if (qParts.length) { qEl.style.display = 'block'; qEl.textContent = qParts.join(' / '); }
   else qEl.style.display = 'none';
 
@@ -9691,7 +10433,7 @@ function restoreFloorPower(sourceLabel = '壁面制御盤の電源を復旧！')
   });
   sound.playPowerRestore();
   const extra = lv.arch === 'boiler_layer' ? ' 蒸気が停止し照明が点いた！' : ' 照明が点き帰還扉が解錠された（光に寄る種に警戒！）';
-  showToast(`★ ${sourceLabel}${extra}`);
+  showToast(`[*] ${sourceLabel}${extra}`);
   updateObjectiveUI();
 }
 
@@ -9772,7 +10514,7 @@ function attemptLockpickTap() {
         target.mesh.userData.statusLedMat.color.setHex(0x44ff88);
         target.mesh.userData.statusLedMat.emissive.setHex(0x22ee66);
       }
-      showToast('★ ピッキング開錠成功！扉が開いた！');
+      showToast('[*] ピッキング開錠成功！扉が開いた！');
     } else {
       lp.stage++;
       const np = calcLockpickParams(lp.stage, state.depth);
@@ -9813,7 +10555,7 @@ function throwBall() {
     vx: -Math.sin(yaw) * 11.5, vy: 3.4, vz: -Math.cos(yaw) * 11.5, life: 7.5
   });
   sound.playBallBounce(0.2, 0);
-  showToast('⚾ ボールを投げた！（VIP・クロカビ・ディンゴの注意を引く）');
+  showToast('[球] ボールを投げた！（VIP・クロカビ・ディンゴの注意を引く）');
 }
 
 // V8 §2 Drop Lit Flashlight Decoy for Dokuga (Deathmoth)
@@ -9829,7 +10571,7 @@ function dropDecoyLight() {
   scene.add(mesh);
   activeDecoyLights.push({ mesh, x: state.pos.x, z: state.pos.z, life: 14.0 });
   sound.playSwitch();
-  showToast('🔦 点灯ライトを囮として設置した（14秒間ドクガを誘引）');
+  showToast('[光] 点灯ライトを囮として設置した（14秒間ドクガを誘引）');
 }
 
 function enterDownedState(reason = '') {
@@ -9916,10 +10658,16 @@ function enterLevel(idx, showCurtain = true, routeText = '') {
   // V10.0.0 K-3: Always initialize anomaly cooldown per floor start (3s / 8s / 15s)
   resetAnomalyCooldown();
 
-  scene.background = new THREE.Color(lv.fogColor);
-  scene.fog = new THREE.FogExp2(lv.fogColor, lv.fogDensity);
-  ambLight.color.setHex(lv.ambColor); ambLight.intensity = lv.ambInt;
-  hemiLight.color.setHex(lv.lightColor); hemiLight.intensity = lv.hasCeil ? 0.16 : 0.34;
+  // V10.2.0 K-1 & K-4: ACES Filmic per-floor exposure + harmonized per-floor fog color/density & ambient tint (existing light intensities unchanged!)
+  const atm = computeFloorAtmosphere(lv);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = atm.exposure;
+  scene.background = new THREE.Color(atm.fogColor);
+  scene.fog = new THREE.FogExp2(atm.fogColor, atm.fogDensity);
+  ambLight.color.setHex(atm.ambColor); ambLight.intensity = lv.ambInt;
+  hemiLight.color.setHex(atm.hemiSkyColor);
+  if (hemiLight.groundColor) hemiLight.groundColor.setHex(atm.hemiGroundColor);
+  hemiLight.intensity = lv.hasCeil ? 0.16 : 0.34;
 
   sound.setAmbient(lv.sound);
   state.channelAction = null;
@@ -10011,7 +10759,16 @@ function countConsciousMembers() {
 }
 
 function executeTransition(etype) {
-  // V10.0.0 A-2 & A-3: In Solo mode, 1 shift = 1 floor; returning via any exit returns to Outpost for delivery!
+  // V10.2.0 E-2: Continuous Dispatch Mode (solo) — exit door advances to depth + 1, NEVER triggers result screen!
+  if (!isMpActive() && state.continuousMode) {
+    if (etype === 'noclip' || etype === 'chasm') {
+      unlockAchievement('first_noclip');
+      sound.playNoclipFall();
+    }
+    advanceContinuousFloor(etype);
+    return;
+  }
+  // V10.0.0 A-2 & A-3: In Solo normal shift, 1 shift = 1 floor; returning via any exit returns to Outpost for delivery!
   if (!isMpActive()) {
     if (etype === 'noclip' || etype === 'chasm') {
       unlockAchievement('first_noclip');
@@ -10050,7 +10807,7 @@ function executeTransition(etype) {
   if (state.emergencyActive) {
     state.emergencyActive = false; document.getElementById('emergency-bar').style.display = 'none';
     state.sanity = 100; state.inv[0]++; state.inv[4]++;
-    showToast('★ 不安定化脱出成功！SANITY全回復＆補給ボーナス！');
+    showToast('[*] 不安定化脱出成功！SANITY全回復＆補給ボーナス！');
     updateInventoryUI();
   }
   const { next, depthGain, routeText } = computeNextLevelByGraph(etype);
@@ -10174,7 +10931,7 @@ function triggerExitTransition(it) {
     if (state.channelAction && state.channelAction.kind === 'exit' && state.channelAction.it === it) return;
     state.channelAction = { kind: 'exit', it, timer: 0, dur: 2.5, requireHold: false, startX: state.pos.x, startZ: state.pos.z };
     sound.playSwitch();
-    document.getElementById('use-progress-label').textContent = isMpActive() ? '出口を開扉中... (2.5秒・無防備！)' : '帰還の扉を開扉中... (2.5秒)';
+    document.getElementById('use-progress-label').textContent = isMpActive() ? '出口を開扉中... (2.5秒・無防備！)' : (state.continuousMode ? '次の深度への扉を開扉中... (2.5秒)' : '帰還の扉を開扉中... (2.5秒)');
     document.getElementById('use-progress-fill').style.width = '0%';
     document.getElementById('use-progress-wrap').style.display = 'block';
     return;
@@ -10204,11 +10961,11 @@ function updateChannelAction(dt) {
   if (ca.kind === 'control_panel') {
     const held = !!(keys['KeyE'] || mUseHeld);
     if (!held) {
-      cancelChannelAction('⚡ 制御盤の復旧を中断（4秒間長押しが必要）');
+      cancelChannelAction('[電] 制御盤の復旧を中断（4秒間長押しが必要）');
       return;
     }
     if (distToObj > (ca.it.radius || 2.9) + 0.6 || movedFromStart > 2.0) {
-      cancelChannelAction('⚡ 制御盤から離れたため復旧が中断された');
+      cancelChannelAction('[電] 制御盤から離れたため復旧が中断された');
       return;
     }
     ca.timer += dt;
@@ -10223,7 +10980,7 @@ function updateChannelAction(dt) {
       const lured = attractNoiseEntities(ca.it.x, ca.it.z, 16, 7.0);
       if (lured > 0 && !ca.noiseWarned) {
         ca.noiseWarned = true;
-        showToast('⚠ 復旧の駆動音に近くの存在が反応した！');
+        showToast('[!] 復旧の駆動音に近くの存在が反応した！');
       }
     }
     if (ca.timer >= ca.dur) {
@@ -10261,16 +11018,16 @@ function showToast(msg) {
 
 // Item Use with Short Cast Time (slots 0..4; slots 5=Lockpick, 6=Ball handled directly)
 const ITEM_DEFS = [
-  { name: 'アーモンド水', ico: '💧', desc: 'HP+25 / 空腹+16 / 正気+35 / スタミナ+30', dur: 1.05, apply: () => { state.hp = Math.min(100, state.hp+25); state.hunger = Math.min(100, state.hunger+16); state.sanity = Math.min(100, state.sanity+35); state.stamina = Math.min(100, state.stamina+30); sound.playDrink(); showToast('アーモンドウォーターを飲んだ（HP+25 / 安定+35）'); } },
-  { name: '携帯食料', ico: '🥫', desc: '空腹+38 / HP+6（モルトマウス誘引）', dur: 1.2, apply: () => {
+  { name: 'アーモンド水', ico: '水', desc: 'HP+25 / 空腹+16 / 正気+35 / スタミナ+30', dur: 1.05, apply: () => { state.hp = Math.min(100, state.hp+25); state.hunger = Math.min(100, state.hunger+16); state.sanity = Math.min(100, state.sanity+35); state.stamina = Math.min(100, state.stamina+30); sound.playDrink(); showToast('アーモンドウォーターを飲んだ（HP+25 / 安定+35）'); } },
+  { name: '携帯食料', ico: '食', desc: '空腹+38 / HP+6（モルトマウス誘引）', dur: 1.2, apply: () => {
     state.hunger = Math.min(100, state.hunger+38); state.hp = Math.min(100, state.hp+6); sound.playPickup();
     let lured = 0;
     for (const e of activeEntities) if (e.kind === 'deathrat' && Math.hypot(e.x-state.pos.x, e.z-state.pos.z) < 16) { e.lureX = state.pos.x; e.lureZ = state.pos.z; e.lureTimer = 6.0; lured++; }
     showToast(lured > 0 ? '携帯食料を使用（空腹+38 / モルトマウスを6秒間おびき寄せた！）' : '携帯食料を食べた（空腹+38）');
   } },
-  { name: '救急キット', ico: '🩹', desc: 'HP+55 大回復', dur: 1.6, apply: () => { state.hp = Math.min(100, state.hp+55); sound.playPickup(); showToast('救急キットで手当した（HP+55）'); } },
-  { name: 'モスゼリー', ico: '🍯', desc: '空腹+30 / 45秒間 ドクガ忌避', dur: 1.0, apply: () => { state.hunger = Math.min(100, state.hunger+30); state.mothRepelTimer = 45; sound.playDrink(); showToast('モスゼリーを摂取（空腹+30 / 45秒間 ドクガ忌避）'); } },
-  { name: '乾電池', ico: '🔋', desc: 'ライト電池+50% / ハッピーファイル即駆除', dur: 0.85, apply: () => {
+  { name: '救急キット', ico: '救', desc: 'HP+55 大回復', dur: 1.6, apply: () => { state.hp = Math.min(100, state.hp+55); sound.playPickup(); showToast('救急キットで手当した（HP+55）'); } },
+  { name: 'モスゼリー', ico: '蜜', desc: '空腹+30 / 45秒間 ドクガ忌避', dur: 1.0, apply: () => { state.hunger = Math.min(100, state.hunger+30); state.mothRepelTimer = 45; sound.playDrink(); showToast('モスゼリーを摂取（空腹+30 / 45秒間 ドクガ忌避）'); } },
+  { name: '乾電池', ico: '電', desc: 'ライト電池+50% / ハッピーファイル即駆除', dur: 0.85, apply: () => {
     state.battery = Math.min(100, state.battery+50); sound.playSwitch();
     if (state.happyfileTimer > 0) {
       state.happyfileTimer = 0; state.happyfileStillTimer = 0; document.getElementById('happyfile-bar').style.display = 'none';
@@ -10281,20 +11038,20 @@ const ITEM_DEFS = [
 
 // V9.2.0 B-3 Bag Modal: large comfortable inventory panel; pauses game time in Solo, live in MP!
 const BAG_ALL_ITEMS = [
-  { slot: 0, ico: '💧', name: 'アーモンド水', desc: 'HP+25 / 空腹+16 / 正気+35 / スタミナ+30', btn: '使う' },
-  { slot: 1, ico: '🥫', name: '携帯食料', desc: '空腹+38 / HP+6（モルトマウス誘引）', btn: '使う' },
-  { slot: 2, ico: '🩹', name: '救急キット', desc: 'HP+55 大回復', btn: '使う' },
-  { slot: 3, ico: '🍯', name: 'モスゼリー', desc: '空腹+30 / 45秒間 ドクガ忌避', btn: '使う' },
-  { slot: 4, ico: '🔋', name: '乾電池', desc: 'ライト電池+50% / ハッピーファイル即駆除', btn: '使う' },
-  { slot: 5, ico: '🧷', name: 'ピック', desc: '施錠された出口扉の前で使用しピッキング開錠', btn: '開錠' },
-  { slot: 6, ico: '⚾', name: 'ボール', desc: '前方へ投擲し音でVIP・クロカビ・ディンゴを誘引', btn: '投げる' }
+  { slot: 0, ico: '水', name: 'アーモンド水', desc: 'HP+25 / 空腹+16 / 正気+35 / スタミナ+30', btn: '使う' },
+  { slot: 1, ico: '食', name: '携帯食料', desc: '空腹+38 / HP+6（モルトマウス誘引）', btn: '使う' },
+  { slot: 2, ico: '救', name: '救急キット', desc: 'HP+55 大回復', btn: '使う' },
+  { slot: 3, ico: '蜜', name: 'モスゼリー', desc: '空腹+30 / 45秒間 ドクガ忌避', btn: '使う' },
+  { slot: 4, ico: '電', name: '乾電池', desc: 'ライト電池+50% / ハッピーファイル即駆除', btn: '使う' },
+  { slot: 5, ico: '針', name: 'ピック', desc: '施錠された出口扉の前で使用しピッキング開錠', btn: '開錠' },
+  { slot: 6, ico: '球', name: 'ボール', desc: '前方へ投擲し音でVIP・クロカビ・ディンゴを誘引', btn: '投げる' }
 ];
 function renderBagModal() {
   const grid = document.getElementById('bag-grid');
   const badge = document.getElementById('bag-pause-badge');
   if (badge) {
     const mpLive = isMpActive();
-    badge.textContent = mpLive ? '● マルチ稼働中（時間停止なし）' : '⏸ ソロ一時停止中';
+    badge.textContent = mpLive ? '● マルチ稼働中（時間停止なし）' : '[PAUSE] ソロ一時停止中';
     badge.classList.toggle('mp-live', mpLive);
   }
   if (!grid) return;
@@ -10434,7 +11191,7 @@ function firePulse() {
   const exits = state.pulseTargets.filter(t => t.kind === 'exit' || t.kind === 'white').length;
   if (scattered > 0) showToast('探知パルス：モルトマウスの群れを離散させた！');
   else if (stunned > 0) showToast(`探知パルス：視線型を3秒足止め！出口反応 ${exits}件`);
-  else if (luredHound > 0) showToast('⚠ 探知音にディンゴが反応した！その場から離れろ！');
+  else if (luredHound > 0) showToast('[!] 探知音にディンゴが反応した！その場から離れろ！');
   else showToast(exits > 0 ? `空間探知：出口・制御盤の反応を検知 (${exits}件)` : '周囲に反応なし。矢印標識や光を辿れ。');
 }
 
@@ -10462,7 +11219,7 @@ function dropHeavySample() {
     const hs = PropFactory.heavySampleMesh();
     addInteractable(ch, hs, state.pos.x, state.floorY, state.pos.z, 'heavy_sample', '[E] 重量サンプルを担ぐ（2人搬送で速度70%・価値3倍）', { value: 3 }, 2.9);
   }
-  sound.playPickup(); showToast('📦 重量サンプルをその場へ置いた（消えずに残る）');
+  sound.playPickup(); showToast('[重] 重量サンプルをその場へ置いた（消えずに残る）');
   updateObjectiveUI();
 }
 
@@ -10485,7 +11242,7 @@ function triggerInteract() {
         if (keys['ShiftLeft'] || keys['ShiftRight'] || state.crouching) {
           state.carryingPeerId = pid;
           mpBroadcastOrSend({ type: 'carry_peer', targetId: pid, by: mp.myId });
-          showToast(`🚑 ${p.name} を担いだ！（速度60%・ライト減光 / [E]で下ろす）`);
+          showToast(`[搬送] ${p.name} を担いだ！（速度60%・ライト減光 / [E]で下ろす）`);
           updateObjectiveUI();
         } else if (!state.reviveTarget) {
           state.reviveTarget = { id: pid, name: p.name, timer: 0 };
@@ -10528,31 +11285,38 @@ function triggerInteract() {
   if (it.type === 'document') {
     markUsed();
     const title = (it.data && it.data.title) || '未整理の研究資料';
-    state.shiftDocs.push({ title, depth: state.depth, ts: Date.now() });
+    const docObj = { title, depth: state.depth, ts: Date.now() };
+    state.shiftDocs.push(docObj);
     sound.playPickup();
-    showToast(`📄 研究資料「${title}」を回収！（所持資料 ×${state.shiftDocs.length} — 帰還して納品せよ）`);
+    if (state.continuousMode && !isMpActive()) {
+      const tx = transmitContinuousDoc(docObj, state.depth);
+      state.continuousDocsSent = (state.continuousDocsSent || 0) + 1;
+      showToast(`[送信済] 研究資料「${title}」（安定度 +${tx.stabGain} / 送信資料 ×${state.continuousDocsSent}）`);
+    } else {
+      showToast(`研究資料「${title}」を回収（所持資料 ×${state.shiftDocs.length} — 帰還して納品せよ）`);
+    }
     updateHUDText(); updateObjectiveUI();
-  } else if (it.type === 'almond') { markUsed(); state.inv[0]++; sound.playPickup(); showToast('💧 アーモンドウォーターを入手'); }
-  else if (it.type === 'food') { markUsed(); state.inv[1]++; sound.playPickup(); showToast('🥫 携帯食料を入手'); }
-  else if (it.type === 'medkit') { markUsed(); state.inv[2]++; sound.playPickup(); showToast('🩹 救急キットを入手'); }
-  else if (it.type === 'jelly') { markUsed(); state.inv[3]++; sound.playPickup(); showToast('🍯 モスゼリーを入手（ドクガ忌避）'); }
-  else if (it.type === 'battery') { markUsed(); state.inv[4]++; sound.playPickup(); showToast('🔋 乾電池を入手 [5]'); }
+  } else if (it.type === 'almond') { markUsed(); state.inv[0]++; sound.playPickup(); showToast('[水] アーモンドウォーターを入手'); }
+  else if (it.type === 'food') { markUsed(); state.inv[1]++; sound.playPickup(); showToast('[食] 携帯食料を入手'); }
+  else if (it.type === 'medkit') { markUsed(); state.inv[2]++; sound.playPickup(); showToast('[救] 救急キットを入手'); }
+  else if (it.type === 'jelly') { markUsed(); state.inv[3]++; sound.playPickup(); showToast('[蜜] モスゼリーを入手（ドクガ忌避）'); }
+  else if (it.type === 'battery') { markUsed(); state.inv[4]++; sound.playPickup(); showToast('[電] 乾電池を入手 [5]'); }
   else if (it.type === 'lockpick') {
     if ((state.inv[5] || 0) >= LOCKPICK_MAX) { showToast(`ピックは最大${LOCKPICK_MAX}本まで所持できる`); return; }
-    markUsed(); state.inv[5] = (state.inv[5] || 0) + 1; sound.playPickup(); showToast(`🧷 ピックを入手 (${state.inv[5]}/${LOCKPICK_MAX})`);
+    markUsed(); state.inv[5] = (state.inv[5] || 0) + 1; sound.playPickup(); showToast(`[針] ピックを入手 (${state.inv[5]}/${LOCKPICK_MAX})`);
   } else if (it.type === 'ball') {
-    markUsed(); state.inv[6] = (state.inv[6] || 0) + 1; sound.playPickup(); showToast('⚾ ボールを入手！[B]で投擲（VIP・クロカビ・ディンゴ用）');
+    markUsed(); state.inv[6] = (state.inv[6] || 0) + 1; sound.playPickup(); showToast('[球] ボールを入手！[B]で投擲（VIP・クロカビ・ディンゴ用）');
   } else if (it.type === 'heavy_sample') {
     if (!isMpActive()) return;
     markUsed(); state.heavySampleCarried = true; state.heavySampleUid = it.uid;
-    sound.playCrystal(); showToast('📦 重量サンプルを入手・搬送中（2人搬送で速度70%・価値3倍）');
+    sound.playCrystal(); showToast('[重] 重量サンプルを入手・搬送中（2人搬送で速度70%・価値3倍）');
     updateObjectiveUI();
   } else if (it.type === 'fuse') {
     markUsed('fuse'); state.questFuses++; sound.playPickup();
     const fuseNeed = getLevelTaskTarget(lv, state.depth);
     if (lv.task && lv.task.type === 'fuse' && state.questFuses >= fuseNeed) {
-      restoreFloorPower('⚡ ヒューズを入手 — 電源復旧完了！');
-    } else showToast(`⚡ 電源ヒューズを入手 (${state.questFuses}/${fuseNeed})`);
+      restoreFloorPower('[電] ヒューズを入手 — 電源復旧完了！');
+    } else showToast(`[電] 電源ヒューズを入手 (${state.questFuses}/${fuseNeed})`);
     updateObjectiveUI();
   } else if (it.type === 'control_panel' || it.type === 'breaker') {
     if (lv.task && lv.task.type === 'fuse') {
@@ -10582,7 +11346,7 @@ function triggerInteract() {
     markUsed(); state.unconfirmedSamples++; sound.playCrystal();
     saveRecords(r => { r.sampleLevels.add(state.levelIdx); });
     completeSideObjective('sample'); updateHUDText();
-    showToast(`✦ 特異点サンプルを入手！（未確定 ×${state.unconfirmedSamples} — 持つほど足音増・移動微減）`);
+    showToast(`[+] 特異点サンプルを入手！（未確定 ×${state.unconfirmedSamples} — 持つほど足音増・移動微減）`);
     if (state.depth === 1 && state.levelIdx === 0) {
       showFirstHint('tut_l0_sample', 'ヒント：特異点サンプルを回収し、帰還の扉から前哨拠点へ持ち帰って納品しよう');
     }
@@ -10608,9 +11372,9 @@ function triggerInteract() {
     const unl = document.getElementById('note-unlock');
     if (n.unlockEntity && ENTITY_META[n.unlockEntity]) {
       registerCodexHint(n.unlockEntity);
-      unl.textContent = `📖 図鑑＆記録に保存：「${ENTITY_META[n.unlockEntity].name}」の対処法が解禁されました`;
+      unl.textContent = `[LOG] 図鑑＆記録に保存：「${ENTITY_META[n.unlockEntity].name}」の対処法が解禁されました`;
       unl.style.display = 'block';
-    } else { unl.textContent = '📖 M.E.G. 記録に保存されました'; unl.style.display = 'block'; }
+    } else { unl.textContent = '[LOG] M.E.G. 記録に保存されました'; unl.style.display = 'block'; }
     document.getElementById('note-modal').classList.add('show');
     state.noteOpen = true; checkAchievements();
     try { if (document.pointerLockElement) document.exitPointerLock(); } catch (e) {}
@@ -10628,7 +11392,7 @@ function openBranchCentralDoor() {
     }
   });
   sound.playPowerRestore();
-  showToast('★ A翼・B翼同時操作成功！中央の重い扉が開放された！');
+  showToast('[*] A翼・B翼同時操作成功！中央の重い扉が開放された！');
   updateObjectiveUI();
 }
 function closeNote() { state.noteOpen = false; document.getElementById('note-modal').classList.remove('show'); }
@@ -10810,7 +11574,7 @@ function updateCameraSystem(dt) {
 
   if (infoEl) {
     if (state.camTarget) {
-      const closeTag = (state.camTarget.type === 'entity' && state.camTarget.dist <= 8.0) ? ' ★至近' : '';
+      const closeTag = (state.camTarget.type === 'entity' && state.camTarget.dist <= 8.0) ? ' [*]至近' : '';
       const angTag = state.camTarget.angle ? ` [${ANGLE_LABELS_JA[state.camTarget.angle]}]` : '';
       infoEl.textContent = `${state.camTarget.label}${angTag} ${Math.round(state.camTarget.dist)}m${closeTag}` + (ready ? ' ● 撮影可' : '');
     } else {
@@ -10848,7 +11612,7 @@ function pressCameraShutter() {
   attractNoiseEntities(state.pos.x, state.pos.z, 7.0, 5.5);
 
   if (!valid) {
-    showToast('📷 空シャッター（対象ゲージ不足 — 半径7mにシャッター音が響いた）');
+    showToast('[撮影] 空シャッター（対象ゲージ不足 — 半径7mにシャッター音が響いた）');
     return;
   }
 
@@ -10860,43 +11624,58 @@ function pressCameraShutter() {
     const angle = tgt.angle || classifyPhotoAngle(tgt.ent, state.pos.x, state.pos.z);
     const shotKey = `${tgt.kind}_${angle}`;
     if (state.shiftShotKeys[shotKey]) {
-      showToast(`📷 ${tgt.label} [${ANGLE_LABELS_JA[angle]}] はこの勤務で撮影済み（別の角度を狙え）`);
+      showToast(`[撮影] ${tgt.label} [${ANGLE_LABELS_JA[angle]}] はこの勤務で撮影済み（別の角度を狙え）`);
       state.camGauge = 0.35;
       return;
     }
     state.shiftShotKeys[shotKey] = true;
     const isClose = tgt.dist <= 8.0;
-    state.shiftCuts.push({
+    const cutObj = {
       kind: tgt.kind,
       angle,
       dist: Math.round(tgt.dist * 10) / 10,
       isClose,
       dataUrl: thumbUrl,
       ts: Date.now()
-    });
+    };
+    state.shiftCuts.push(cutObj);
     registerCodexSeen(tgt.kind);
     state.camGauge = 0.2;
-    const cap = `${tgt.label} [${ANGLE_LABELS_JA[angle]}]${isClose ? ' ★至近≤8m' : ''}`;
+    const cap = `${tgt.label} [${ANGLE_LABELS_JA[angle]}]${isClose ? ' [*]至近≤8m' : ''}`;
     showCamThumbPop(thumbUrl, cap);
-    showToast(`📷 カット確定：${cap}`);
+    if (state.continuousMode && !isMpActive()) {
+      const lvCur = getActiveLevel();
+      const tx = transmitContinuousCut(cutObj, state.depth, lvCur ? lvCur.name : '');
+      state.continuousCutsSent = (state.continuousCutsSent || 0) + 1;
+      showToast(`[送信済] カット確定: ${cap}（安定度 +${tx.stabGain}）`);
+    } else {
+      showToast(`カット確定: ${cap}`);
+    }
     updateHUDText(); updateObjectiveUI();
   } else if (tgt.type === 'core') {
     state.shiftCoreShot = { dataUrl: thumbUrl, ts: Date.now() };
     state.camGauge = 0;
-    showCamThumbPop(thumbUrl, '◈ 深度20「核（CORE）」撮影完了');
-    showToast('◈ 「核（CORE）」を撮影した！帰還の扉[E]から前哨拠点へ戻れ！');
+    showCamThumbPop(thumbUrl, '深度20「核（CORE）」撮影完了');
+    showToast('「核（CORE）」を撮影した。扉[E]へ進め。');
     updateHUDText(); updateObjectiveUI();
   } else if (tgt.type === 'anomaly') {
     if (state.shiftAnomalyKeys[tgt.kind]) {
-      showToast(`📷 異常現象「${tgt.label}」はこの勤務で記録済み`);
+      showToast(`観測対象「${tgt.label}」はこのフロアで記録済み`);
       state.camGauge = 0.3;
       return;
     }
     state.shiftAnomalyKeys[tgt.kind] = true;
-    state.shiftAnomalies.push({ kind: tgt.kind, label: tgt.label, dataUrl: thumbUrl, ts: Date.now() });
+    const anomObj = { kind: tgt.kind, label: tgt.label, dataUrl: thumbUrl, ts: Date.now() };
+    state.shiftAnomalies.push(anomObj);
     state.camGauge = 0;
-    showCamThumbPop(thumbUrl, `異常記録：${tgt.label}`);
-    showToast(`📷 異常現象を記録：${tgt.label}`);
+    showCamThumbPop(thumbUrl, `観測記録: ${tgt.label}`);
+    if (state.continuousMode && !isMpActive()) {
+      const tx = transmitContinuousAnomaly(anomObj);
+      state.continuousCutsSent = (state.continuousCutsSent || 0) + 1;
+      showToast(`[送信済] 観測記録: ${tgt.label}（安定度 +${tx.stabGain}）`);
+    } else {
+      showToast(`観測記録: ${tgt.label}`);
+    }
     updateHUDText(); updateObjectiveUI();
   }
 }
@@ -10904,7 +11683,8 @@ window.V10Camera = { classifyPhotoAngle, captureCameraThumb, updateCameraSystem,
 
 // V10.0.0 A-2: Select an appropriate floor from the 29 levels for a given depth & contract
 function pickLevelForDepth(depth, contract) {
-  if (depth >= 20) return -200; // Q-1: Dedicated Core Floor ONLY at Depth 20
+  if (depth === 20 && !state.continuousMode) return -200; // Q-1: Dedicated Core Floor ONLY at Depth 20 in normal shift
+  if (depth === 20 && state.continuousMode) return -200;
   if (contract && contract.targetLevelId !== undefined && LEVELS[contract.targetLevelId] && !LEVELS[contract.targetLevelId].mpOnly) {
     return contract.targetLevelId;
   }
@@ -10914,10 +11694,25 @@ function pickLevelForDepth(depth, contract) {
   return soloIds[Math.floor(rng() * soloIds.length)] || 0;
 }
 
+function pickContinuousContractForDepth(depth) {
+  const base = loadV10Base();
+  const fakeBase = Object.assign({}, base, { unlockedDepth: Math.max(1, Math.min(V10_MAX_DEPTH, depth)) });
+  const list = generateV10Contracts(fakeBase);
+  if (!list || !list.length) return null;
+  // Pick the contract closest to the current depth band
+  let best = list[0], bestDiff = 999;
+  for (const c of list) {
+    const diff = Math.abs((c.depth || 1) - Math.min(V10_MAX_DEPTH, depth));
+    if (diff < bestDiff) { bestDiff = diff; best = c; }
+  }
+  return best;
+}
+
 // V10.0.0 A-1: Enter the Outpost Base
 function enterOutpost(deliverySummary = null) {
   state.inOutpost = true;
   state.inCoreFloor = false;
+  state.continuousMode = false;
   state.playing = true;
   state.paused = false;
   state.terminalOpen = false;
@@ -10948,14 +11743,23 @@ function enterOutpost(deliverySummary = null) {
       setTimeout(() => openTerminalModal('delivery'), 750);
     }
   }
+  // V10.2.0 B: result screen hid #mobile-ui => always resync touch controls when arriving at the Outpost (death->successor / return / survive)
+  refreshMobileUIVisibility();
 }
 
-// V10.0.0 A-2: Depart on a 1-floor shift from Outpost
-function departOnShift(depth, contract = null) {
+// V10.0.0 A-2 + V10.2.0 E-1: Depart on a 1-floor normal shift OR Continuous Dispatch Mode (solo only)
+function departOnShift(depth, contract = null, opts = null) {
   const base = loadV10Base();
   const clampedDepth = Math.max(1, Math.min(base.unlockedDepth, Number(depth) || 1));
+  const wantContinuous = !!(opts && opts.continuous) && !isMpActive();
+  state.continuousMode = wantContinuous;
+  state.continuousStartDepth = clampedDepth;
+  state.continuousMaxDepth = clampedDepth;
+  state.continuousCutsSent = 0;
+  state.continuousDocsSent = 0;
+  state.continuousTime = 0;
   state.depth = clampedDepth;
-  state.activeContract = contract || null;
+  state.activeContract = contract || (wantContinuous ? pickContinuousContractForDepth(clampedDepth) : null);
   state.shiftCuts = [];
   state.shiftShotKeys = {};
   state.shiftDocs = [];
@@ -10971,20 +11775,44 @@ function departOnShift(depth, contract = null) {
   state.seed = (Date.now() ^ (base.employeeId * 7919) ^ (clampedDepth * 997)) >>> 0;
 
   closeTerminalModal();
-  const targetLv = pickLevelForDepth(clampedDepth, contract);
-  const routeLabel = targetLv === -200
-    ? `深度 20 // 最深部「核」出勤`
-    : `出勤 // 深度 ${clampedDepth}` + (contract ? ` (${contract.title})` : '');
+  const targetLv = pickLevelForDepth(clampedDepth, state.activeContract);
+  const routeLabel = wantContinuous
+    ? `連続派遣 // 開始深度 ${clampedDepth}`
+    : (targetLv === -200
+      ? `深度 20 // 最深部「核」出勤`
+      : `出勤 // 深度 ${clampedDepth}` + (state.activeContract ? ` (${state.activeContract.title})` : ''));
   enterLevel(targetLv, true, routeLabel);
+  refreshMobileUIVisibility();
   if (!isTouchDevice && renderer.domElement.requestPointerLock) { try { renderer.domElement.requestPointerLock(); } catch (e) {} }
+}
+
+// V10.2.0 E-2: Advance to next depth (+1) in Continuous Dispatch Mode (NO result screen, keep carried samples & vitals, refresh depth-band contract)
+function advanceContinuousFloor(etype = 'door') {
+  const base = loadV10Base();
+  state.depth = (state.depth || 1) + 1;
+  state.continuousMaxDepth = Math.max(state.continuousMaxDepth || 1, state.depth);
+  // Reset per-floor shot dedup keys while preserving carried samples & continuous counters
+  state.shiftShotKeys = {};
+  state.shiftAnomalyKeys = {};
+  state.shiftCoreShot = null;
+  state.stamina = 100;
+  state.seed = (Date.now() ^ (base.employeeId * 7919) ^ (state.depth * 1301)) >>> 0;
+  // Refresh contract for the new depth band
+  state.activeContract = pickContinuousContractForDepth(state.depth);
+  const targetLv = pickLevelForDepth(state.depth, state.activeContract);
+  sound.playPowerRestore();
+  showToast(`[連続派遣] 深度 ${state.depth} へ進行（携行サンプル ×${state.unconfirmedSamples}）`);
+  enterLevel(targetLv, true, `連続派遣 // 深度 ${state.depth}`);
+  refreshMobileUIVisibility();
 }
 
 function departFromOutpostDoor() {
   const base = loadV10Base();
   const contracts = loadV10Contracts(base);
-  const c = state.activeContract || (contracts && contracts[0]) || null;
+  const wantCont = (!isMpActive() && state.selectedDispatchMode === 'continuous');
+  const c = wantCont ? null : (state.activeContract || (contracts && contracts[0]) || null);
   const depth = Math.min(base.unlockedDepth, Math.max(1, state.selectedDispatchDepth || (c ? c.depth : 1)));
-  departOnShift(depth, c);
+  departOnShift(depth, c, { continuous: wantCont });
 }
 
 // V10.0.0 A-3 & C-3: Return to Outpost & Deliver Shift Results
@@ -11003,11 +11831,11 @@ function returnToOutpost() {
     contract: state.activeContract
   });
   sound.playPowerRestore();
-  showToast(`✦ 帰還完了！評価 +${summary.evalGain} / 拠点安定度 +${summary.stabGain}`);
+  showToast(`帰還完了: 評価 +${summary.evalGain} / 拠点安定度 +${summary.stabGain}`);
   enterOutpost(summary);
 }
 
-// V10.0.0 A-5: Employee Death & Replacement (unsubmitted deliverables & inventory lost; base/ledger/unlockedDepth preserved; employeeId +1)
+// V10.0.0 A-5 + V10.2.0 E-4: Employee Death & Replacement (handles both normal shift and Continuous Dispatch Mode)
 function handleEmployeeDeath(reason = '死亡') {
   if (state.hide.active) exitHideSpot();
   if (state.lockpick.active) closeLockpickModal();
@@ -11016,38 +11844,82 @@ function handleEmployeeDeath(reason = '死亡') {
   const deadEmpId = base.employeeId;
   const causeMeta = state.lastDamageSource && (NON_ENTITY_DEATH_TIPS[state.lastDamageSource] || ENTITY_META[state.lastDamageSource]);
   const causeName = causeMeta ? causeMeta.name : (reason || '不明');
+  const wasContinuous = !!state.continuousMode && !isMpActive();
+  const totalLostSamples = (state.unconfirmedSamples || 0) + (state.confirmedSamples || 0);
 
-  appendV10History({
-    employeeId: deadEmpId,
-    depth: state.depth,
-    levelCode: lv.code,
-    levelName: lv.name,
-    outcome: 'dead',
-    cause: causeName,
-    causeDetail: reason,
-    lostCuts: state.shiftCuts.length,
-    lostDocs: state.shiftDocs.length,
-    lostSamples: (state.unconfirmedSamples || 0) + (state.confirmedSamples || 0),
-    contractTitle: state.activeContract ? state.activeContract.title : '自由調査',
-    contractDone: false,
-    evalGain: 0,
-    stabGain: 0
-  });
+  let contSummary = null;
+  if (wasContinuous) {
+    const startDepth = state.continuousStartDepth || 1;
+    const reachedDepth = Math.max(startDepth, state.continuousMaxDepth || state.depth || 1);
+    const cutsSent = state.continuousCutsSent || 0;
+    const docsSent = state.continuousDocsSent || 0;
+    const timeSec = Math.floor(state.continuousTime || state.runTime || 0);
+    const contRank = computeContinuousRank({ startDepth, reachedDepth, cutsSent, docsSent, timeSec });
+    contSummary = {
+      continuous: true,
+      rank: contRank,
+      startDepth,
+      reachedDepth,
+      cutsSent,
+      docsSent,
+      timeSec,
+      lostSamples: totalLostSamples
+    };
+    appendV10History({
+      employeeId: deadEmpId,
+      mode: 'continuous',
+      startDepth,
+      reachedDepth,
+      depth: reachedDepth,
+      rank: contRank,
+      cutsSent,
+      docsSent,
+      timeSec,
+      levelCode: lv.code,
+      levelName: lv.name,
+      outcome: 'continuous_end',
+      cause: causeName,
+      causeDetail: reason,
+      lostSamples: totalLostSamples,
+      contractTitle: '連続派遣'
+    });
+  } else {
+    appendV10History({
+      employeeId: deadEmpId,
+      depth: state.depth,
+      levelCode: lv.code,
+      levelName: lv.name,
+      outcome: 'dead',
+      cause: causeName,
+      causeDetail: reason,
+      lostCuts: state.shiftCuts.length,
+      lostDocs: state.shiftDocs.length,
+      lostSamples: totalLostSamples,
+      contractTitle: state.activeContract ? state.activeContract.title : '自由調査',
+      contractDone: false,
+      evalGain: 0,
+      stabGain: 0
+    });
+  }
 
   // Increment employee number & keep base/ledger/unlockedDepth intact
   base.employeeId = deadEmpId + 1;
   saveV10Base(base);
 
-  // Drop unsubmitted shift items & reset fresh replacement employee's inventory/vitals
+  // Drop carried samples & shift inventory; photos/docs transmitted in continuous mode are ALREADY persisted in V10Ledger!
   const achCnt = loadRecords().achievements.size;
   state.inv = [achCnt >= 3 ? 2 : 1, 1, 0, achCnt >= 6 ? 1 : 0, achCnt >= 3 ? 2 : 1, 1, 0];
   state.hp = 100; state.hunger = 100; state.sanity = 100; state.stamina = 100; state.battery = 100;
   state.shiftCuts = []; state.shiftShotKeys = {}; state.shiftDocs = []; state.shiftAnomalies = []; state.shiftAnomalyKeys = {}; state.shiftCoreShot = null;
   state.unconfirmedSamples = 0; state.confirmedSamples = 0;
+  state.continuousMode = false;
   state.downed = false;
 
   // Show replacement notice in result screen with direct handoff to Outpost as new employee
-  showResultScreen(false, `派遣社員 #${deadEmpId} は ${lv.code}（${lv.name}）にて業務終了（死因：${causeName}）。後任 #${base.employeeId} が前哨拠点へ着任しました。`);
+  const msg = wasContinuous
+    ? `派遣社員 #${deadEmpId} の連続派遣（深度 ${contSummary.startDepth} → ${contSummary.reachedDepth}）は ${lv.code}（${lv.name}）にて終了（死因：${causeName}）。後任 #${base.employeeId} が着任しました。`
+    : `派遣社員 #${deadEmpId} は ${lv.code}（${lv.name}）にて業務終了（死因：${causeName}）。後任 #${base.employeeId} が前哨拠点へ着任しました。`;
+  showResultScreen(false, msg, null, contSummary);
 }
 
 // V10.0.0 Outpost Terminal 4-Tab Modal (A-2, C-1, C-3, E, F)
@@ -11091,52 +11963,75 @@ function renderTerminalDispatch(base) {
   const pane = document.getElementById('term-pane-dispatch');
   if (!pane) return;
   const contracts = loadV10Contracts(base);
+  const soloOnly = !isMpActive();
+  if (!soloOnly) state.selectedDispatchMode = 'normal';
+  const mode = state.selectedDispatchMode === 'continuous' ? 'continuous' : 'normal';
   const depthOpts = [];
   for (let d = 1; d <= base.unlockedDepth; d++) {
-    const tag = d === 20 ? '深度 20 — ◈ 核フロア（最終依頼）' : `深度 ${d}${d === base.unlockedDepth ? '（最深解放帯）' : ''}`;
+    const tag = d === 20 ? '深度 20 — 核フロア（最終依頼）' : `深度 ${d}${d === base.unlockedDepth ? '（最深解放帯）' : ''}`;
     depthOpts.push(`<option value="${d}" ${d === state.selectedDispatchDepth ? 'selected' : ''}>${tag}</option>`);
   }
+  const nowStr = new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
   const stabWarn = base.stability <= 30
-    ? `<div style="padding:8px 10px;border-radius:7px;background:rgba(170,35,35,0.22);border:1px solid rgba(255,100,100,0.5);color:#ffd0d0;font-size:11.5px;margin-bottom:10px;">⚠ 拠点安定度が低下中（${Math.round(base.stability)}/100）。成果物を納品して安定度を回復せよ！</div>`
+    ? `<div class="term-alert-row">[警告] 拠点安定度が低下中（${Math.round(base.stability)}/100）。成果物を納品して安定度を回復せよ。</div>`
     : '';
-  let html = `${stabWarn}
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
-      <label style="font-size:12px;color:#b8c0cc;">出発深度:</label>
-      <select id="term-depth-sel" style="flex:1;min-width:170px;background:#12171e;color:#f4f0e4;border:1px solid rgba(255,255,255,0.22);border-radius:7px;padding:7px 9px;font-size:12px;">${depthOpts.join('')}</select>
-      <button class="primary" id="term-free-depart-btn" style="padding:8px 14px;font-size:12px;">自由調査で出勤</button>
+  const modePicker = soloOnly ? `
+    <div class="term-mode-row" role="group" aria-label="派遣種別">
+      <button type="button" class="term-mode-btn ${mode === 'normal' ? 'active' : ''}" data-dmode="normal">通常派遣（1階層・帰還納品）</button>
+      <button type="button" class="term-mode-btn ${mode === 'continuous' ? 'active' : ''}" data-dmode="continuous">連続派遣（ソロ専用・死亡まで深層へ）</button>
     </div>
-    <div style="font-size:11px;color:#9ea8b8;margin-bottom:6px;letter-spacing:0.06em;">依頼主からの現行依頼（3件・帰還ごとに入替 / 最深帯依頼の達成で解放深度+2）</div>`;
+    ${mode === 'continuous' ? `<div class="term-mode-note">帰還なし。扉を使うと深度+1へ進行。撮影カット(+2)・資料回収(+4)はその場で送信され、死亡後も台帳に残る。現物サンプルのみ死亡時に喪失。</div>` : ''}
+  ` : `<div class="term-mode-note">マルチプレイ中：通常派遣のみ選択可（連続派遣はソロ専用）。</div>`;
+
+  const departBtnLabel = mode === 'continuous' ? '連続派遣を開始' : '自由調査で出勤';
+  let html = `
+    <div class="term-form-meta"><span>帳票種別: 派遣指令書</span><span>社員番号: #${String(base.employeeId).padStart(4, '0')}</span><span>日時: ${nowStr}</span></div>
+    ${stabWarn}
+    ${modePicker}
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
+      <label style="font-size:12px;">開始深度:</label>
+      <select id="term-depth-sel" class="term-select" style="flex:1;min-width:170px;">${depthOpts.join('')}</select>
+      <button class="primary" id="term-free-depart-btn" style="padding:8px 14px;font-size:12px;">${departBtnLabel}</button>
+    </div>
+    <div class="term-section-cap">${mode === 'continuous' ? '※ 連続派遣では進行深度に応じた依頼が自動更新されます。現行依頼（通常派遣用）：' : '現行依頼（3件・帰還ごとに入替 / 最深帯依頼の達成で解放深度+2）'}</div>`;
 
   contracts.forEach((c, idx) => {
     const selected = state.activeContract && state.activeContract.id === c.id;
     html += `<div class="contract-card ${selected ? 'selected' : ''}" data-cidx="${idx}">
       <div class="c-head">
         <span class="c-title">${c.title}</span>
-        <span class="c-meta">推奨深度 ${c.depth} ・ 危険度 ${c.tier}</span>
+        <span class="c-meta">推奨深度 ${c.depth} / 危険度 ${c.tier}</span>
       </div>
       <div class="c-desc">${c.desc}</div>
-      <div class="c-reward">達成ボーナス：評価 +${V10_REWARDS.contract.eval} / 安定度 +${V10_REWARDS.contract.stab}${c.depth >= base.unlockedDepth && base.unlockedDepth < V10_MAX_DEPTH ? ' ＋ 解放深度 +2' : ''}</div>
+      <div class="c-reward">達成報酬: 評価 +${V10_REWARDS.contract.eval} / 安定度 +${V10_REWARDS.contract.stab}${c.depth >= base.unlockedDepth && base.unlockedDepth < V10_MAX_DEPTH ? ' ＋ 解放深度 +2' : ''}</div>
       <div style="margin-top:8px;display:flex;gap:8px;">
-        <button class="primary term-accept-btn" data-cidx="${idx}" style="flex:1;padding:7px 10px;font-size:12px;">この依頼を受けて出勤（深度 ${c.depth}）</button>
+        <button class="primary term-accept-btn" data-cidx="${idx}" style="flex:1;padding:7px 10px;font-size:12px;">${mode === 'continuous' ? `この深度(${c.depth})から連続派遣を開始` : `この依頼を受けて出勤（深度 ${c.depth}）`}</button>
       </div>
     </div>`;
   });
   pane.innerHTML = html;
 
+  pane.querySelectorAll('.term-mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.selectedDispatchMode = btn.dataset.dmode === 'continuous' ? 'continuous' : 'normal';
+      renderTerminalDispatch(base);
+    });
+  });
   const sel = document.getElementById('term-depth-sel');
   if (sel) sel.addEventListener('change', (e) => { state.selectedDispatchDepth = parseInt(e.target.value, 10) || 1; });
   const freeBtn = document.getElementById('term-free-depart-btn');
   if (freeBtn) freeBtn.addEventListener('click', () => {
     const d = parseInt((document.getElementById('term-depth-sel') || {}).value, 10) || 1;
     state.selectedDispatchDepth = d;
-    departOnShift(d, null);
+    departOnShift(d, null, { continuous: state.selectedDispatchMode === 'continuous' && !isMpActive() });
   });
   pane.querySelectorAll('.term-accept-btn').forEach(b => {
     b.addEventListener('click', () => {
       const c = contracts[parseInt(b.dataset.cidx, 10)];
       if (!c) return;
       state.selectedDispatchDepth = Math.min(base.unlockedDepth, c.depth);
-      departOnShift(state.selectedDispatchDepth, c);
+      const isCont = state.selectedDispatchMode === 'continuous' && !isMpActive();
+      departOnShift(state.selectedDispatchDepth, c, { continuous: isCont });
     });
   });
 }
@@ -11145,22 +12040,25 @@ function renderTerminalDelivery(base) {
   const pane = document.getElementById('term-pane-delivery');
   if (!pane) return;
   const s = base.lastDeliverySummary;
+  const nowStr = new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
   if (!s) {
-    pane.innerHTML = `<div style="padding:18px;text-align:center;color:#9ea8b8;font-size:12.5px;">まだ納品記録がありません。現場へ出勤し、撮影カット・資料・サンプルを持ち帰って納品してください。</div>`;
+    pane.innerHTML = `<div class="term-form-meta"><span>帳票種別: 納品受領票</span><span>社員番号: #${String(base.employeeId).padStart(4, '0')}</span><span>日時: ${nowStr}</span></div>
+      <div style="padding:18px;text-align:center;font-size:12.5px;opacity:0.75;">納品記録なし。現場へ出勤し、撮影カット・資料・サンプルを持ち帰って納品せよ。</div>`;
     return;
   }
   const rowsHtml = (s.rows && s.rows.length)
     ? s.rows.map(r => `<div class="delivery-row"><span>${r.label}</span><span class="val">評価 +${r.eval} / 安定度 +${r.stab}</span></div>`).join('')
     : `<div class="delivery-row"><span>持ち帰り成果物なし</span><span class="val">評価 +0 / 安定度 +0</span></div>`;
   const unlockHtml = s.depthUnlockedTo
-    ? `<div style="margin-top:10px;padding:8px 10px;border-radius:7px;background:rgba(139,232,182,0.14);border:1px solid rgba(139,232,182,0.45);color:#aef8d0;font-size:12px;">★ 出発可能な深度が <b>深度 ${s.depthUnlockedTo}</b> まで解放されました！</div>`
+    ? `<div class="term-unlock-row">[解放通知] 出発可能な深度が <b>深度 ${s.depthUnlockedTo}</b> まで更新されました。</div>`
     : '';
   pane.innerHTML = `
-    <div style="font-size:12px;color:#cbd2dd;margin-bottom:8px;">
-      直近の納品：<b>派遣社員 #${s.employeeId}</b> — ${s.levelCode} ${s.levelName}（深度 ${s.depth}） / 依頼：${s.contractTitle} ${s.contractDone ? '✓ 達成' : ''}
+    <div class="term-form-meta"><span>帳票種別: 納品受領票</span><span>社員番号: #${String(s.employeeId).padStart(4, '0')}</span><span class="term-stamp">記録済</span></div>
+    <div style="font-size:12px;margin-bottom:8px;">
+      直近の納品: <b>派遣社員 #${s.employeeId}</b> — ${s.levelCode} ${s.levelName}（深度 ${s.depth}） / 依頼: ${s.contractTitle} ${s.contractDone ? '[達成]' : ''}
     </div>
     ${rowsHtml}
-    <div class="delivery-row" style="border-top:1px solid rgba(255,255,255,0.2);margin-top:6px;padding-top:8px;font-weight:800;">
+    <div class="delivery-row term-total-row">
       <span>合計</span>
       <span class="val">評価 +${s.evalGain}（累計 ${base.totalEval}） / 安定度 +${s.stabGain}（現在 ${Math.round(base.stability)}/100）</span>
     </div>
@@ -11175,43 +12073,64 @@ function renderTerminalDelivery(base) {
 function renderTerminalHistory() {
   const pane = document.getElementById('term-pane-history');
   if (!pane) return;
+  const base = loadV10Base();
   const hist = loadV10History();
+  const header = `<div class="term-form-meta"><span>帳票種別: 勤務記録簿</span><span>現行社員: #${String(base.employeeId).padStart(4, '0')}</span><span>件数: ${hist.length}/100</span></div>`;
   if (!hist.length) {
-    pane.innerHTML = `<div style="padding:18px;text-align:center;color:#9ea8b8;font-size:12.5px;">勤務履歴はまだありません。</div>`;
+    pane.innerHTML = header + `<div style="padding:18px;text-align:center;font-size:12.5px;opacity:0.75;">勤務履歴はまだありません。</div>`;
     return;
   }
   const items = hist.slice().reverse().map(h => {
     const dtStr = h.ts ? new Date(h.ts).toLocaleString('ja-JP', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+    if (h.mode === 'continuous' || h.outcome === 'continuous_end') {
+      const m = String(Math.floor((h.timeSec || 0) / 60)).padStart(2, '0');
+      const sec = String(Math.floor((h.timeSec || 0) % 60)).padStart(2, '0');
+      return `<div class="hist-entry dead">
+        <div class="h-top"><span><b>派遣社員 #${h.employeeId}</b> — [連続派遣 / ランク ${h.rank || 'D'}]</span><span>${dtStr} <span class="term-stamp">記録済</span></span></div>
+        <div>開始深度 ${h.startDepth || 1} → 到達深度 ${h.reachedDepth || h.depth || 1}（最終: ${h.levelCode || ''} ${h.levelName || ''}） / 死因: ${h.cause || '不明'}</div>
+        <div style="font-size:11px;margin-top:2px;opacity:0.85;">送信済: カット×${h.cutsSent || 0}・資料×${h.docsSent || 0} / 滞在 ${m}:${sec} / 喪失サンプル ×${h.lostSamples || 0}</div>
+      </div>`;
+    }
     if (h.outcome === 'dead') {
       return `<div class="hist-entry dead">
-        <div class="h-top"><span><b>派遣社員 #${h.employeeId}</b> — [終了 / 業務中死亡]</span><span>${dtStr}</span></div>
-        <div style="color:#ffd0d0;">現場：${h.levelCode} ${h.levelName}（深度 ${h.depth}） / 死因：${h.cause || '不明'}</div>
-        <div style="color:#b89898;font-size:11px;margin-top:2px;">未納品喪失：カット×${h.lostCuts || 0}・資料×${h.lostDocs || 0}・サンプル×${h.lostSamples || 0}（記録はここで途切れている）</div>
+        <div class="h-top"><span><b>派遣社員 #${h.employeeId}</b> — [業務終了 / 死亡]</span><span>${dtStr}</span></div>
+        <div>現場: ${h.levelCode} ${h.levelName}（深度 ${h.depth}） / 死因: ${h.cause || '不明'}</div>
+        <div style="font-size:11px;margin-top:2px;opacity:0.8;">未納品喪失: カット×${h.lostCuts || 0}・資料×${h.lostDocs || 0}・サンプル×${h.lostSamples || 0}（記録はここで途切れている）</div>
       </div>`;
     }
     if (h.outcome === 'ending') {
-      return `<div class="hist-entry" style="border-left-color:#ffe57f;">
-        <div class="h-top"><span><b>派遣社員 #${h.employeeId}</b> — [深度20 核・最終選択]</span><span>${dtStr}</span></div>
-        <div style="color:#ffeaa0;">選択：「${h.choiceLabel}」</div>
+      return `<div class="hist-entry">
+        <div class="h-top"><span><b>派遣社員 #${h.employeeId}</b> — [深度20 核・最終選択]</span><span>${dtStr} <span class="term-stamp">記録済</span></span></div>
+        <div>選択: 「${h.choiceLabel}」</div>
       </div>`;
     }
     return `<div class="hist-entry">
-      <div class="h-top"><span><b>派遣社員 #${h.employeeId}</b> — 帰還・納品完了</span><span>${dtStr}</span></div>
-      <div>現場：${h.levelCode} ${h.levelName}（深度 ${h.depth}） / 依頼：${h.contractTitle}${h.contractDone ? ' ✓' : ''}</div>
-      <div style="color:#9ef5c5;font-size:11px;margin-top:2px;">納品：カット×${h.cutsCount || 0}（至近×${h.closeCuts || 0}）・資料×${h.docsCount || 0}・サンプル×${h.samplesCount || 0}・異常×${h.anomaliesCount || 0} → 評価+${h.evalGain} / 安定度+${h.stabGain}</div>
+      <div class="h-top"><span><b>派遣社員 #${h.employeeId}</b> — 帰還・納品完了</span><span>${dtStr} <span class="term-stamp">記録済</span></span></div>
+      <div>現場: ${h.levelCode} ${h.levelName}（深度 ${h.depth}） / 依頼: ${h.contractTitle}${h.contractDone ? ' [達成]' : ''}</div>
+      <div style="font-size:11px;margin-top:2px;opacity:0.88;">納品: カット×${h.cutsCount || 0}（至近×${h.closeCuts || 0}）・資料×${h.docsCount || 0}・サンプル×${h.samplesCount || 0}・観測×${h.anomaliesCount || 0} → 評価+${h.evalGain} / 安定度+${h.stabGain}</div>
     </div>`;
   });
-  pane.innerHTML = `<div style="font-size:11px;color:#9ea8b8;margin-bottom:8px;">前任者の途切れた記録を含む最新 ${hist.length} / 100 件</div>` + items.join('');
+  pane.innerHTML = header + items.join('');
 }
 
 function renderTerminalArchive() {
   const pane = document.getElementById('term-pane-archive');
   if (!pane) return;
+  const base = loadV10Base();
   const ledger = loadV10Ledger();
   const anomTotal = Object.values(ledger.anomalies || {}).reduce((a, b) => a + b, 0);
-  let html = `<div style="font-size:11.5px;color:#b8c2d0;margin-bottom:8px;">
-    納品資料累計：<b>${(ledger.docs || []).length}</b>件 ・ 異常現象記録：<b>${anomTotal}</b>件 ・ 核撮影：<b>${(ledger.coreShots || []).length}</b>件
-  </div>`;
+  // Count downloadable photos
+  let photoTotal = 0;
+  for (const id of ENTITY_ORDER) {
+    const le = ledger.entities && ledger.entities[id];
+    if (le && le.thumbs) photoTotal += le.thumbs.filter(t => !!t.dataUrl).length;
+  }
+  let html = `
+    <div class="term-form-meta"><span>帳票種別: 撮影・資料台帳</span><span>社員番号: #${String(base.employeeId).padStart(4, '0')}</span><span>保存写真: ${photoTotal}件</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:11.5px;">
+      <span>資料累計: <b>${(ledger.docs || []).length}</b>件 / 観測記録: <b>${anomTotal}</b>件 / 核撮影: <b>${(ledger.coreShots || []).length}</b>件</span>
+      <button type="button" id="term-dl-all-photos" class="term-mini-btn" ${photoTotal === 0 ? 'disabled' : ''}>全てダウンロード (${photoTotal})</button>
+    </div>`;
   for (const id of ENTITY_ORDER) {
     const m = ENTITY_META[id];
     const le = ledger.entities && ledger.entities[id];
@@ -11219,21 +12138,45 @@ function renderTerminalArchive() {
     const s = le && le.angles ? le.angles.side : 0;
     const b = le && le.angles ? le.angles.back : 0;
     const tot = f + s + b;
-    const thumbs = (le && le.thumbs ? le.thumbs : []).filter(t => !!t.dataUrl).slice(-4);
+    const thumbs = (le && le.thumbs ? le.thumbs : []).filter(t => !!t.dataUrl).slice(-6);
     const thumbHtml = thumbs.length
-      ? `<div class="ledger-thumbs">${thumbs.map(t => `<img src="${t.dataUrl}" title="${ANGLE_LABELS_JA[t.angle] || t.angle} (${t.dist}m) 派遣#${t.employeeId}">`).join('')}</div>`
+      ? `<div class="ledger-thumbs">${thumbs.map((t, ti) => {
+          const angJa = ANGLE_LABELS_JA[t.angle] || t.angle;
+          return `<div class="ledger-thumb-card">
+            <img src="${t.dataUrl}" title="${m.name} [${angJa}] (${t.dist}m) 派遣#${t.employeeId}">
+            <button type="button" class="thumb-dl-btn" data-eid="${id}" data-tidx="${ti}" title="JPEGで保存">保存[${angJa}]</button>
+          </div>`;
+        }).join('')}</div>`
       : '';
     html += `<div class="codex-item ${tot > 0 ? 'seen' : ''}" style="margin-bottom:7px;">
       <div class="codex-info">
         <div class="codex-head">
-          <span class="codex-name">${tot > 0 ? m.name : '???（未納品）'}</span>
-          <span class="codex-tag ${tot > 0 ? 'ok' : ''}">正:${f} / 側:${s} / 背:${b} ・ サンプル:${(le && le.samples) || 0}</span>
+          <span class="codex-name">${tot > 0 ? m.name : '???（未登録）'}</span>
+          <span class="codex-tag ${tot > 0 ? 'ok' : ''}">${tot > 0 ? '[記録済] ' : ''}正:${f} / 側:${s} / 背:${b} ・ 標本:${(le && le.samples) || 0}</span>
         </div>
         ${thumbHtml}
       </div>
     </div>`;
   }
   pane.innerHTML = html;
+
+  const dlAllBtn = document.getElementById('term-dl-all-photos');
+  if (dlAllBtn) dlAllBtn.addEventListener('click', () => downloadAllLedgerPhotos());
+  pane.querySelectorAll('.thumb-dl-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const eid = btn.dataset.eid;
+      const tidx = parseInt(btn.dataset.tidx, 10);
+      const le = ledger.entities && ledger.entities[eid];
+      const thumbs = (le && le.thumbs ? le.thumbs : []).filter(t => !!t.dataUrl).slice(-6);
+      const photo = thumbs[tidx];
+      const name = (ENTITY_META[eid] && ENTITY_META[eid].name) || eid;
+      if (photo && photo.dataUrl) {
+        const fn = downloadLedgerPhoto(photo.dataUrl, name, photo.angle, photo.ts);
+        if (fn) showToast(`写真を保存: ${fn}`);
+      }
+    });
+  });
 }
 
 // V10.0.0 Q-1: Depth 20 Core Ending 3-Choice Modal (continues shifts afterward!)
@@ -11264,10 +12207,10 @@ function chooseCoreEnding(choice) {
   state.paused = false;
   const modal = document.getElementById('core-ending-modal');
   if (modal) modal.classList.remove('show');
-  showToast(`◈ 最終選択「${label}」を履歴に記録しました。勤務は引き続き継続できます。`);
+  showToast(`最終選択「${label}」を履歴に記録しました。勤務は引き続き継続できます。`);
   openTerminalModal('history');
 }
-window.V10Flow = { enterOutpost, departOnShift, returnToOutpost, handleEmployeeDeath, openTerminalModal, closeTerminalModal, openCoreEndingModal, chooseCoreEnding };
+window.V10Flow = { enterOutpost, departOnShift, advanceContinuousFloor, returnToOutpost, handleEmployeeDeath, openTerminalModal, closeTerminalModal, openCoreEndingModal, chooseCoreEnding };
 
 // V7.2 §4 + V8 §6 Strict D–S+ Solo & Team Rank Evaluator (exported for verification!)
 function computeRank(p) {
@@ -11351,15 +12294,16 @@ const NON_ENTITY_DEATH_TIPS = {
 };
 
 // Result / Return Rift / Escape Ending Screen (V7.2 §4 + V8 §6 & §8 + V9 §2-1 & §6-2)
-function showResultScreen(outcome, reason, remoteRunEnd = null) {
+function showResultScreen(outcome, reason, remoteRunEnd = null, continuousSummary = null) {
   if (state.hide.active) exitHideSpot();
   if (state.lockpick.active) closeLockpickModal();
   const escaped = (outcome === true);
   const extracted = (outcome === 'extracted');
   const returned = escaped || extracted;
-  const lostSamples = remoteRunEnd ? (remoteRunEnd.lost || 0) : (!returned ? state.unconfirmedSamples : 0);
+  const isCont = !!(continuousSummary && continuousSummary.continuous);
+  const lostSamples = isCont ? (continuousSummary.lostSamples || 0) : (remoteRunEnd ? (remoteRunEnd.lost || 0) : (!returned ? state.unconfirmedSamples : 0));
   const confirmedForRank = remoteRunEnd ? (remoteRunEnd.confirmed !== undefined ? remoteRunEnd.confirmed : state.confirmedSamples) : state.confirmedSamples;
-  const depthForRank = remoteRunEnd ? (remoteRunEnd.depth || state.depth) : state.depth;
+  const depthForRank = isCont ? (continuousSummary.reachedDepth || state.depth) : (remoteRunEnd ? (remoteRunEnd.depth || state.depth) : state.depth);
   state.unconfirmedSamples = 0;
   state.playing = false; state.paused = false; state.downed = false;
   document.getElementById('downed-overlay').classList.remove('show');
@@ -11377,10 +12321,12 @@ function showResultScreen(outcome, reason, remoteRunEnd = null) {
   }
   const abandoned = remoteRunEnd ? !!remoteRunEnd.abandoned : (isMp && (state.abandonedPeer || unrescuedDowned > 0));
   const allReturned = remoteRunEnd ? !!remoteRunEnd.allReturned : (returned && !abandoned);
-  const { rank, nextMissing } = computeRank({
+  const baseEval = computeRank({
     returned, depth: depthForRank, confirmed: confirmedForRank, lost: lostSamples,
     isMp, playerCount, allReturned, abandoned
   });
+  const rank = isCont ? (continuousSummary.rank || 'D') : baseEval.rank;
+  const nextMissing = baseEval.nextMissing;
 
   if (!remoteRunEnd && mp.role === 'host' && mp.active && returned) {
     mpBroadcast({
@@ -11397,15 +12343,21 @@ function showResultScreen(outcome, reason, remoteRunEnd = null) {
   try { if (document.pointerLockElement) document.exitPointerLock(); } catch (e) {}
   document.getElementById('hud').classList.remove('active');
   document.getElementById('cam-chrome').classList.remove('active');
-  document.getElementById('mobile-ui').classList.remove('show');
+  refreshMobileUIVisibility(); // V10.2.0 B: unified visibility sync on every state.playing transition
 
   const rs = document.getElementById('result-screen');
   rs.classList.toggle('escaped', returned);
-  document.getElementById('res-tag').textContent = escaped ? 'REALITY RESTORED // ESCAPE COMPLETE' : (extracted ? 'EXTRACTION COMPLETE // SAMPLES BANKED' : 'SHIFT TERMINATED // REPLACEMENT DISPATCHED');
-  document.getElementById('res-title').textContent = escaped ? (isMp ? 'チーム全員で現実世界へ帰還した' : '現実世界へ帰還した') : (extracted ? '帰還の裂け目から生還した' : (!isMp ? '業務終了 — 後任の派遣社員へ交代' : '意識が途絶えた'));
+  document.getElementById('res-tag').textContent = isCont
+    ? 'CONTINUOUS DISPATCH // FINAL EVALUATION'
+    : (escaped ? 'REALITY RESTORED // ESCAPE COMPLETE' : (extracted ? 'EXTRACTION COMPLETE // SAMPLES BANKED' : 'SHIFT TERMINATED // REPLACEMENT DISPATCHED'));
+  document.getElementById('res-title').textContent = isCont
+    ? `連続派遣終了 — 総合評価 ${rank}`
+    : (escaped ? (isMp ? 'チーム全員で現実世界へ帰還した' : '現実世界へ帰還した') : (extracted ? '帰還の裂け目から生還した' : (!isMp ? '業務終了 — 後任の派遣社員へ交代' : '意識が途絶えた')));
   document.getElementById('res-reason').textContent = reason;
-  document.getElementById('res-rank').textContent = isMp ? `TEAM ${rank}` : (!returned ? `派遣 #${loadV10Base().employeeId}` : rank);
-  document.getElementById('res-next-rank').textContent = (!isMp && !returned) ? '未納品の成果物と所持品は喪失。拠点・納品済み台帳・解放深度は引き継がれます。' : nextMissing;
+  document.getElementById('res-rank').textContent = isCont ? rank : (isMp ? `TEAM ${rank}` : (!returned ? `派遣 #${loadV10Base().employeeId}` : rank));
+  document.getElementById('res-next-rank').textContent = isCont
+    ? `開始深度 ${continuousSummary.startDepth} → 到達深度 ${continuousSummary.reachedDepth} / 送信済カット ×${continuousSummary.cutsSent}・資料 ×${continuousSummary.docsSent}（台帳に保存済。現物サンプル ×${lostSamples} は喪失）`
+    : ((!isMp && !returned) ? '未納品の成果物と所持品は喪失。拠点・納品済み台帳・解放深度は引き継がれます。' : nextMissing);
 
   const tipEl = document.getElementById('res-death-tip');
   if (!returned && state.lastDamageSource && NON_ENTITY_DEATH_TIPS[state.lastDamageSource]) {
@@ -11423,11 +12375,12 @@ function showResultScreen(outcome, reason, remoteRunEnd = null) {
     tipEl.style.display = 'none';
   }
 
-  document.getElementById('res-depth').textContent = depthForRank;
+  document.getElementById('res-depth').textContent = isCont ? `${continuousSummary.startDepth}→${continuousSummary.reachedDepth}` : depthForRank;
   document.getElementById('res-dist').textContent = Math.floor(state.totalDist) + ' m';
-  const mins = String(Math.floor(state.runTime / 60)).padStart(2, '0'), secs = String(Math.floor(state.runTime % 60)).padStart(2, '0');
+  const runSec = isCont ? (continuousSummary.timeSec || 0) : state.runTime;
+  const mins = String(Math.floor(runSec / 60)).padStart(2, '0'), secs = String(Math.floor(runSec % 60)).padStart(2, '0');
   document.getElementById('res-time').textContent = `${mins}:${secs}`;
-  document.getElementById('res-samples').textContent = `確定${confirmedForRank} / 喪失${lostSamples}`;
+  document.getElementById('res-samples').textContent = isCont ? `送信カット${continuousSummary.cutsSent} / 喪失標本${lostSamples}` : `確定${confirmedForRank} / 喪失${lostSamples}`;
   const ents = state.runEntitiesSeen.size ? Array.from(state.runEntitiesSeen).join(' / ') : 'なし';
   const lvls = Array.from(state.runLevelsVisited).join(' → ');
   document.getElementById('res-summary').innerHTML = `<b>現場：</b>${lvls}<br><b>遭遇エンティティ：</b>${ents}<br><b>拠点安定度：</b>${Math.round(loadV10Base().stability)} / 100`;
@@ -11513,7 +12466,7 @@ function openCodex() {
 
   const logsEl = document.getElementById('logs-list'); logsEl.innerHTML = '';
   const clueBox = document.createElement('div'); clueBox.className = 'codex-item hint';
-  const unlockedClues = WHITE_DOOR_CLUES.map(c => rec.logsCollected.size >= c.need ? `✓ ${c.text}` : `🔒 記録 ${c.need}個収集で開示`).join('<br>');
+  const unlockedClues = WHITE_DOOR_CLUES.map(c => rec.logsCollected.size >= c.need ? `✓ ${c.text}` : `[未解放] 記録 ${c.need}個収集で開示`).join('<br>');
   clueBox.innerHTML = `<div class="codex-info"><div class="codex-head"><span class="codex-name" style="color:#ffffff;">白い扉の追跡手がかり（記録 ${rec.logsCollected.size}/16）</span></div><div class="codex-desc">${unlockedClues}</div></div>`;
   logsEl.appendChild(clueBox);
   for (const lg of MEG_LOGS) {
@@ -11525,19 +12478,19 @@ function openCodex() {
   }
   if (rec.logsCollected.size >= MEG_LOGS.length) {
     const fin = document.createElement('div'); fin.className = 'codex-item seen'; fin.style.borderColor = '#ffe47a';
-    fin.innerHTML = `<div class="codex-info"><div class="codex-head"><span class="codex-name" style="color:#ffe47a;">★ ${FINAL_MEG_LOG.title}</span><span class="codex-tag ok">全収集特典</span></div><div class="codex-desc" style="color:#efe8d0;">${FINAL_MEG_LOG.body}</div></div>`;
+    fin.innerHTML = `<div class="codex-info"><div class="codex-head"><span class="codex-name" style="color:#ffe47a;">[*] ${FINAL_MEG_LOG.title}</span><span class="codex-tag ok">全収集特典</span></div><div class="codex-desc" style="color:#efe8d0;">${FINAL_MEG_LOG.body}</div></div>`;
     logsEl.prepend(fin);
   }
 
   const achEl = document.getElementById('ach-list'); achEl.innerHTML = '';
   const achCnt = rec.achievements.size;
   const perks = document.createElement('div'); perks.className = 'codex-item hint';
-  perks.innerHTML = `<div class="codex-info"><div class="codex-head"><span class="codex-name">永続アンロック特典（実績 ${achCnt}/10・最高ランク ${rec.bestRank||'D'}）</span></div><div class="codex-desc">• 実績2個：VHS アンバー＆ストライプ柄解放 ${achCnt>=2?'✓':'🔒'}<br>• 実績3個：開始時 乾電池+1 / アーモンド水+1 ＆ バイオレットスーツ解放 ${achCnt>=3?'✓':'🔒'}<br>• 深度10到達：カモ柄解放 ${Math.max(rec.bestDepth||0,rec.bestCollapseDepth||0)>=10?'✓':'🔒'}<br>• S+ クリア：ゴールドアクセント解放 ${(rec.bestRank==='S+')?'✓':'🔒'}</div></div>`;
+  perks.innerHTML = `<div class="codex-info"><div class="codex-head"><span class="codex-name">永続アンロック特典（実績 ${achCnt}/10・最高ランク ${rec.bestRank||'D'}）</span></div><div class="codex-desc">• 実績2個：VHS アンバー＆ストライプ柄解放 ${achCnt>=2?'✓':'[未解放]'}<br>• 実績3個：開始時 乾電池+1 / アーモンド水+1 ＆ バイオレットスーツ解放 ${achCnt>=3?'✓':'[未解放]'}<br>• 深度10到達：カモ柄解放 ${Math.max(rec.bestDepth||0,rec.bestCollapseDepth||0)>=10?'✓':'[未解放]'}<br>• S+ クリア：ゴールドアクセント解放 ${(rec.bestRank==='S+')?'✓':'[未解放]'}</div></div>`;
   achEl.appendChild(perks);
   for (const a of ACHIEVEMENTS) {
     const ok = rec.achievements.has(a.id);
     const d = document.createElement('div'); d.className = 'codex-item' + (ok ? ' seen' : '');
-    d.innerHTML = `<div class="codex-info"><div class="codex-head"><span class="codex-name">${ok?'🏆 ':'🔒 '}${a.name}</span><span class="codex-tag ${ok?'ok':''}">${ok?'達成':'未達成'}</span></div><div class="codex-desc">${a.desc}</div></div>`;
+    d.innerHTML = `<div class="codex-info"><div class="codex-head"><span class="codex-name">${ok?'[実績] ':'[未解放] '}${a.name}</span><span class="codex-tag ${ok?'ok':''}">${ok?'達成':'未達成'}</span></div><div class="codex-desc">${a.desc}</div></div>`;
     achEl.appendChild(d);
   }
 
@@ -11567,7 +12520,7 @@ function populateStartLevelSelect() {
     const unlocked = settings.unlockAllLevels || rec.discovered.has(lv.id);
     const o = document.createElement('option'); o.value = String(lv.id);
     o.disabled = !unlocked;
-    o.textContent = unlocked ? `${lv.code}: ${lv.name}` : `🔒 ${lv.code}: ??? (到達で解放)`;
+    o.textContent = unlocked ? `${lv.code}: ${lv.name}` : `[未解放] ${lv.code}: ??? (到達で解放)`;
     sel.appendChild(o);
   }
   if (prev && [...sel.options].some(o => o.value === prev && !o.disabled)) sel.value = prev;
@@ -11586,7 +12539,7 @@ function populateSkinSelectors() {
       const unlocked = isSkinOptionUnlocked(opt, rec);
       const o = document.createElement('option');
       o.value = opt.id; o.disabled = !unlocked;
-      o.textContent = unlocked ? opt.name : `🔒 ${opt.name}`;
+      o.textContent = unlocked ? opt.name : `[未解放] ${opt.name}`;
       el.appendChild(o);
     }
     el.value = cur;
@@ -11609,7 +12562,7 @@ function syncSettingsUI() {
   document.getElementById('set-volume').value = settings.volume;
   document.getElementById('val-volume').textContent = settings.volume + '%';
   document.getElementById('set-mute').checked = settings.muted;
-  document.getElementById('btn-audio-toggle').textContent = settings.muted ? '🔇' : '🔊';
+  document.getElementById('btn-audio-toggle').textContent = settings.muted ? 'MUTE' : 'SND';
   document.getElementById('set-collapse').checked = settings.seedCollapse;
   document.getElementById('set-battery').checked = settings.batteryEnabled;
   document.getElementById('set-unlock-all').checked = settings.unlockAllLevels;
@@ -11729,7 +12682,7 @@ function mpMarkPeerDisconnected(id) {
   if (p.disconnected) return;
   p.disconnected = true; p.reconnectTimer = 30.0; p.conn = null; p.movedDist = 0;
   mpExitWaiters.delete(id);
-  showToast(`⚠ ${p.name || '仲間'} が切断しました（30秒間その場で再接続を待機します）`);
+  showToast(`[!] ${p.name || '仲間'} が切断しました（30秒間その場で再接続を待機します）`);
   mpUpdateLobbyPeers();
 }
 function mpRemovePeer(id, timedOut = false) {
@@ -11765,7 +12718,7 @@ function mpCleanup(returnToTitle = false, notice = '') {
     state.playing = false; if (state.hide.active) exitHideSpot();
     document.getElementById('hud').classList.remove('active');
     document.getElementById('cam-chrome').classList.remove('active');
-    document.getElementById('mobile-ui').classList.remove('show');
+    refreshMobileUIVisibility(); // V10.2.0 B: unified visibility sync on every state.playing transition
     document.getElementById('title-screen').style.display = 'flex';
   }
   if (notice) { mpSetStatus(notice); showToast(notice); }
@@ -11790,7 +12743,7 @@ function mpApplyRemoteTask(taskKind) {
     return;
   } else if (taskKind === 'keycard') {
     state.questKeys++;
-    if (lv.task.type === 'keycard' && state.questKeys >= lv.task.target) { state.taskDone = true; showToast('★ 仲間がキーカードを回収！出口が開錠された！'); }
+    if (lv.task.type === 'keycard' && state.questKeys >= lv.task.target) { state.taskDone = true; showToast('[*] 仲間がキーカードを回収！出口が開錠された！'); }
     else showToast('仲間がキーカードを回収した');
   } else if (taskKind === 'fuse') {
     state.questFuses++;
@@ -11825,7 +12778,7 @@ function mpHandleMessage(fromId, msg) {
         p.tx = resumedFrom.tx; p.ty = resumedFrom.ty; p.tz = resumedFrom.tz;
         p.downed = resumedFrom.downed; p.carriedBy = resumedFrom.carriedBy;
         if (p.avatar) p.avatar.position.set(p.tx, p.ty, p.tz);
-        showToast(`★ ${p.name} が再接続して探索に復帰した！`);
+        showToast(`[*] ${p.name} が再接続して探索に復帰した！`);
       }
       // Send authoritative world state to newly joined / reconnected guest!
       p.conn && p.conn.send({
@@ -11932,7 +12885,7 @@ function mpHandleMessage(fromId, msg) {
           // V9 §2-4 Seamless reconnect: keep local inventory/samples/HP & restore exact position!
           state.pos.x = msg.resumeState.tx; state.pos.z = msg.resumeState.tz; state.floorY = msg.resumeState.ty || 0;
           if (msg.resumeState.downed && !state.downed) enterDownedState('復帰時ダウン継続');
-          showToast('★ ホストへ再接続し、元の状態のまま探索を再開した！');
+          showToast('[*] ホストへ再接続し、元の状態のまま探索を再開した！');
         } else {
           startGame(false, msg.levelIdx, true, msg.depth || 1);
           if (msg.reconnected && msg.resumeState) {
@@ -12086,7 +13039,7 @@ function placeWorldPin() {
   const oid = mp.myId || 'local';
   spawnWorldPin(oid, mp.myName || 'You', px, state.floorY, pz);
   if (mp.active) mpBroadcastOrSend({ type: 'pin', id: oid, name: mp.myName || 'Peer', x: +px.toFixed(2), y: +state.floorY.toFixed(2), z: +pz.toFixed(2) });
-  showToast('📍 10秒間ピンを設置しました（全員に表示）');
+  showToast('[PIN] 10秒間ピンを設置しました（全員に表示）');
 }
 
 function mpCreateRoom() {
@@ -12547,34 +13500,11 @@ for (let i = 0; i < 7; i++) bindTouchBtn('slot-' + i, () => useInventorySlot(i))
 
 function syncVitalsLayout() {
   const hud = document.getElementById('hud');
-  const tl = document.querySelector('.hud-top-left');
   const vb = document.getElementById('hud-vitals-box');
-  if (!hud || !tl || !vb) return;
-  const expanded = !vb.classList.contains('collapsed');
-  hud.classList.toggle('vitals-expanded', expanded);
-  if (window.innerWidth > 860) {
-    vb.style.top = ''; vb.style.bottom = ''; vb.style.left = ''; vb.style.right = '';
-    return;
-  }
-  if (!expanded) {
-    vb.style.top = ''; vb.style.bottom = ''; vb.style.left = ''; vb.style.right = '';
-    return;
-  }
-  const tlRect = tl.getBoundingClientRect();
-  const vbH = vb.offsetHeight || 128;
-  const safeTop = Math.ceil(tlRect.bottom + 6);
-  const pulseClearance = (isTouchDevice || settings.forceTouchUI) ? 235 : 24;
-  if (safeTop + vbH < window.innerHeight - pulseClearance) {
-    vb.style.top = safeTop + 'px';
-    vb.style.bottom = 'auto';
-    vb.style.left = '10px';
-    vb.style.right = 'auto';
-  } else {
-    vb.style.top = '106px';
-    vb.style.bottom = 'auto';
-    vb.style.left = 'auto';
-    vb.style.right = '10px';
-  }
+  if (!hud || !vb) return;
+  // V10.2.0 H-2: .hud-left-col stacks info panel & vitals box in normal flex column flow => NEVER override with fixed top/left/right!
+  hud.classList.toggle('vitals-expanded', !vb.classList.contains('collapsed'));
+  vb.style.top = ''; vb.style.bottom = ''; vb.style.left = ''; vb.style.right = '';
 }
 
 (() => {
@@ -12602,93 +13532,125 @@ function updateHUDText() {
   document.getElementById('hud-level-code').textContent = lv.code;
   document.getElementById('hud-level-name').textContent = lv.name;
   document.getElementById('hud-depth').textContent = lv.isOutpost ? `解放 1-${base.unlockedDepth}` : `深度 ${state.depth}`;
+  const seedText = settings.seedCollapse ? 'COLLAPSED' : (state.isDailyRun ? 'DAILY' : String(state.seed));
   const seedEl = document.getElementById('hud-seed');
-  if (settings.seedCollapse) { seedEl.textContent = 'SEED: COLLAPSED'; seedEl.classList.add('collapsed'); }
-  else { seedEl.textContent = state.isDailyRun ? 'DAILY' : `SEED: ${state.seed}`; seedEl.classList.remove('collapsed'); }
+  if (seedEl) { seedEl.textContent = `SEED: ${seedText}`; seedEl.classList.toggle('collapsed', !!settings.seedCollapse); }
+  const pauseSeedEl = document.getElementById('pause-seed-val');
+  if (pauseSeedEl) pauseSeedEl.textContent = seedText;
   const soloDisc = Array.from(state.discovered).filter(id => isSoloPlayableLevel(id)).length;
   document.getElementById('hud-disc').textContent = `発見: ${soloDisc}/${SOLO_LEVEL_COUNT}`;
-  document.getElementById('hud-samples').textContent = `サンプル ×${state.confirmedSamples}（未確定 ×${state.unconfirmedSamples}）`;
 
-  // V10.0.0 F & C: Stability, Employee ID, Research Docs & Captured Cuts HUD
+  // V10.0.0 F & C + V10.2.0 E-5: Stability, Employee ID & Continuous Dispatch Badge
   const stabEl = document.getElementById('hud-stability');
   if (stabEl) {
     const sv = Math.round(base.stability);
-    stabEl.textContent = `拠点安定度 ${sv}/100`;
+    stabEl.textContent = `安定度 ${sv}/100`;
     stabEl.classList.toggle('low', sv <= 30 && sv > 0);
     stabEl.classList.toggle('crit', sv <= 0);
   }
   const empEl = document.getElementById('hud-emp');
   if (empEl) empEl.textContent = `派遣 #${base.employeeId}`;
-  const docsEl = document.getElementById('hud-docs');
-  if (docsEl) docsEl.textContent = `資料 ×${state.shiftDocs.length} / 撮影カット ×${state.shiftCuts.length}${state.shiftAnomalies.length ? ` / 異常 ×${state.shiftAnomalies.length}` : ''}`;
+  const contEl = document.getElementById('hud-cont-badge');
+  if (contEl) {
+    if (state.continuousMode && !lv.isOutpost) {
+      const ct = Math.floor(state.continuousTime || 0);
+      const cm = String(Math.floor(ct / 60)).padStart(2, '0');
+      const cs = String(ct % 60).padStart(2, '0');
+      contEl.textContent = `[連続派遣] 深度${state.depth} ${cm}:${cs}`;
+      contEl.classList.add('show');
+    } else {
+      contEl.classList.remove('show');
+    }
+  }
 
+  // V10.2.0 H-2: Samples + Docs/Cuts merged on 1 line with short inline risk suffix
+  const sampEl = document.getElementById('hud-samples');
+  if (sampEl) {
+    sampEl.textContent = state.unconfirmedSamples > 0
+      ? `標本×${state.confirmedSamples}(+${state.unconfirmedSamples})`
+      : `標本×${state.confirmedSamples}`;
+  }
+  const docsEl = document.getElementById('hud-docs');
+  if (docsEl) {
+    const docCnt = state.continuousMode ? (state.continuousDocsSent || 0) : state.shiftDocs.length;
+    const cutCnt = state.continuousMode ? (state.continuousCutsSent || 0) : state.shiftCuts.length;
+    docsEl.textContent = `資料×${docCnt}・撮影×${cutCnt}`;
+  }
   const riskEl = document.getElementById('hud-sample-risk');
   if (riskEl) {
     if (state.unconfirmedSamples > 0) {
       const noisePct = Math.min(48, state.unconfirmedSamples * 8);
-      const speedPct = Math.min(15, state.unconfirmedSamples * 2.5).toFixed(1);
-      riskEl.textContent = `⚠ 携行リスク：聴覚感知 +${noisePct}% / 移動 -${speedPct}%`;
-      riskEl.style.display = 'block';
+      const speedPct = Math.min(15, state.unconfirmedSamples * 2.5).toFixed(0);
+      riskEl.textContent = `音+${noisePct}% 速-${speedPct}%`;
     } else {
       riskEl.textContent = '';
-      riskEl.style.display = 'none';
     }
   }
   syncVitalsLayout();
 }
 
-// V10.0.0 P-2: Directional Objective Indicator (points to nearest remaining control panel/fuse, Core, or Return Door!)
+// V10.2.0 C: Nerfed Objective Indicator (NO meter distances anywhere; NO bearing for panels/fuses or locked doors;
+// 8-direction bearing ONLY for unlocked return/next-depth door and Depth 20 Core; Outpost guidance preserved; K-6 zero emoji).
+function formatBearing8(tx, tz) {
+  const angTo = Math.atan2(-(tx - state.pos.x), -(tz - state.pos.z));
+  const diff = Math.atan2(Math.sin(angTo - getActiveViewYaw()), Math.cos(angTo - getActiveViewYaw()));
+  const deg = diff * (180 / Math.PI);
+  if (deg > 22.5 && deg <= 67.5) return '↖ 左前';
+  if (deg > 67.5 && deg <= 112.5) return '← 左';
+  if (deg > 112.5 && deg <= 157.5) return '↙ 左後';
+  if (deg < -22.5 && deg >= -67.5) return '↗ 右前';
+  if (deg < -67.5 && deg >= -112.5) return '→ 右';
+  if (deg < -112.5 && deg >= -157.5) return '↘ 右後';
+  if (Math.abs(deg) > 157.5) return '↓ 後方';
+  return '↑ 前方';
+}
 function updateObjectiveDirIndicator() {
   const el = document.getElementById('obj-dir-indicator');
   if (!el) return;
   const lv = getActiveLevel();
   if (lv.isOutpost) {
     el.style.display = 'block';
-    el.textContent = '🧭 端末で依頼・深度を選び、南の扉から出勤';
+    el.textContent = '[案内] 端末で依頼・深度を選び、南の扉から出勤';
     return;
   }
-  let target = null, targetName = '';
-  let bestD = 9999;
+  // Depth 20 Core: bearing only, no distance
   if (lv.isCore && !state.shiftCoreShot) {
-    chunks.forEach(ch => {
-      if (ch.coreObj) { target = ch.coreObj; targetName = '◈ 核（CORE）'; bestD = Math.hypot(ch.coreObj.x - state.pos.x, ch.coreObj.z - state.pos.z); }
-    });
-  } else if (!state.taskDone && lv.task && (lv.task.type === 'breaker' || lv.task.type === 'fuse')) {
-    const wantType = lv.task.type === 'fuse' ? 'fuse' : 'control_panel';
-    chunks.forEach(ch => {
-      for (const it of ch.interactables) {
-        if (it.used) continue;
-        if (it.type === wantType || (wantType === 'control_panel' && it.type === 'breaker')) {
-          const d = Math.hypot(it.x - state.pos.x, it.z - state.pos.z);
-          if (d < bestD) { bestD = d; target = it; targetName = wantType === 'fuse' ? '⚡ ヒューズ' : '⚡ 制御盤'; }
-        }
-      }
-    });
+    let coreObj = null;
+    chunks.forEach(ch => { if (ch.coreObj) coreObj = ch.coreObj; });
+    if (coreObj) {
+      el.style.display = 'block';
+      el.textContent = `[核] ${formatBearing8(coreObj.x, coreObj.z)}`;
+      return;
+    }
   }
-  if (!target) {
-    chunks.forEach(ch => {
-      for (const it of ch.interactables) {
-        if (it.used || it.type !== 'exit') continue;
-        const d = Math.hypot(it.x - state.pos.x, it.z - state.pos.z);
-        if (d < bestD) { bestD = d; target = it; targetName = state.taskDone || lv.isCore ? '🚪 帰還の扉' : '🚪 帰還の扉(施錠)'; }
-      }
-    });
+  // Control panels / fuses: status text ONLY (no bearing, no distance)
+  if (!state.taskDone && lv.task && (lv.task.type === 'breaker' || lv.task.type === 'fuse')) {
+    const label = lv.task.type === 'fuse' ? 'ヒューズ' : '制御盤';
+    el.style.display = 'block';
+    el.textContent = `[${label}] 探索中`;
+    return;
   }
+  // Return door / Next-depth door: locked => no bearing; unlocked => 8-direction bearing only, no distance
+  const doorLabel = state.continuousMode ? '次深度の扉' : '帰還の扉';
+  if (!state.taskDone && !lv.isCore) {
+    el.style.display = 'block';
+    el.textContent = `[${doorLabel}] 施錠中`;
+    return;
+  }
+  let target = null, bestD = 9999;
+  chunks.forEach(ch => {
+    for (const it of ch.interactables) {
+      if (it.used || it.type !== 'exit') continue;
+      const d = Math.hypot(it.x - state.pos.x, it.z - state.pos.z);
+      if (d < bestD) { bestD = d; target = it; }
+    }
+  });
   if (!target) {
     el.style.display = 'none';
     return;
   }
-  const angTo = Math.atan2(-(target.x - state.pos.x), -(target.z - state.pos.z));
-  const diff = Math.atan2(Math.sin(angTo - getActiveViewYaw()), Math.cos(angTo - getActiveViewYaw()));
-  const deg = diff * (180 / Math.PI);
-  let arrow = '↑ 前方';
-  if (deg > 25 && deg <= 75) arrow = '↖ 左前';
-  else if (deg > 75 && deg <= 135) arrow = '← 左';
-  else if (deg < -25 && deg >= -75) arrow = '↗ 右前';
-  else if (deg < -75 && deg >= -135) arrow = '→ 右';
-  else if (Math.abs(deg) > 135) arrow = '↓ 後方';
   el.style.display = 'block';
-  el.textContent = `🧭 ${targetName}: ${arrow} (${Math.round(bestD)}m)`;
+  el.textContent = `[${doorLabel}] ${formatBearing8(target.x, target.z)}`;
 }
 const INV_REAL_NAMES = ['アーモンド水', '携帯食料', '救急キット', 'モスゼリー', '乾電池', 'ピック', 'ボール'];
 const INV_GARBLED = ['ｱｰﾓﾝﾄﾞ#ERR', '食料?0x4F', '救%急K!T', 'ﾓｽ_NULL', '電#池_666', 'ﾋﾟｯｸ_ERR', 'ﾎﾞｰﾙ_NULL'];
@@ -12726,7 +13688,7 @@ function updateSignalStrip() {
         if (t.kind === 'white') label = '◆白い扉';
         else if (t.kind === 'glitch') label = '◆ERR_EXIT??m';
         else if (t.kind === 'exit') label = `◆EXIT ${dist}m`;
-        else if (t.kind === 'panel') { cls = 'supply'; label = `⚡制御盤 ${dist}m`; }
+        else if (t.kind === 'panel') { cls = 'supply'; label = `[電]制御盤 ${dist}m`; }
         items.push({ pct, cls, label });
       }
     }
@@ -12735,7 +13697,7 @@ function updateSignalStrip() {
     const ang = Math.atan2(-(pin.x-state.pos.x), -(pin.z-state.pos.z)), diff = norm(ang - viewYaw);
     if (Math.abs(diff) < 1.15) {
       const pct = 50 - (diff/1.15)*50, dist = Math.round(Math.hypot(pin.x-state.pos.x, pin.z-state.pos.z));
-      items.push({ pct, cls: 'pin', label: `📍${dist}m` });
+      items.push({ pct, cls: 'pin', label: `[PIN]${dist}m` });
     }
   }
   items.sort((a, b) => a.pct - b.pct);
@@ -12873,7 +13835,7 @@ function animate(now) {
         lowFpsStreak = 0;
         const nextTier = autoPerfTier + 1;
         applyAutoPerfTier(nextTier);
-        if (nextTier === 2) showToast('⚙ FPS低下を検知：影・解像度を自動軽量化しました');
+        if (nextTier === 2) showToast('[SYS] FPS低下を検知：影・解像度を自動軽量化しました');
       }
     } else {
       lowFpsStreak = Math.max(0, lowFpsStreak - 1);
@@ -12884,6 +13846,7 @@ function animate(now) {
   if (state.paused || state.settingsOpen || state.codexOpen || state.terminalOpen || state.endingOpen || (state.bagOpen && !isMpActive())) { renderer.render(scene, camera); return; }
 
   state.elapsed += dt; state.runTime += dt;
+  if (state.continuousMode && !state.inOutpost) state.continuousTime = (state.continuousTime || 0) + dt;
   const lv = getActiveLevel();
   if (state.pulseTimer > 0) state.pulseTimer = Math.max(0, state.pulseTimer - dt);
   if (state.blackoutTimer > 0) state.blackoutTimer = Math.max(0, state.blackoutTimer - dt);
@@ -12921,14 +13884,14 @@ function animate(now) {
     if (lv.isOutpost) {
       const curStab = loadV10Base().stability;
       if (curStab <= 0) {
-        outpostWarn = '⚠ 拠点安定度 0：保護消失 — エンティティ侵入中！（端末操作と納品は可能）';
+        outpostWarn = '[!] 拠点安定度 0：保護消失 — エンティティ侵入中！（端末操作と納品は可能）';
         if (!state.outpostIntruderSpawned && state.horrorMode && settings.entityFreq !== 'none') {
           state.outpostIntruderSpawned = true;
           spawnEntity('bacteria', { x: 0, z: -4.2 });
-          showToast('⚠ 拠点の保護が消失！エンティティが拠点内に侵入した！（端末で出勤・納品すれば回復可能）');
+          showToast('[!] 拠点の保護が消失！エンティティが拠点内に侵入した！（端末で出勤・納品すれば回復可能）');
         }
       } else if (curStab <= 30) {
-        outpostWarn = `⚠ 拠点安定度低下（${Math.round(curStab)}/100）：照明不安定 — 成果物を納品せよ`;
+        outpostWarn = `[!] 拠点安定度低下（${Math.round(curStab)}/100）：照明不安定 — 成果物を納品せよ`;
       }
     }
   }
@@ -12951,7 +13914,7 @@ function animate(now) {
       state.blackoutTimer = 3.2;
       state.variantBlackoutCd = 18 + Math.random() * 14;
       sound.playSwitch();
-      showToast('⚡ 過負荷により区画が一時停電した！');
+      showToast('[電] 過負荷により区画が一時停電した！');
     }
   }
   if (lv.arch === 'subway_station') {
@@ -13057,7 +14020,7 @@ function animate(now) {
 
     if (lv.task && lv.task.type === 'quiet' && !state.taskDone && state.crouching) {
       state.taskProgress += stepDist;
-      if (state.taskProgress >= lv.task.target) { state.taskDone = true; showToast('★ 静寂区間の通過完了！帰還扉が解錠された！'); }
+      if (state.taskProgress >= lv.task.target) { state.taskDone = true; showToast('[*] 静寂区間の通過完了！帰還扉が解錠された！'); }
       updateObjectiveUI();
     }
 
@@ -13311,6 +14274,14 @@ function animate(now) {
     document.getElementById('battery-val').textContent = Math.ceil(state.battery) + '%';
     document.getElementById('stamina-val').textContent = Math.ceil(state.stamina);
     document.getElementById('hud-dist').textContent = `${Math.floor(state.totalDist)} m`;
+    if (state.continuousMode && !lv.isOutpost) {
+      const cEl = document.getElementById('hud-cont-badge');
+      if (cEl) {
+        const ct = Math.floor(state.continuousTime || 0);
+        cEl.textContent = `[連続派遣] 深度${state.depth} ${String(Math.floor(ct / 60)).padStart(2, '0')}:${String(ct % 60).padStart(2, '0')}`;
+        cEl.classList.add('show');
+      }
+    }
 
     const ring = document.getElementById('dash-ring-fill');
     if (ring) { ring.setAttribute('stroke-dashoffset', (226.19*(1-state.stamina/100)).toFixed(1)); ring.setAttribute('stroke', state.exhausted ? '#ff6464' : '#ffe57f'); }
@@ -13322,17 +14293,17 @@ function animate(now) {
     if (warnText) { hw.textContent = warnText; hw.style.display = 'block'; } else hw.style.display = 'none';
 
     const GROUND_PICKUP_INFO = {
-      document: { ico: '📄', name: '研究資料' },
-      almond: { ico: '💧', name: 'アーモンドウォーター' },
-      food: { ico: '🥫', name: '携帯食料' },
-      medkit: { ico: '🩹', name: '救急キット' },
-      jelly: { ico: '🍯', name: 'モスゼリー' },
-      battery: { ico: '🔋', name: '乾電池' },
-      lockpick: { ico: '🧷', name: 'ピック' },
-      ball: { ico: '⚾', name: 'ボール' },
-      fuse: { ico: '⚡', name: '電源ヒューズ' },
-      sample: { ico: '✦', name: '特異点サンプル' },
-      heavy_sample: { ico: '📦', name: '重量サンプル' }
+      document: { ico: '紙', name: '研究資料' },
+      almond: { ico: '水', name: 'アーモンドウォーター' },
+      food: { ico: '食', name: '携帯食料' },
+      medkit: { ico: '救', name: '救急キット' },
+      jelly: { ico: '蜜', name: 'モスゼリー' },
+      battery: { ico: '電', name: '乾電池' },
+      lockpick: { ico: '針', name: 'ピック' },
+      ball: { ico: '球', name: 'ボール' },
+      fuse: { ico: '盤', name: '電源ヒューズ' },
+      sample: { ico: '標', name: '特異点サンプル' },
+      heavy_sample: { ico: '重', name: '重量サンプル' }
     };
     const hit = getBestInteractable(), pr = document.getElementById('interact-prompt'), ch = document.getElementById('crosshair');
     const chip = document.getElementById('pickup-chip'), chipIco = document.getElementById('pickup-chip-ico'), chipName = document.getElementById('pickup-chip-name');
@@ -13418,7 +14389,7 @@ document.getElementById('set-title-btn').addEventListener('click', () => {
   if (state.hide.active) exitHideSpot(); state.playing = false;
   document.getElementById('hud').classList.remove('active');
   document.getElementById('cam-chrome').classList.remove('active');
-  document.getElementById('mobile-ui').classList.remove('show');
+  refreshMobileUIVisibility(); // V10.2.0 B: unified visibility sync on every state.playing transition
   document.getElementById('title-screen').style.display = 'flex';
   refreshTitleRecords();
 });
@@ -13537,6 +14508,7 @@ function startGame(newRandomSeed = false, forcedLevel = null, keepMp = false, fo
   state.runEntitiesSeen = new Set(); state.runLevelsVisited = new Set([LEVELS[startLv].code]);
   state.anomaliesSeen = 0; state.discovered = new Set(loadRecords().discovered); state.discovered.add(startLv);
   state.playing = true; state.paused = false; state.noteOpen = false; state.settingsOpen = false; state.codexOpen = false; state.terminalOpen = false; state.endingOpen = false;
+  refreshMobileUIVisibility(); // V10.2.0 B
   state.flashlightOn = true;
 
   document.getElementById('title-screen').style.display = 'none';
@@ -13573,6 +14545,7 @@ document.getElementById('res-continue-btn').addEventListener('click', () => {
   document.getElementById('hud').classList.add('active');
   if (!isMpActive()) { enterOutpost(null); return; }
   state.playing = true; state.infiniteAfterEscape = true;
+  refreshMobileUIVisibility(); // V10.2.0 B
   state.depth++; state.sanity = 100; state.hp = 100;
   syncSettingsUI(); enterLevel(0, true, '無限モード継続 // 深度 ' + state.depth);
 });
