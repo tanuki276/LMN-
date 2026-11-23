@@ -856,6 +856,10 @@
     #cam-action-wrap { right: 12px; bottom: max(196px, calc(env(safe-area-inset-bottom) + 190px)); }
     #cam-btn { width: 64px; height: 64px; font-size: 21px; }
   }
+  /* V10.0.1 Fix-2: Touch layout (same condition that shows #mobile-arc: isTouchDevice || forceTouchUI)
+     => lift camera above "調べる" (#m-use) at ANY width (e.g. tablet landscape 1180px).
+     Mouse/PC layout (no .touch-layout class) keeps the default right:16px / bottom:16px. */
+  body.touch-layout #cam-action-wrap { right: 12px; bottom: max(196px, calc(env(safe-area-inset-bottom) + 190px)); }
 
   /* B-5 Corner Thumbnail Flash */
   #cam-thumb-pop {
@@ -1440,7 +1444,7 @@
 <div id="title-screen">
   <div class="card">
     <div class="tag">
-      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V10.0.0</span>
+      <span id="title-ver-tag">FOUND FOOTAGE SURVIVAL HORROR // V10.0.1</span>
       <span class="escape-badge" id="title-escape-badge">★ 核の記録完了</span>
     </div>
     <h1>Like Homes</h1>
@@ -1496,7 +1500,7 @@
     <div id="model-load-status" style="font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;min-height:14px;"></div>
 
     <div class="credits-bar">
-      <span id="credits-ver">Like Homes // V10.0.0</span>
+      <span id="credits-ver">Like Homes // V10.0.1</span>
       <span>CREDITS: LIKE HOMES PROJECT (THREE.JS / PEERJS)</span>
     </div>
   </div>
@@ -1538,7 +1542,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V10.0.0';
+const VERSION = 'V10.0.1';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -4128,6 +4132,30 @@ function addPart(parent, geo, mat, sx, sy, sz, px, py, pz, rx = 0, ry = 0, rz = 
   parent.add(m); return m;
 }
 
+// V10.0.1 Fix-1: Skeleton-aware GLB clone.
+// Object3D.clone(true) keeps SkinnedMesh bound to the TEMPLATE skeleton (whose bones are never in the scene,
+// so their world matrices never update => all vertices collapse into a tiny blob). This helper clones the
+// hierarchy, maps every source node to its cloned counterpart (same traversal order), then rebinds each cloned
+// SkinnedMesh to a NEW THREE.Skeleton built from the cloned bones (boneInverses duplicated).
+function cloneGlbWithSkeleton(source) {
+  const clone = source.clone(true);
+  const srcNodes = [], dstNodes = [];
+  source.traverse(n => srcNodes.push(n));
+  clone.traverse(n => dstNodes.push(n));
+  const nodeMap = new Map();
+  for (let i = 0; i < srcNodes.length && i < dstNodes.length; i++) nodeMap.set(srcNodes[i], dstNodes[i]);
+  for (let i = 0; i < srcNodes.length && i < dstNodes.length; i++) {
+    const srcMesh = srcNodes[i], dstMesh = dstNodes[i];
+    if (!srcMesh.isSkinnedMesh || !dstMesh.isSkinnedMesh || !srcMesh.skeleton) continue;
+    const srcSkel = srcMesh.skeleton;
+    const newBones = srcSkel.bones.map(b => nodeMap.get(b) || b);
+    const newInverses = srcSkel.boneInverses.map(m => m.clone());
+    const newSkeleton = new THREE.Skeleton(newBones, newInverses);
+    dstMesh.bind(newSkeleton, srcMesh.bindMatrix.clone());
+  }
+  return clone;
+}
+
 const PropFactory = {
   mats: {},
   init() {
@@ -5633,7 +5661,7 @@ const PropFactory = {
         const r = new THREE.Group();
         const ang = (i / 6) * Math.PI * 2, rad = 0.22 + (i % 2) * 0.16;
         r.position.set(Math.cos(ang)*rad, 0, Math.sin(ang)*rad);
-        const clone = tmpl.clone(true);
+        const clone = cloneGlbWithSkeleton(tmpl);
         this.applyGlbTint(clone, tintHex);
         this.normalizeGlbClone(clone, baseScale, yawRad, 0.22);
         const mx = this.attachGlbMixer(clone, clips);
@@ -5647,7 +5675,7 @@ const PropFactory = {
       return root;
     }
 
-    const clone = tmpl.clone(true);
+    const clone = cloneGlbWithSkeleton(tmpl);
     this.applyGlbTint(clone, tintHex);
     this.normalizeGlbClone(clone, baseScale, yawRad, colliderRad);
     const mx = this.attachGlbMixer(clone, clips);
@@ -12260,6 +12288,8 @@ let mobileDashHeld = false, mobileDashToggle = false, mouseDragging = false, las
 
 function refreshMobileUIVisibility() {
   document.getElementById('mobile-ui').classList.toggle('show', state.playing && (isTouchDevice || settings.forceTouchUI));
+  // V10.0.1 Fix-2: same condition as the mobile arc => camera button lifts above "調べる" at any screen width
+  document.body.classList.toggle('touch-layout', !!(isTouchDevice || settings.forceTouchUI));
 }
 
 // §8-2 Auto-pause when mobile app goes to background!
