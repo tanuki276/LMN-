@@ -1818,7 +1818,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V10.2.0';
+const VERSION = 'V10.2.1';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -3542,8 +3542,14 @@ function createBackroomsTextures() {
 
   TexCache.water_caustics = makeCanvasTex(S, (ctx, s) => {
     ctx.fillStyle = '#28899e'; ctx.fillRect(0, 0, s, s);
-    ctx.strokeStyle = 'rgba(185,248,255,0.34)'; ctx.lineWidth = 4;
-    for (let i = 0; i < 48; i++) { ctx.beginPath(); ctx.arc(Math.random()*s, Math.random()*s, 18+Math.random()*54, 0, Math.PI*2); ctx.stroke(); }
+    // V10.2.1 fix: ring/circle stroke pattern removed (owner request). Soft light mottling only — no circular outlines.
+    for (let i = 0; i < 26; i++) {
+      const x = Math.random()*s, y = Math.random()*s, r = 40+Math.random()*90;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, 'rgba(185,248,255,0.10)');
+      g.addColorStop(1, 'rgba(185,248,255,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
+    }
     addGrain(ctx, s, 10);
   }, 3, 3);
 
