@@ -1818,7 +1818,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V10.2.6';
+const VERSION = 'V10.2.7';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -9246,12 +9246,19 @@ function updateEntities(dt, playerMovedDist) {
       }
 
       let activeHostile = null, bestHostileDist = 22;
-      for (const other of activeEntities) {
-        if (other === e || other.kind === 'amicus' || other.kind === 'imagination_diver' || other.kind === 'snail') continue;
-        if (other.state === 'chase' || other.alerted) {
-          const hd = Math.hypot(other.x - state.pos.x, other.z - state.pos.z);
-          if (hd < bestHostileDist) { bestHostileDist = hd; activeHostile = other; }
+      // V10.2.7: the decoy itself clears the target's chase/alerted flags, which used to cancel the decoy after ~1 frame and leave the hostile parked at a stale lure point. Keep the locked target (amicusDecoyTarget) until the dissolve completes.
+      if (e.amicusDecoyTarget && activeEntities.includes(e.amicusDecoyTarget)) {
+        activeHostile = e.amicusDecoyTarget;
+      } else {
+        e.amicusDecoyTarget = null;
+        for (const other of activeEntities) {
+          if (other === e || other.kind === 'amicus' || other.kind === 'imagination_diver' || other.kind === 'snail') continue;
+          if (other.state === 'chase' || other.alerted) {
+            const hd = Math.hypot(other.x - state.pos.x, other.z - state.pos.z);
+            if (hd < bestHostileDist) { bestHostileDist = hd; activeHostile = other; }
+          }
         }
+        if (activeHostile) { e.amicusDecoyTarget = activeHostile; e.amicusDecoyTimer = 0; }
       }
       if (activeHostile) {
         e.amicusMode = 'decoy';
@@ -9281,7 +9288,9 @@ function updateEntities(dt, playerMovedDist) {
         });
         // Fallback known guaranteed return door location (16, 16) if exit chunk not yet streamed
         const exitTarget = nearExit ? { x: nearExit.x, z: nearExit.z } : { x: CHUNK_SIZE, z: CHUNK_SIZE };
-        if (hDist <= 9.5) {
+        // V10.2.7: guiding to a door the player is already standing next to is pointless; only guide when the exit is far from the PLAYER, otherwise just follow.
+        const exitDistFromPlayer = Math.hypot(exitTarget.x - state.pos.x, exitTarget.z - state.pos.z);
+        if (hDist <= 9.5 && exitDistFromPlayer > 12.0) {
           e.amicusMode = 'guide';
           const exDx = exitTarget.x - e.x, exDz = exitTarget.z - e.z, exD = Math.hypot(exDx, exDz);
           if (exD > 5.0) {
