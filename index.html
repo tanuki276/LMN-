@@ -1818,7 +1818,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V10.2.5';
+const VERSION = 'V10.2.6';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -2003,7 +2003,7 @@ const ENTITY_META = {
     counter: '接近距離（約11m以内）に入らず迂回せよ。反応されたら一本道で囲まれる前に開けた側へ距離を取り、追跡範囲外へ離脱しろ。'
   },
   smiler: {
-    id: 'smiler', name: 'メガン', danger: '危険 / 暗所死角型', color: '#d8d8d8', axis: '光',
+    id: 'smiler', name: 'ジルチジョイント', danger: '危険 / 暗所死角型', color: '#d8d8d8', axis: '光',
     desc: '手足が絡み合うグロテスクな姿に光る目と歯を持つ存在。身動きは遅いが、消灯時や光の届かない死角から襲ってくる。',
     counter: '光に極めて弱い。気配を感じたら即座に懐中電灯[F]を照射し続けると約1秒で霧散・消滅する。'
   },
@@ -2033,12 +2033,12 @@ const ENTITY_META = {
     counter: '懐中電灯[F]を消灯するか、[F]長押し（モバイルはライト長押し）で点灯ライトを囮として置いて離れろ。モスゼリー[4]も有効。'
   },
   faceling: {
-    id: 'faceling', name: 'ノッペラ', danger: '警戒 / 視線興奮型', color: '#b8b0a4', axis: '視線',
+    id: 'faceling', name: 'ヨローナ', danger: '警戒 / 視線興奮型', color: '#b8b0a4', axis: '視線',
     desc: '顔の造形が欠落した灰肌の人型。普段は穏やかだが、顔を真正面から直視され続けると興奮して襲ってくる（小型は悪戯で所持品を落とす）。',
     counter: '顔を直視するな。視界の端で捉えつつ目を逸らして通り過ぎれば興奮せずやり過ごせる。'
   },
   clump: {
-    id: 'clump', name: 'テアシ', danger: '危険 / 振動感知型', color: '#6a5a8a', axis: '音',
+    id: 'clump', name: 'シャーム', danger: '危険 / 振動感知型', color: '#6a5a8a', axis: '音',
     desc: '多数の腕脚が絡み合った紫色の塊。床を伝う振動を感知して近づく。速度は鈍いが接触ダメージが高い。',
     counter: '軋み音が近づいたらその場で静止するか、しゃがみ歩行で床振動を抑えてやり過ごせ。'
   },
@@ -2078,7 +2078,7 @@ const ENTITY_META = {
     counter: '入る前に物体をよく見て、違和感のあるものには入らないこと。入ってしまったら早急に出ること。'
   },
   straggler: {
-    id: 'straggler', name: 'はぐれ狙い（MP専用）', danger: '危険 / 孤立標的型(MP)', color: '#2c384a', axis: '接近', mpOnly: true,
+    id: 'straggler', name: 'ポーザー（MP専用）', danger: '危険 / 孤立標的型(MP)', color: '#2c384a', axis: '接近', mpOnly: true,
     desc: 'マルチプレイ専用の細長い暗色人型。その瞬間に仲間から最も離れて孤立しているプレイヤー1人だけを執拗に狙う。',
     counter: '仲間と合流して距離を縮めれば標的から外れる。分岐層や重量サンプル運搬時の孤立に警戒せよ。'
   },
@@ -4493,8 +4493,8 @@ const LEVELS = [
 // §6-3 Complete 16 Level-Specific M.E.G. Logs (+ Final Log #17 & Progressive White Door Clues!)
 const MEG_LOGS = [
   { id: 0,  lv: 0,  title: 'M.E.G. 記録 #01 [LEVEL 0] クロカビと薄い床', unlockEntity: 'bacteria', body: '湿ったカーペットの奥に、わずかにノイズが走る薄い床（ノークリップ箇所）がある。踏み抜けばLevel 1へ落ちる。黒い人影「クロカビ」に追われたら角を曲がって4秒視線を切れ。' },
-  { id: 1,  lv: 1,  title: 'M.E.G. 記録 #02 [LEVEL 1] 倉庫の施錠とテアシ', unlockEntity: 'clump', body: '倉庫区画の出口扉はセキュリティカードで施錠されている。重い軋み音が聞こえたら「テアシ」が近い。歩みは遅いが止まらない。距離を保て。' },
-  { id: 2,  lv: 2,  title: 'M.E.G. 記録 #03 [LEVEL 2] 蒸気配管とモルトマウス', unlockEntity: 'deathrat', body: '配管回廊には「メガン」に加え大型ネズミの群れ「モルトマウス」が潜む。携帯食料[2]を落とせば群れを足止めでき、ライトを2秒当て続けるか探知パルス[Q]で散らせる。' },
+  { id: 1,  lv: 1,  title: 'M.E.G. 記録 #02 [LEVEL 1] 倉庫の施錠とシャーム', unlockEntity: 'clump', body: '倉庫区画の出口扉はセキュリティカードで施錠されている。重い軋み音が聞こえたら「シャーム」が近い。歩みは遅いが止まらない。距離を保て。' },
+  { id: 2,  lv: 2,  title: 'M.E.G. 記録 #03 [LEVEL 2] 蒸気配管とモルトマウス', unlockEntity: 'deathrat', body: '配管回廊には「ジルチジョイント」に加え大型ネズミの群れ「モルトマウス」が潜む。携帯食料[2]を落とせば群れを足止めでき、ライトを2秒当て続けるか探知パルス[Q]で散らせる。' },
   { id: 3,  lv: 3,  title: 'M.E.G. 記録 #04 [LEVEL 3] 変電所ブレーカーとウイルス', unlockEntity: 'smiler', body: '高圧アークに近づくな。2箇所のブレーカーを復旧させれば区画に照明が戻り出口が開く。電子的な「ハッピーファイル」感染時は消灯して5秒静止せよ。' },
   { id: 4,  lv: 4,  title: 'M.E.G. 記録 #05 [LEVEL 4] 雨のオフィスとブランクアイドル', unlockEntity: 'mannequin', body: '「ブランクアイドル」と睨み合いになっても動じるな。視界に通算4秒収め続ければ、陶器の擦れ音とともに後退する。探知パルス[Q]で3秒足止めもできる。' },
   { id: 5,  lv: 5,  title: 'M.E.G. 記録 #06 [LEVEL 5] 静寂ホテルとドクガ', unlockEntity: 'deathmoth', body: '「ドクガ」は明るい照明とライトに集まる。消灯して暗い道を選び、モスゼリーを使えば近づけない。この階層ではしゃがみ歩きで静かに進め。' },
@@ -4507,7 +4507,7 @@ const MEG_LOGS = [
   { id: 12, lv: 12, title: 'M.E.G. 記録 #13 [LEVEL 11] 無限都市と街灯の監視者', unlockEntity: 'watch', body: '夜の市街地では「ネイバーフッド・ウォッチ」の光の円錐内で走る・ライト点灯が厳禁だ。背後を付ける「カワハギ」には後ろチラ見[R]で視線を合わせろ。' },
   { id: 13, lv: 13, title: 'M.E.G. 記録 #14 [LEVEL 33] モールとグリッチ・VIP', unlockEntity: 'tvhead', body: '「グリッチ」の砂嵐と電子音が高まったら突撃の合図。予兆のうちに物陰へ入れ。風船のあるパーティ部屋には「VIP」が潜むため立ち入るな。' },
   { id: 14, lv: 14, title: 'M.E.G. 記録 #15 [LEVEL 3999] ネオンの果て', unlockEntity: 'partygoer', body: 'ネオンが明滅するアーケード。明るい広間は「ドクガ」に狙われやすい。ヒューズを集め、深度10を超えた先で「現実への白い扉」を待て。' },
-  { id: 15, lv: 15, title: 'M.E.G. 記録 #16 [LEVEL 94] 昼のモーション住宅とヒトガタ', unlockEntity: 'scarecrow', body: '青空の下、支柱に立つ「ヒトガタ」は目を離すと跳躍して迫る。視界に収めたまま縄張り（26m）の外へ後退せよ。子ノッペラの悪戯にも注意。' }
+  { id: 15, lv: 15, title: 'M.E.G. 記録 #16 [LEVEL 94] 昼のモーション住宅とヒトガタ', unlockEntity: 'scarecrow', body: '青空の下、支柱に立つ「ヒトガタ」は目を離すと跳躍して迫る。視界に収めたまま縄張り（26m）の外へ後退せよ。子ヨローナの悪戯にも注意。' }
 ];
 const WHITE_DOOR_CLUES = [
   { need: 2,  text: '手がかり①：現実へ通じる「白い扉」は、深度10未満の浅い階層には一切出現しない。' },
@@ -6232,6 +6232,15 @@ const PropFactory = {
       const mSkin = (mimicOpts && mimicOpts.skinId) || 'teal_orange_solid';
       const offTag = !!(mimicOpts && mimicOpts.offTagColor);
       return this.createPeerAvatar(mName, mSkin, true, offTag);
+    }
+
+    if (kind === 'smiler') {
+      // V10.2.6: Jilchi Joint is ONLY a glowing face (eyes + grin) floating in the dark - no body.
+      const g = new THREE.Group();
+      const face = new THREE.Mesh(Geo.plane, new THREE.MeshBasicMaterial({ map: TexCache.smiler_face, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
+      face.scale.set(0.95, 0.95, 1); face.position.set(0, 1.5, 0);
+      g.add(face); g.userData = { face };
+      return g;
     }
 
     const glbModel = this.buildGlbEntity(kind, isChild);
@@ -8754,7 +8763,7 @@ function dropPlayerItemForPrank() {
     addInteractable(ch, fns[slot](), dx, state.floorY, dz, types[slot], '[E] 落とした携帯品を拾う');
   }
   sound.playPickup();
-  showToast('子ノッペラがすれ違いざまに携帯品を1つ落とした！足元を拾い直そう');
+  showToast('子ヨローナがすれ違いざまに携帯品を1つ落とした！足元を拾い直そう');
 }
 
 function updateDirector(dt, chasingCount) {
@@ -9413,7 +9422,7 @@ function updateEntities(dt, playerMovedDist) {
         moveSpd = 0;
         if (e.lightBurn >= 1.8) {
           sound.playCounterSuccess(pan);
-          showToast('メガンに光を浴びせて消滅させた！');
+          showToast('ジルチジョイントに光を浴びせて消滅させた！');
           e.life = 0;
         }
       } else {
@@ -9752,7 +9761,7 @@ function updateEntities(dt, playerMovedDist) {
         moveDirX = idx / (id || 1); moveDirZ = idz / (id || 1);
         moveSpd = Math.min(MAX_SPEED, 5.1 * speedMul); useBfs = true;
         if (iso.isHost && hDist < 16) {
-          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('bacteria', pan, hDist); showAnomalyBadge('ENTITY: はぐれ狙い（孤立している！仲間へ合流せよ！）'); }
+          if (!e.alerted) { e.alerted = true; sound.playEntityAlert('bacteria', pan, hDist); showAnomalyBadge('ENTITY: ポーザー（孤立している！仲間へ合流せよ！）'); }
           chasingCount++; if (!nearestChaser || hDist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist: hDist };
         }
       }
