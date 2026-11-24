@@ -1818,7 +1818,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V10.2.4';
+const VERSION = 'V10.2.5';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -6020,6 +6020,19 @@ const PropFactory = {
         if (hasVertexColor) {
           nm.vertexColors = true;
           if (nm.color) nm.color.setHex(0xffffff);
+          // V10.2.5: Several models' vertex colours sit at 0.8-0.95 luminance, so under the floor
+          // lighting + ACES they blow out to identical white silhouettes. Darken and saturate the
+          // vertex-colour diffuse in-shader so shading and hue differences survive (no GLB re-upload).
+          nm.onBeforeCompile = (shader) => {
+            shader.fragmentShader = shader.fragmentShader.replace('#include <color_fragment>',
+              `#include <color_fragment>
+{ float v1025lum = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
+  vec3 v1025sat = mix(vec3(v1025lum), diffuseColor.rgb, 1.5);
+  vec3 v1025strong = pow(v1025sat, vec3(1.35)) * 0.58;
+  float v1025w = smoothstep(0.25, 0.75, v1025lum);
+  diffuseColor.rgb = mix(diffuseColor.rgb, v1025strong, v1025w); }`);
+          };
+          nm.customProgramCacheKey = () => 'v1025-sat';
         } else if (tintColor && nm.color) {
           nm.color.multiply(tintColor);
         }
@@ -9626,15 +9639,28 @@ function updateEntities(dt, playerMovedDist) {
       }
     } else if (e.kind === 'clump') {
       // V8 §2 Teashi (Clump): floor vibration sensing -> stand still or slow crouch to slip past!
+      // V10.2.5 buff: chase 2.2 -> 3.9 (was slower than the player's walk, so it could never catch anyone),
+      // 2.5s vibration memory (freezing after being sensed is no longer an instant off-switch), close-range lunge.
       const vibrating = !tHidden && tgt.movedDist > 0.012 && !tgt.crouch;
       const vibR = (tgt.sprinting ? 22 : (vibrating ? 14 : 3.2)) * levelSoundMul;
-      if (canDetect && !tHidden && dist < vibR) {
+      e.lungeCd = Math.max(0, (e.lungeCd || 0) - dt);
+      e.lungeT = Math.max(0, (e.lungeT || 0) - dt);
+      const sensing = canDetect && !tHidden && dist < vibR;
+      if (sensing) {
         sensedNow = true; // A-1: designed through-wall floor-vibration sensing
+        e.vibMemT = 2.5;
         if (!e.alerted) { e.alerted = true; showAnomalyBadge(`ENTITY: ${meta.name}（床振動感知！静止かしゃがみ歩きで回避）`); }
-        moveSpd = Math.min(MAX_SPEED, 2.2 * speedMul); useBfs = true;
+        if (hDist < 4.5 && e.lungeCd <= 0 && e.lungeT <= 0) { e.lungeT = 0.42; e.lungeCd = 5.0; }
+      } else if ((e.vibMemT || 0) > 0) {
+        e.vibMemT -= dt;
+      } else {
+        e.alerted = false;
+      }
+      if (sensing || (e.vibMemT || 0) > 0) {
+        moveSpd = Math.min(MAX_SPEED, (e.lungeT > 0 ? 6.4 : 3.9) * speedMul); useBfs = true;
         if (hDist < 12) { chasingCount++; if (!nearestChaser || hDist < nearestChaser.dist) nearestChaser = { x: e.x, z: e.z, dist: hDist }; }
       } else {
-        e.alerted = false; moveSpd = 0.6; e.wanderAng += (Math.random()-0.5)*dt*0.7; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
+        moveSpd = 0.6; e.wanderAng += (Math.random()-0.5)*dt*0.7; moveDirX = Math.cos(e.wanderAng); moveDirZ = Math.sin(e.wanderAng);
       }
       if (hDist < 18 && e.soundCd <= 0) { sound.playClumpCreakSpatial(Math.max(0.03, (1-hDist/18)*0.24), pan, hDist); e.soundCd = 1.35; }
       if (e.mesh.userData.limbs) e.mesh.userData.limbs.forEach((lb, idx) => { lb.rotation.x = 0.8 + Math.sin(state.elapsed*4+idx)*0.38; });
@@ -10947,6 +10973,10 @@ function triggerExitTransition(it) {
     }
     return;
   }
+
+  // V10.2.5: LEVEL! (task type 'run') is a pure chase floor — the horde can never be cleared,
+  // so the 2.5s exit channel was a guaranteed death at the door. Its exits open instantly.
+  if (etype !== 'noclip' && lv.task && lv.task.type === 'run') { executeExitNow(it); return; }
 
   if (etype !== 'noclip') {
     if (state.channelAction && state.channelAction.kind === 'exit' && state.channelAction.it === it) return;
