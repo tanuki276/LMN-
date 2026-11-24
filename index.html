@@ -1818,7 +1818,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V10.2.1';
+const VERSION = 'V10.2.2';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -7016,6 +7016,8 @@ function tryPlaceRandomProp(chunk, rng, wx, wz, spreadX, spreadZ, clearanceR, co
   for (let attempt = 0; attempt < 14; attempt++) {
     const px = wx + (rng()-0.5)*spreadX, pz = wz + (rng()-0.5)*spreadZ;
     if (isSpawn && Math.hypot(px, pz) < 3.4) continue;
+    // V10.2.2: Never place random props inside enterable buildings (hollow interiors have no solid collider, so trees/mailboxes spawned in living rooms)
+    if (chunk.noPlaceZones) { let inZone = false; for (const zn of chunk.noPlaceZones) { if (px > zn.minX - clearanceR && px < zn.maxX + clearanceR && pz > zn.minZ - clearanceR && pz < zn.maxZ + clearanceR) { inZone = true; break; } } if (inZone) continue; }
     // V9.3.0 E-3 Keep benches out of crosswalk center strip
     if (opts.noCrosswalkCenter && chunk.zoneType === 'crosswalk' && Math.abs(px - wx) < 4.4 && Math.abs(pz - wz) < 4.4) continue;
     const baseRot = opts.fixedRot !== undefined ? opts.fixedRot : (opts.cardinal ? Math.floor(rng()*4)*Math.PI/2 : rng()*Math.PI*2);
@@ -7155,12 +7157,15 @@ function buildManilaRoom(chunk, wx, wz, H, lv) {
 
 function buildEnterableHouse(chunk, wx, wz, rng, isDay) {
   const M = PropFactory.mats, W = 11.4, D = 10.6, H1 = 3.1, H2 = 2.9;
+  // V10.2.2: Reserve the footprint so random props (dead trees, mailboxes) never spawn inside the house
+  chunk.noPlaceZones.push({ minX: wx - W/2 - 0.25, maxX: wx + W/2 + 0.25, minZ: wz - D/2 - 0.25, maxZ: wz + D/2 + 0.25 });
   const wallExt = M.sidingMats[isDay ? 4 : Math.floor(rng()*4)], wallInt = M.interiorWall, floorW = M.woodFloorMat;
   const f1 = new THREE.Mesh(Geo.plane, floorW); f1.rotation.x = -Math.PI/2; f1.scale.set(W, D, 1); f1.position.set(wx, 0.05, wz); chunk.group.add(f1);
   createWallBox(chunk, floorW, wx - 1.4, H1 - 0.08, wz, W - 2.8, 0.16, D - 0.2, false);
   chunk.walkSurfaces.push({ minX: wx-W/2, maxX: wx+W/2-2.8, minZ: wz-D/2, maxZ: wz+D/2, y: H1 });
   // V9.2.0 G-1 Landing depth extended 2.8 -> 3.2 so it seamlessly meets the top stair (z = wz - 2.2) with zero fall gap!
-  createWallBox(chunk, floorW, wx + W/2 - 1.4, H1 - 0.08, wz - D/2 + 1.6, 2.8, 0.16, 3.2, false);
+  // V10.2.2: Landing slab sits 1.5cm lower so its top face is not coplanar with the top stair step (was z-fighting at the stair head)
+  createWallBox(chunk, floorW, wx + W/2 - 1.4, H1 - 0.095, wz - D/2 + 1.6, 2.8, 0.16, 3.2, false);
   chunk.walkSurfaces.push({ minX: wx+W/2-2.8, maxX: wx+W/2, minZ: wz-D/2, maxZ: wz-D/2+3.2, y: H1 });
   const roofBaseY = H1+H2, ridgeH = 2.5, halfD = D/2+0.6, slopeLen = Math.hypot(halfD, ridgeH), slopeAng = Math.atan2(ridgeH, halfD);
   addPart(chunk.group, Geo.box1, M.shingleMat, W+1.2, 0.2, slopeLen+0.2, wx, roofBaseY+ridgeH/2, wz+halfD/2, slopeAng, 0, 0);
@@ -7199,6 +7204,8 @@ function buildEnterableHouse(chunk, wx, wz, rng, isDay) {
 
 function buildEnterableStore(chunk, wx, wz, isBookstore) {
   const M = PropFactory.mats, W = 12.2, D = 11.4, H = 3.8;
+  // V10.2.2: Reserve the footprint so random props never spawn inside the store
+  chunk.noPlaceZones.push({ minX: wx - W/2 - 0.25, maxX: wx + W/2 + 0.25, minZ: wz - D/2 - 0.25, maxZ: wz + D/2 + 0.25 });
   const wallMat = isBookstore ? getMat('bs_w', { map: TexCache.wood_panel, roughness: 0.85 }) : getMat('cv_w', { map: TexCache.l4_wall, roughness: 0.8 });
   const fl = new THREE.Mesh(Geo.plane, getMat('st_f', { map: TexCache.mall_tile, roughness: 0.7 }));
   fl.rotation.x = -Math.PI/2; fl.scale.set(W, D, 1); fl.position.set(wx, 0.04, wz); chunk.group.add(fl);
@@ -7242,7 +7249,7 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
 
   const chunk = {
     key, cx, cz, wx, wz, shiftEpoch, seen: false, visited: false, unseenTime: 0,
-    group: new THREE.Group(), colliders: [], walkSurfaces: [], lights: [], interactables: [],
+    group: new THREE.Group(), colliders: [], noPlaceZones: [], walkSurfaces: [], lights: [], interactables: [],
     hazards: [], shiftables: [], animatedProps: [], disposables: [], mirrorSpots: [],
     shelterZones: [],
     partyZone: null, loopZone: null, manilaZone: null, noclipSpot: null, chasmSpot: null,
@@ -7493,6 +7500,8 @@ function buildChunk(cx, cz, shiftEpoch = 0, forceExit = false) {
         house.position.set(wx, 0, wz); house.rotation.y = isDay ? 0 : Math.floor(rng()*4)*Math.PI/2; chunk.group.add(house);
         if (house.userData.curtainShadows) chunk.animatedProps.push(house);
         chunk.colliders.push({ minX: wx-3.7, maxX: wx+3.7, minZ: wz-3.1, maxZ: wz+3.1, minY: 0, maxY: 8, disabled: false });
+        // V10.2.2: Visual body + roof overhang + porch reach ~4.4m from center (more than the collider), so keep random props (esp. dead trees) clear of the walls/roof at any rotation
+        chunk.noPlaceZones.push({ minX: wx-4.5, maxX: wx+4.5, minZ: wz-4.5, maxZ: wz+4.5 });
         if (lit) chunk.lights.push({ x: wx, y: 2.8, z: wz+4.2, color: 0xffc66e });
       }
       tryPlaceRandomProp(chunk, rng, wx, wz, 13, 13, 0.6, 0.25, 0.25, () => PropFactory.mailbox(), { isStreetFixture: true });
