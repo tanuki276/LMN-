@@ -1818,7 +1818,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V10.2.2';
+const VERSION = 'V10.2.3';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -8823,7 +8823,8 @@ function updateWatchSweep(dt) {
       state.hp -= 10 * dt;
       state.runTookDamage = true;
       state.hurtFlash = Math.max(state.hurtFlash, 0.35);
-      registerCodexSeen('watch');
+      // V10.2.3: Codex counts once per sweep that actually catches the player (was: every frame, inflating the count into the thousands)
+      if (!ws.codexLogged) { ws.codexLogged = true; registerCodexSeen('watch'); }
     }
     if (ws.dur <= 0) {
       ws.active = false; ws.warn = false; ws.timer = 24 + Math.random() * 12; ws.warnBeepStep = 0;
@@ -8847,7 +8848,7 @@ function updateWatchSweep(dt) {
     if (ws.dur <= 0) {
       ws.warn = false; ws.active = true; ws.dur = 5.5; ws.warnBeepStep = 0;
       sound.playEntityAlert('watch', 0, 4);
-      registerCodexSeen('watch');
+      ws.codexLogged = false;
     }
   } else {
     ws.timer -= dt;
