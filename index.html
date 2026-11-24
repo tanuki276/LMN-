@@ -1818,7 +1818,7 @@
 /* ============================================================
    0. VERSION CONSTANT & SELF-CONTAINED QR CODE GENERATOR (§7-3, §9-3)
    ============================================================ */
-const VERSION = 'V10.2.3';
+const VERSION = 'V10.2.4';
 const GAME_VERSION = VERSION;
 document.getElementById('title-ver-tag').textContent = `FOUND FOOTAGE SURVIVAL HORROR // ${VERSION}`;
 document.getElementById('credits-ver').textContent = `Like Homes // ${VERSION}`;
@@ -2251,6 +2251,11 @@ function loadRecords() {
     r.sampleLevels = new Set(r.sampleLevels || []);
     r.achievements = new Set(r.achievements || []);
     r.phenomenaSeen = r.phenomenaSeen || {};
+    // V10.2.4: One-time repair of the Watch codex count inflated by the per-frame registration bug (fixed in V10.2.3).
+    // One caught sweep (5.5s at 60fps) added up to ~330 counts, so divide back to an estimated sweep count. The >50 guard makes this self-limiting: a repaired value never triggers it again.
+    if (r.codexSeen && typeof r.codexSeen.watch === 'number' && r.codexSeen.watch > 50) {
+      r.codexSeen.watch = Math.max(1, Math.round(r.codexSeen.watch / 330));
+    }
     return r;
   } catch (e) {
     const r = Object.assign(defaultRecords(), memStore.records || {});
